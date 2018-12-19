@@ -20,7 +20,7 @@
 See CHANGELOG for all breaking (and non-breaking) changes.
 
 ## Become Contributor
-If you wish to 
+If you wish to contribute in our development process, refer to our [Contributing Guidelines](https://github.com/knoxpo/dart_algolia/blob/master/CONTRIBUTING.md)
 
 ## Getting started
 You should ensure that you add the router as a dependency in your flutter project.

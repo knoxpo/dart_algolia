@@ -1,4 +1,3 @@
-
 part of algolia;
 
 class AlgoliaObjectSnapshot {
@@ -16,8 +15,9 @@ class AlgoliaObjectSnapshot {
     algolia = algolia;
     index = index;
     objectID = map['objectID'];
-    Map<String, dynamic> newMapHighlightResult =
-        map['_highlightResult'] != null ? Map<String, Map<String, dynamic>>.from(map['_highlightResult']) : null;
+    Map<String, dynamic> newMapHighlightResult = map['_highlightResult'] != null
+        ? Map<String, Map<String, dynamic>>.from(map['_highlightResult'])
+        : null;
     highlightResult = newMapHighlightResult;
     // Map<String, dynamic> m = map;
     map.remove('objectID');

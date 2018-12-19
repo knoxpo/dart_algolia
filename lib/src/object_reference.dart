@@ -37,7 +37,7 @@ class AlgoliaObjectReference {
   Future<AlgoliaTask> setData(Map<String, dynamic> data) async {
     try {
       assert(_index != null && _index != '*' && _index != '',
-        'IndexName is required, but it has `*` multiple flag or `null`.');
+          'IndexName is required, but it has `*` multiple flag or `null`.');
       String url = '${algolia._host}indexes/$_index';
       if (_objectId != null) {
         url = '$url/$_objectId';
@@ -66,7 +66,7 @@ class AlgoliaObjectReference {
   Future<AlgoliaTask> updateData(Map<String, dynamic> data) async {
     try {
       assert(_index != null && _index != '*' && _index != '',
-        'IndexName is required, but it has `*` multiple flag or `null`.');
+          'IndexName is required, but it has `*` multiple flag or `null`.');
       String url = '${algolia._host}indexes/$_index';
       if (_objectId != null) {
         url = '$url/$_objectId';

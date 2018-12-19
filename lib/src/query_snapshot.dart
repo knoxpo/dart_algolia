@@ -1,4 +1,3 @@
-
 part of algolia;
 
 class AlgoliaQuerySnapshot {
