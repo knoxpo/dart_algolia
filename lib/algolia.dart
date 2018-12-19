@@ -1,7 +1,6 @@
 
 library algolia;
 
-import 'dart:ui' show hashValues, hashList;
 import 'dart:async';
 import 'dart:convert';
 import 'package:meta/meta.dart';

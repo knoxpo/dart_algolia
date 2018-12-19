@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 import 'package:algolia/algolia.dart';
 
@@ -174,6 +174,7 @@ void main() async {
     print(taskDeleteIndex.data);
   });
 }
+
 
 class Application {
   static Algolia algolia = Algolia.init(
