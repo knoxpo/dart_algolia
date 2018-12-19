@@ -521,4 +521,104 @@ class AlgoliaQuery {
     assert(!_parameters.containsKey('length'));
     return _copyWithParameters(<String, dynamic>{'length': value});
   }
+
+  ///
+  /// **MinWordSizefor1Typo**
+  ///
+  /// TODO: Documentation to be added.
+  ///
+  /// Document Source: (https://www.algolia.com/doc/api-reference/api-parameters/minWordSizefor1Typo/)
+  ///
+  AlgoliaQuery setMinWordSizefor1Typo(int value) {
+    assert(value != null);
+    assert(!_parameters.containsKey('minWordSizefor1Typo'));
+    return _copyWithParameters(<String, dynamic>{'minWordSizefor1Typo': value});
+  }
+
+
+  ///
+  /// **MinWordSizefor2Typos**
+  ///
+  /// TODO: Documentation to be added.
+  ///
+  /// Document Source: (https://www.algolia.com/doc/api-reference/api-parameters/minWordSizefor2Typos/)
+  ///
+  AlgoliaQuery setMinWordSizefor2Typos(int value) {
+    assert(value != null);
+    assert(!_parameters.containsKey('minWordSizefor2Typos'));
+    return _copyWithParameters(<String, dynamic>{'minWordSizefor2Typos': value});
+  }
+
+  ///
+  /// **TypoTolerance**
+  ///
+  /// TODO: Documentation to be added.
+  /// 
+  /// typoTolerance: true|false|'min'|'strict'
+  ///
+  /// Document Source: (https://www.algolia.com/doc/api-reference/api-parameters/typoTolerance/)
+  ///
+  AlgoliaQuery setTypoTolerance(dynamic value) {
+    assert(value != null);
+    assert(!_parameters.containsKey('typoTolerance'));
+    return _copyWithParameters(<String, dynamic>{'typoTolerance': value});
+  }
+
+  ///
+  /// **AllowTyposOnNumericTokens**
+  ///
+  /// TODO: Documentation to be added.
+  /// 
+  /// allowTyposOnNumericTokens: true|false
+  ///
+  /// Document Source: (https://www.algolia.com/doc/api-reference/api-parameters/allowTyposOnNumericTokens/)
+  ///
+  AlgoliaQuery setAllowTyposOnNumericTokens(bool value) {
+    assert(value != null);
+    assert(!_parameters.containsKey('allowTyposOnNumericTokens'));
+    return _copyWithParameters(<String, dynamic>{'allowTyposOnNumericTokens': value});
+  }
+
+
+  ///
+  /// **DisableTypoToleranceOnAttributes**
+  ///
+  /// TODO: Documentation to be added.
+  /// 
+  ///
+  /// Document Source: (https://www.algolia.com/doc/api-reference/api-parameters/disableTypoToleranceOnAttributes/)
+  ///
+  AlgoliaQuery setDisableTypoToleranceOnAttributes(List<String> value) {
+    assert(value != null);
+    assert(!_parameters.containsKey('disableTypoToleranceOnAttributes'));
+    return _copyWithParameters(<String, dynamic>{'disableTypoToleranceOnAttributes': value});
+  }
+
+  ///
+  /// **DisableTypoToleranceOnWords**
+  ///
+  /// TODO: Documentation to be added.
+  /// 
+  ///
+  /// Document Source: (https://www.algolia.com/doc/api-reference/api-parameters/disableTypoToleranceOnWords/)
+  ///
+  AlgoliaQuery setDisableTypoToleranceOnWords(List<String> value) {
+    assert(value != null);
+    assert(!_parameters.containsKey('disableTypoToleranceOnWords'));
+    return _copyWithParameters(<String, dynamic>{'disableTypoToleranceOnWords': value});
+  }
+  
+  ///
+  /// **SeparatorsToIndex**
+  ///
+  /// TODO: Documentation to be added.
+  /// 
+  ///
+  /// Document Source: (https://www.algolia.com/doc/api-reference/api-parameters/separatorsToIndex/)
+  ///
+  AlgoliaQuery setSeparatorsToIndex(List<String> value) {
+    assert(value != null);
+    assert(!_parameters.containsKey('separatorsToIndex'));
+    return _copyWithParameters(<String, dynamic>{'separatorsToIndex': value});
+  }
 }
