@@ -275,6 +275,6 @@ version of the release.
 
 
 <hr/>
-Algolia is a Knoxpo original.
+Algolia [Unofficial SDK for Dart] is a Knoxpo original.
 <br/>
 <a href="https://knoxpo.com" target="_knoxpo"><img src="https://www.knoxpo.com/assets/logo.png" width="60"></a>
