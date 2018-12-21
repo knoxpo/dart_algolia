@@ -26,7 +26,7 @@ If you wish to contribute in our development process, refer to our [Contributing
 You should ensure that you add the router as a dependency in your flutter project.
 ```yaml
 dependencies:
- algolia: ^0.1.0
+ algolia: ^0.1.2
 ```
 You should then run `flutter packages upgrade` or update your packages in IntelliJ.
 
@@ -86,6 +86,10 @@ version of the release.
 ##### filtering (2/6)
 - `.setFilters(String value)`
 - `.setFacetFilter(String value)` This can be used multiple times in a query.
+- `.setOptionalFilter(String value)` This can be used multiple times in a query.
+- `.setNumericFilter(String value)` This can be used multiple times in a query.
+- `.setTagFilter(String value)` This can be used multiple times in a query.
+- `.setSumOrFiltersScore(bool value)`
 
 ##### faceting (4/4)
 - `.setFacets(List<String> value)`
@@ -107,9 +111,21 @@ version of the release.
 - `.setOffset(int value)`
 - `.setLength(int value)`
 
-##### typos (0/5)
+##### typos (7/7)
+- `.setMinWordSizefor1Typo(int value)`
+- `.setMinWordSizefor2Typos(int value)`
+- `.setTypoTolerance(dynamic value)`
+- `.setAllowTyposOnNumericTokens(bool value)`
+- `.setDisableTypoToleranceOnAttributes(List<String> value)`
 
-##### geo-search (0/7)
+##### geo-search (7/7)
+- `.setAroundLatLng(String value)`
+- `.setAroundLatLngViaIP(bool value)`
+- `.setAroundRadius(dynamic value)`
+- `.setAroundPrecision(int value)`
+- `.setMinimumAroundRadius(int value)`
+- `.setInsideBoundingBox(List<BoundingBox> value)`
+- `.setInsidePolygon(List<BoundingPolygonBox> value)`
 
 ##### languages (0/3)
 
