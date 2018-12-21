@@ -83,7 +83,7 @@ version of the release.
 - `.setAttributesToRetrieve(List<String> value)`
 - `.setRestrictSearchableAttributes(List<String> value)`
 
-##### filtering (2/6)
+##### filtering (6/6)
 - `.setFilters(String value)`
 - `.setFacetFilter(String value)` This can be used multiple times in a query.
 - `.setOptionalFilter(String value)` This can be used multiple times in a query.
