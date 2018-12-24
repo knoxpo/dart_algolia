@@ -730,37 +730,6 @@ class AlgoliaQuery {
         <String, dynamic>{'disableTypoToleranceOnAttributes': value});
   }
 
-  //
-  // **DisableTypoToleranceOnWords**
-  //
-  // TODO: Documentation to be added.
-  //
-  //
-  // Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/disableTypoToleranceOnWords/)
-  //
-  // TODO: To be moved to settings.
-  // AlgoliaQuery setDisableTypoToleranceOnWords(List<String> value) {
-  //   assert(value != null);
-  //   assert(!_parameters.containsKey('disableTypoToleranceOnWords'));
-  //   return _copyWithParameters(
-  //       <String, dynamic>{'disableTypoToleranceOnWords': value});
-  // }
-
-  //
-  // **SeparatorsToIndex**
-  //
-  // TODO: Documentation to be added.
-  //
-  //
-  // Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/separatorsToIndex/)
-  //
-  // TODO: To be moved to settings.
-  // AlgoliaQuery setSeparatorsToIndex(List<String> value) {
-  //   assert(value != null);
-  //   assert(!_parameters.containsKey('separatorsToIndex'));
-  //   return _copyWithParameters(<String, dynamic>{'separatorsToIndex': value});
-  // }
-
   ///
   /// **AroundLatLng**
   ///

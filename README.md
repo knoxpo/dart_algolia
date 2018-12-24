@@ -26,7 +26,7 @@ If you wish to contribute in our development process, refer to our [Contributing
 You should ensure that you add the router as a dependency in your flutter project.
 ```yaml
 dependencies:
- algolia: ^0.1.2
+ algolia: ^0.1.3
 ```
 You should then run `flutter packages upgrade` or update your packages in IntelliJ.
 
@@ -111,7 +111,7 @@ version of the release.
 - `.setOffset(int value)`
 - `.setLength(int value)`
 
-##### typos (7/7)
+##### typos (5/5)
 - `.setMinWordSizefor1Typo(int value)`
 - `.setMinWordSizefor2Typos(int value)`
 - `.setTypoTolerance(dynamic value)`
@@ -137,6 +137,68 @@ version of the release.
 
 ##### GET RESULT
 - `.getObjects()`
+
+
+## Settings Parameters
+Here is the list of parameters you can use with the settings method (settings scope).
+We have managed to include most commonly used parameters for settings functionality
+and there many more to be added in future releases.
+
+We have indicated counts of settings parameters with their availability status
+on official Algolia website and what we have managed to support it in this
+version of the release. 
+
+##### attributes (4/4)
+- `.setSearchableAttributes(List<String> value)`
+- `.setAttributesForFaceting(List<String> value)`
+- `.setUnretrievableAttributes(List<String> value)`
+- `.setAttributesToRetrieve(List<String> value)`
+
+##### ranking (3/3)
+- `.setRanking(List<String> value)`
+- `.setCustomRanking(List<String> value)`
+- `.setReplicas(List<String> value)`
+
+##### faceting (2/2)
+- `.setMaxValuesPerFacet(int value)`
+- `.setSortFacetValuesBy(AlgoliaSortFacetValuesBy value)`
+
+##### highlighting-snippeting (6/6)
+- `.setAttributesToHighlight(List<String> value)`
+- `.setAttributesToSnippet(List<String> value)`
+- `.setHighlightPreTag(String value)`
+- `.setHighlightPostTag(String value)`
+- `.setSnippetEllipsisText(String value)`
+- `.setRestrictHighlightAndSnippetArrays({bool enable = true})`
+
+##### pagination (2/2)
+- `.setHitsPerPage(int value)`
+- `.setPaginationLimitedTo(int value)`
+
+##### typos (7/7)
+- `.setMinWordSizefor1Typo(int value)`
+- `.setMinWordSizefor2Typos(int value)`
+- `.setTypoTolerance(dynamic value)`
+- `.setAllowTyposOnNumericTokens(bool value)`
+- `.setDisableTypoToleranceOnAttributes(List<String> value)`
+- `.setDisableTypoToleranceOnWords(List<String> value)`
+- `.setSeparatorsToIndex(List<String> value)`
+
+##### languages (0/3)
+
+##### query-rules (0/2)
+
+##### query-strategy (0/7)
+
+##### performance (0/2)
+
+##### advanced (0/11)
+
+##### GET Settings
+- `.getSettings()`
+
+##### SET Settings
+- `.setSettings()`
 
 
 <hr/>

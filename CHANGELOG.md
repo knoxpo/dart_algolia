@@ -1,3 +1,6 @@
+## [0.1.3] - Added support to manage index settings.
+- Added support to manage index settings (Get & Set), limited to 24 settings parameters, more to be added in newer releases.
+
 ## [0.1.2] - Added new query params.
 - OptionalFilter (Filtering)
 - NumericFilter (Filtering)

@@ -1,4 +1,3 @@
-
 library algolia;
 
 import 'dart:async';
@@ -9,6 +8,7 @@ import 'package:http/http.dart';
 part 'src/algolia.dart';
 
 part 'src/index_reference.dart';
+part 'src/index_settings.dart';
 part 'src/index_snapshot.dart';
 
 part 'src/query.dart';

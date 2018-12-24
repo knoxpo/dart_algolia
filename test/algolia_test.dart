@@ -7,9 +7,13 @@ void main() async {
   /// Initiate Algolia in your project
   ///
   Algolia algolia = Application.algolia;
-  AlgoliaTask taskAdded, taskUpdated, taskDeleted, taskBatch, taskClearIndex, taskDeleteIndex;
+  AlgoliaTask taskAdded,
+      taskUpdated,
+      taskDeleted,
+      taskBatch,
+      taskClearIndex,
+      taskDeleteIndex;
   AlgoliaObjectSnapshot addedObject;
-
 
   ///
   /// 1. Perform Adding Object to existing Index.
@@ -29,8 +33,8 @@ void main() async {
     // Checking if has [AlgoliaTask]
     expect(taskAdded.runtimeType, AlgoliaTask);
     print(taskAdded.data);
+    print('\n\n');
   });
-
 
   ///
   /// 2. Perform Get Object to existing Index.
@@ -45,11 +49,10 @@ void main() async {
     });
 
     // Checking if has [AlgoliaObjectSnapshot]
-    print('\n\n');
     expect(addedObject.runtimeType, AlgoliaObjectSnapshot);
     print(addedObject.data);
+    print('\n\n');
   });
-
 
   ///
   /// 3. Perform Updating Object to existing Index.
@@ -65,11 +68,10 @@ void main() async {
         .updateData(updateData);
 
     // Checking if has [AlgoliaTask]
-    print('\n\n');
     expect(taskUpdated.runtimeType, AlgoliaTask);
     print(taskUpdated.data);
+    print('\n\n');
   });
-
 
   ///
   /// 4. Perform Delete Object to existing Index.
@@ -81,11 +83,10 @@ void main() async {
         .deleteObject();
 
     // Checking if has [AlgoliaTask]
-    print('\n\n');
     expect(taskDeleted.runtimeType, AlgoliaTask);
     print(taskDeleted.data);
+    print('\n\n');
   });
-
 
   ///
   /// 5. Perform Batch
@@ -110,11 +111,10 @@ void main() async {
     taskBatch = await batch.commit();
 
     // Checking if has [AlgoliaTask]
-    print('\n\n');
     expect(taskBatch.runtimeType, AlgoliaTask);
     print(taskBatch.data);
+    print('\n\n');
   });
-
 
   ///
   /// 6. Perform Query
@@ -130,11 +130,10 @@ void main() async {
     AlgoliaQuerySnapshot snap = await query.getObjects();
 
     // Checking if has [AlgoliaQuerySnapshot]
-    print('\n\n');
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
+    print('\n\n');
   });
-
 
   ///
   /// 7. Perform List all Indices
@@ -143,38 +142,67 @@ void main() async {
     AlgoliaIndexesSnapshot indices = await algolia.instance.getIndices();
 
     // Checking if has [AlgoliaIndexesSnapshot]
-    print('\n\n');
     expect(indices.runtimeType, AlgoliaIndexesSnapshot);
     print('Indices count: ${indices.items.length}');
+    print('\n\n');
   });
 
+  ///
+  /// 8. Get Settings of 'contacts' index
+  ///
+  test("8. Get Settings of 'contacts' index", () async {
+    Map<String, dynamic> settings =
+        await algolia.instance.index('contacts').settings.getSettings();
+
+    // Checking if has [Map<String, dynamic>]
+    expect(settings.isEmpty, false);
+    print(settings);
+    print('\n\n');
+  });
 
   ///
-  /// 8. Perform Clear Index.
+  /// 9. Set Settings of 'contacts' index
   ///
-  test("8. Perform Clear Index.", () async {
+  test("9. Set Settings of 'contacts' index", () async {
+    AlgoliaSettings settings =
+        await algolia.instance.index('contacts').settings;
+
+    settings =
+        settings.setReplicas(const ['contacts_copy_1', 'contacts_copy_2']);
+
+    Map<String, dynamic> response = await settings.setSettings();
+
+    // Checking if has [Map<String, dynamic>]
+    expect(response.isEmpty, false);
+    print(response);
+    print('\n\n');
+  });
+
+  ///
+  /// 10. Perform Clear Index.
+  ///
+  test("10. Perform Clear Index.", () async {
     taskClearIndex = await algolia.instance.index('contacts').clearIndex();
 
     // Checking if has [AlgoliaTask]
-    print('\n\n');
     expect(taskClearIndex.runtimeType, AlgoliaTask);
     print(taskClearIndex.data);
+    print('\n\n');
   });
 
-
   ///
-  /// 9. Perform Delete Index.
+  /// 11. Perform Delete Index.
   ///
-  test("9. Perform Delete Index.", () async {
-    taskDeleteIndex = await algolia.instance.index('contact').deleteIndex();
+  test("11. Perform Delete Index.", () async {
+    taskDeleteIndex =
+        await algolia.instance.index('contacts_copy_2').deleteIndex();
 
     // Checking if has [AlgoliaTask]
-    print('\n\n');
     expect(taskDeleteIndex.runtimeType, AlgoliaTask);
     print(taskDeleteIndex.data);
+    print('\n\n');
   });
 }
-
 
 class Application {
   static Algolia algolia = Algolia.init(

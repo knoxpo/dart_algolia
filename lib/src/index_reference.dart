@@ -16,6 +16,14 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   ///
   String get index => _index;
 
+  ///
+  /// **Settings**
+  ///
+  /// Delete the index referred to by this [AlgoliaIndexReference].
+  ///
+  AlgoliaIndexSettings get settings =>
+      AlgoliaIndexSettings._(this.algolia, this._index);
+
   AlgoliaObjectReference object([String path]) {
     String objectId;
     assert(index != null, 'For object reference you required indexName');
