@@ -1,3 +1,7 @@
+## [0.1.3+1] - Added support to manage index settings.
+- Updated `example.dart`: Added index settings example.
+- Updated index `.setSettings()` response to `AlgoliaTask`.
+
 ## [0.1.3] - Added support to manage index settings.
 - Added support to manage index settings (Get & Set), limited to 24 settings parameters, more to be added in newer releases.
 

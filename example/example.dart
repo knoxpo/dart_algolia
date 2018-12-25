@@ -136,9 +136,26 @@ void main() async {
   ///
   taskDeleteIndex = await algolia.instance.index('contact').deleteIndex();
 
+  ///
+  /// 10. Get Index Setting Instance.
+  ///
+  AlgoliaIndexSettings settingsRef = algolia.instance.index('contact').settings;
+
+  // Get Settings
+  Map<String, dynamic> currentSettings = await settingsRef.getSettings();
+
+  // Checking if has [Map]
+  print('\n\n');
+  print(currentSettings);
+
+  // Set Settings
+  AlgoliaSettings settingsData = settingsRef;
+  settingsData = settingsData.setReplicas(const ['index_copy_1', 'index_copy_2']);
+  AlgoliaTask setSettings = await settingsData.setSettings();
+
   // Checking if has [AlgoliaTask]
   print('\n\n');
-  print(taskDeleteIndex.data);
+  print(setSettings.data);
 }
 
 class Application {

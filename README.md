@@ -15,6 +15,8 @@
 - Perform Batch Activities
 - Add Index
 - Delete Index
+- Clear Index
+- Index Settings
 
 ## Version compatibility
 See CHANGELOG for all breaking (and non-breaking) changes.
@@ -37,8 +39,11 @@ There is a pretty sweet example project in the `example` folder. Check it out. O
 
 ## Setting up
 ```dart
+  ///
+  /// Initiate static Algolia once in your project.
+  ///
   class Application {
-    static Algolia algolia = Algolia.init(
+    static final Algolia algolia = Algolia.init(
       applicationId: 'YOUR_APPLICATION_ID',
       apiKey: 'YOUR_API_KEY',
     );
@@ -64,6 +69,27 @@ There is a pretty sweet example project in the `example` folder. Check it out. O
 
     // Checking if has [AlgoliaQuerySnapshot]
     print('Hits count: ${snap.nbHits}');
+
+    ///
+    /// Perform Index Settings
+    ///
+    AlgoliaIndexSettings settingsRef = algolia.instance.index('contact').settings;
+
+    // Get Settings
+    Map<String, dynamic> currentSettings = await settingsRef.getSettings();
+
+    // Checking if has [Map]
+    print('\n\n');
+    print(currentSettings);
+
+    // Set Settings
+    AlgoliaSettings settingsData = settingsRef;
+    settingsData = settingsData.setReplicas(const ['index_copy_1', 'index_copy_2']);
+    AlgoliaTask setSettings = await settingsData.setSettings();
+
+    // Checking if has [AlgoliaTask]
+    print('\n\n');
+    print(setSettings.data);
   }
 ```
 

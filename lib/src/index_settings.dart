@@ -55,7 +55,7 @@ class AlgoliaSettings {
     );
   }
 
-  Future<Map<String, dynamic>> setSettings() async {
+  Future<AlgoliaTask> setSettings() async {
     try {
       assert(
           _parameters.keys.length > 0, 'No setting parameter to update found.');
@@ -69,7 +69,8 @@ class AlgoliaSettings {
         encoding: Encoding.getByName('utf-8'),
       );
       Map<String, dynamic> body = json.decode(response.body);
-      return body;
+      AlgoliaTask task = AlgoliaTask._(algolia, _index, body);
+      return task;
     } catch (err) {
       throw err;
     }

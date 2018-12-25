@@ -170,10 +170,10 @@ void main() async {
     settings =
         settings.setReplicas(const ['contacts_copy_1', 'contacts_copy_2']);
 
-    Map<String, dynamic> response = await settings.setSettings();
+    AlgoliaTask response = await settings.setSettings();
 
-    // Checking if has [Map<String, dynamic>]
-    expect(response.isEmpty, false);
+    // Checking if has [AlgoliaTask]
+    expect(response.runtimeType, AlgoliaTask);
     print(response);
     print('\n\n');
   });
@@ -204,8 +204,9 @@ void main() async {
   });
 }
 
+
 class Application {
-  static Algolia algolia = Algolia.init(
+  static final Algolia algolia = Algolia.init(
     applicationId: 'YOUR_APPLICATION_ID',
     apiKey: 'YOUR_API_KEY',
   );
