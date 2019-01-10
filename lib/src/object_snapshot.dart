@@ -4,7 +4,8 @@ class AlgoliaObjectSnapshot {
   Algolia algolia;
   String objectID;
   String index;
-  Map<String, Map<String, dynamic>> highlightResult;
+  Map<String, dynamic> highlightResult;
+  Map<String, dynamic> snippetResult;
   Map<String, dynamic> data;
 
   AlgoliaObjectReference get ref =>
@@ -15,13 +16,12 @@ class AlgoliaObjectSnapshot {
     algolia = algolia;
     index = index;
     objectID = map['objectID'];
-    Map<String, dynamic> newMapHighlightResult = map['_highlightResult'] != null
-        ? Map<String, Map<String, dynamic>>.from(map['_highlightResult'])
-        : null;
-    highlightResult = newMapHighlightResult;
+    highlightResult = map['_highlightResult'];
+    snippetResult = map['_snippetResult'];
     // Map<String, dynamic> m = map;
     map.remove('objectID');
     map.remove('_highlightResult');
+    map.remove('_snippetResult');
     data = map;
   }
 }
