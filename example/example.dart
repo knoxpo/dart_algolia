@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:algolia/algolia.dart';
 
 void main() async {

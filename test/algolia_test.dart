@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'package:test/test.dart';
-
 import 'package:algolia/algolia.dart';
 
 void main() async {
@@ -204,10 +204,16 @@ void main() async {
   });
 }
 
-
 class Application {
   static final Algolia algolia = Algolia.init(
-    applicationId: 'YOUR_APPLICATION_ID',
-    apiKey: 'YOUR_API_KEY',
+    applicationId: '86BGVLXUEM',
+    apiKey: '79ae086fe5a29c6c08e788e279b6b99d',
   );
 }
+
+// class Application {
+//   static final Algolia algolia = Algolia.init(
+//     applicationId: 'YOUR_APPLICATION_ID',
+//     apiKey: 'YOUR_API_KEY',
+//   );
+// }

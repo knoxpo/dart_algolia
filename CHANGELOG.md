@@ -1,3 +1,8 @@
+## [0.1.3+2] - Added support to manage index settings.
+- Implementation & bug solved
+    - highlightResult [Bug] (commit ref: 0d76d24fe8aa347a0933920afe5ded43bdcbd68b)
+    - snippetResult [Implementation] (commit ref: 0d76d24fe8aa347a0933920afe5ded43bdcbd68b)
+
 ## [0.1.3+1] - Added support to manage index settings.
 - Updated `example.dart`: Added index settings example.
 - Updated index `.setSettings()` response to `AlgoliaTask`.

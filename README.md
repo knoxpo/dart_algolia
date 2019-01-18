@@ -1,5 +1,5 @@
-# Algolia
-**[UNOFFICIAL]** Algolia pure dart SDK, wrapped around Algolia REST API for easy implementation for your Flutter or Dart projects.
+# Algolia Search (Dart Client)
+**[UNOFFICIAL]** Algolia is a pure dart SDK, wrapped around Algolia REST API for easy implementation for your Flutter or Dart projects.
 
 [![pub package](https://img.shields.io/pub/v/algolia.svg)](https://pub.dartlang.org/packages/algolia)
 
