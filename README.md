@@ -28,7 +28,7 @@ If you wish to contribute in our development process, refer to our [Contributing
 You should ensure that you add the router as a dependency in your flutter project.
 ```yaml
 dependencies:
- algolia: ^0.1.3
+ algolia: ^0.1.4
 ```
 You should then run `flutter packages upgrade` or update your packages in IntelliJ.
 
@@ -230,4 +230,4 @@ version of the release.
 <hr/>
 Algolia [Unofficial SDK for Dart] is a Knoxpo original.
 <br/>
-<a href="https://knoxpo.com" target="_knoxpo"><img src="https://www.knoxpo.com/assets/logo.png" width="60"></a>
+<a href="https://knoxpo.com" target="_knoxpo"><img src="https://www.knoxpo.com/assets/logo.png" width="80"></a>

@@ -26,6 +26,7 @@ class AlgoliaQuerySnapshot {
   String query;
   String params;
   String index;
+  Map<String, dynamic> facets;
 
   AlgoliaQuerySnapshot.fromMap(algolia, index, Map<String, dynamic> map) {
     this.algolia = algolia;
@@ -47,5 +48,6 @@ class AlgoliaQuerySnapshot {
     this.exhaustiveNbHits = map['exhaustiveNbHits'];
     this.query = map['query'];
     this.params = map['params'];
+    this.facets = map['facets'] != null ?  map['facets'] : {};
   }
 }
