@@ -27,7 +27,7 @@ class AlgoliaObjectReference {
       Map<String, dynamic> body = json.decode(response.body);
       return AlgoliaObjectSnapshot.fromMap(algolia, _index, body);
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 
@@ -51,7 +51,7 @@ class AlgoliaObjectReference {
       Map<String, dynamic> body = json.decode(response.body);
       return AlgoliaTask._(algolia, _index, body);
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 
@@ -81,7 +81,7 @@ class AlgoliaObjectReference {
       Map<String, dynamic> body = json.decode(response.body);
       return AlgoliaTask._(algolia, _index, body);
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 
@@ -123,7 +123,7 @@ class AlgoliaObjectReference {
       Map<String, dynamic> body = json.decode(response.body);
       return AlgoliaTask._(algolia, _index, body);
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 
@@ -145,7 +145,7 @@ class AlgoliaObjectReference {
       Map<String, dynamic> body = json.decode(response.body);
       return AlgoliaTask._(algolia, _index, body);
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 }

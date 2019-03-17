@@ -1,3 +1,10 @@
+## [0.1.4+2] - Added few advance query references and solved bugs.
+- [Bug] `.setFacetFilter(dynamic value)` can now accept String or List<String> value.
+- [Added] AttributeForDistinct (Advance)
+- [Added] Distinct (Advance)
+- [Added] GetRankingInfo (Advance)
+- [Added] ClickAnalytics (Advance)
+
 ## [0.1.4+1] - Added support facets.
 - Added `facets` to ``AlgoliaQuerySnapshot`` to list facets name with hits count.
 

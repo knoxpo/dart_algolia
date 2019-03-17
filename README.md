@@ -111,7 +111,7 @@ version of the release.
 
 ##### filtering (6/6)
 - `.setFilters(String value)`
-- `.setFacetFilter(String value)` This can be used multiple times in a query.
+- `.setFacetFilter(dynamic value)` This can be used multiple times in a query.
 - `.setOptionalFilter(String value)` This can be used multiple times in a query.
 - `.setNumericFilter(String value)` This can be used multiple times in a query.
 - `.setTagFilter(String value)` This can be used multiple times in a query.
@@ -218,7 +218,11 @@ version of the release.
 
 ##### performance (0/2)
 
-##### advanced (0/11)
+##### advanced (4/11)
+- `.setAttributeForDistinct(String value)`
+- `.setDistinct({dynamic value = 0})`
+- `.setGetRankingInfo({bool enabled = true})`
+- `.setClickAnalytics({bool enabled = false})`
 
 ##### GET Settings
 - `.getSettings()`

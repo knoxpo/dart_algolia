@@ -18,7 +18,8 @@ class AlgoliaQuery {
       : _index = index,
         _parameters = parameters ??
             Map<String, dynamic>.unmodifiable(<String, dynamic>{
-              'facetFilters': List<List<String>>.unmodifiable(<List<String>>[]),
+              'facetFilters':
+                  List<List<dynamic>>.unmodifiable(<List<dynamic>>[]),
               'optionalFilters':
                   List<List<String>>.unmodifiable(<List<String>>[]),
               'numericFilters':
@@ -76,7 +77,7 @@ class AlgoliaQuery {
       Map<String, dynamic> body = json.decode(response.body);
       return AlgoliaQuerySnapshot.fromMap(algolia, _index, body);
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 
@@ -260,10 +261,12 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/facetFilters/)
   ///
-  AlgoliaQuery setFacetFilter(String value) {
-    final List<String> facetFilters =
-        List<String>.from(_parameters['facetFilters']);
-    assert(facetFilters.where((String item) => value == item).isEmpty,
+  AlgoliaQuery setFacetFilter(dynamic value) {
+    assert(value is String || value is List<String>,
+        'value must be either String | List<String> but was found `${value.runtimeType}`');
+    final List<dynamic> facetFilters =
+        List<dynamic>.from(_parameters['facetFilters']);
+    assert(facetFilters.where((dynamic item) => value == item).isEmpty,
         'FacetFilters $value already exists in this query');
     facetFilters.add(value);
     return _copyWithParameters(<String, dynamic>{'facetFilters': facetFilters});
@@ -891,7 +894,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/insideBoundingBox/)
   ///
   AlgoliaQuery setInsideBoundingBox(List<BoundingBox> value) {
-    assert(value != null && value.length > 0, 'value can not be empty');
+    assert(value != null && value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('insideBoundingBox'));
     List<List<num>> list =
         value.map((v) => [v.p1Lat, v.p1Lng, v.p2Lat, v.p2Lng]).toList();
@@ -930,12 +933,74 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/insidePolygon/)
   ///
   AlgoliaQuery setInsidePolygon(List<BoundingPolygonBox> value) {
-    assert(value != null && value.length > 0, 'value can not be empty');
+    assert(value != null && value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('insidePolygon'));
     List<List<num>> list = value
         .map((v) => [v.p1Lat, v.p1Lng, v.p2Lat, v.p2Lng, v.p3Lat, v.p3Lng])
         .toList();
     return _copyWithParameters(<String, dynamic>{'insidePolygon': list});
+  }
+
+  ///
+  /// **attributeForDistinct**
+  ///
+  /// Name of the de-duplication attribute to be used with the distinct feature.
+  ///
+  /// TODO: Add documention.
+  /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/attributeForDistinct/)
+  ///
+  AlgoliaQuery setAttributeForDistinct(String value) {
+    assert(value != null, 'value can not be empty');
+    assert(!_parameters.containsKey('attributeForDistinct'));
+    return _copyWithParameters(
+        <String, dynamic>{'attributeForDistinct': value});
+  }
+
+  ///
+  /// **distinct**
+  ///
+  /// Name of the de-duplication attribute to be used with the distinct feature.
+  ///
+  /// TODO: Add documention.
+  /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/distinct/)
+  ///
+  AlgoliaQuery setDistinct({dynamic value = 0}) {
+    assert(value is int || value is bool, 'value should be a int or boolean');
+    assert(!_parameters.containsKey('distinct'));
+    return _copyWithParameters(<String, dynamic>{'distinct': value});
+  }
+
+  ///
+  /// **getRankingInfo**
+  ///
+  /// Retrieve detailed ranking information.
+  ///
+  /// This setting lets you see exactly which ranking criteria played a role in selecting each record.
+  ///
+  /// TODO: Add documention.
+  /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/getRankingInfo/)
+  ///
+  AlgoliaQuery setGetRankingInfo({bool enabled = true}) {
+    assert(enabled != null, 'value can not be empty');
+    assert(!_parameters.containsKey('getRankingInfo'));
+    return _copyWithParameters(<String, dynamic>{'getRankingInfo': enabled});
+  }
+
+  ///
+  /// **clickAnalytics**
+  ///
+  /// Enable the Click Analytics feature.
+  ///
+  /// The effect of setting clickAnalytics to true is to add a queryID to the search response.
+  /// As explained here, this queryID can subsequently be used in click and conversion analytics.
+  ///
+  /// TODO: Add documention.
+  /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/clickAnalytics/)
+  ///
+  AlgoliaQuery setClickAnalytics({bool enabled = false}) {
+    assert(enabled != null, 'value can not be empty');
+    assert(!_parameters.containsKey('clickAnalytics'));
+    return _copyWithParameters(<String, dynamic>{'clickAnalytics': enabled});
   }
 }
 

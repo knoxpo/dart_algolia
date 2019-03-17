@@ -1,5 +1,5 @@
 name: algolia
-version: 0.1.4+1
+version: 0.1.4+2
 authors: 
   - Nayan Hathiwala (Knoxpo) <nhathiwala@knoxpo.com>
 description: >
@@ -7,7 +7,7 @@ description: >
 homepage: https://github.com/knoxpo/dart_algolia
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.0.0 <3.0.0"
 
 dependencies:
   meta: ^1.1.6

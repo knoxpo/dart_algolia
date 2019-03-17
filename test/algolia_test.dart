@@ -204,11 +204,17 @@ void main() async {
   });
 }
 
+// class Application {
+//   static final Algolia algolia = Algolia.init(
+//     applicationId: 'YOUR_APPLICATION_ID',
+//     apiKey: 'YOUR_API_KEY',
+//   );
+// }
+
+
 class Application {
   static final Algolia algolia = Algolia.init(
-    applicationId: 'YOUR_APPLICATION_ID',
-    apiKey: 'YOUR_API_KEY',
+    applicationId: '86BGVLXUEM',
+    apiKey: '07e1fdc2794cc6dabefd9219e83acd1d',
   );
 }
-
-

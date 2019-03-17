@@ -26,7 +26,7 @@ class AlgoliaIndexSettings extends AlgoliaSettings {
       Map<String, dynamic> body = json.decode(response.body);
       return body;
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 }
@@ -58,7 +58,7 @@ class AlgoliaSettings {
   Future<AlgoliaTask> setSettings() async {
     try {
       assert(
-          _parameters.keys.length > 0, 'No setting parameter to update found.');
+          _parameters.keys.isNotEmpty, 'No setting parameter to update found.');
 
       String url = '${algolia._host}indexes/$_index/settings';
       Response response = await put(
@@ -72,7 +72,7 @@ class AlgoliaSettings {
       AlgoliaTask task = AlgoliaTask._(algolia, _index, body);
       return task;
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 
