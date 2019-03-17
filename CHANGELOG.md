@@ -1,3 +1,6 @@
+## [0.1.4+3] - Improve library health.
+- [Bug] Solved few health suggestion, to improve the health of the code.
+
 ## [0.1.4+2] - Added few advance query references and solved bugs.
 - [Bug] `.setFacetFilter(dynamic value)` can now accept String or List<String> value.
 - [Added] AttributeForDistinct (Advance)

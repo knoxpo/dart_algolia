@@ -99,7 +99,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
       Map<String, dynamic> body = json.decode(response.body);
       return AlgoliaTask._(algolia, index, body);
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 
@@ -119,7 +119,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
       Map<String, dynamic> body = json.decode(response.body);
       return AlgoliaTask._(algolia, index, body);
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 }

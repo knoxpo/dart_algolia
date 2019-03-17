@@ -39,7 +39,7 @@ class AlgoliaQuerySnapshot {
         .toList()
         .cast<AlgoliaObjectSnapshot>();
     this.hits = hitsReMap;
-    this.empty = this.hits.length == 0;
+    this.empty = this.hits.isEmpty;
     this.nbHits = map['nbHits'];
     this.page = map['page'];
     this.nbPages = map['nbPages'];
@@ -48,6 +48,6 @@ class AlgoliaQuerySnapshot {
     this.exhaustiveNbHits = map['exhaustiveNbHits'];
     this.query = map['query'];
     this.params = map['params'];
-    this.facets = map['facets'] != null ?  map['facets'] : {};
+    this.facets = map['facets'] != null ? map['facets'] : {};
   }
 }

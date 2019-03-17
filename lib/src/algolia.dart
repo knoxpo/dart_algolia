@@ -68,7 +68,7 @@ class Algolia {
       print(body);
       return AlgoliaIndexesSnapshot._(this, body);
     } catch (err) {
-      throw err;
+      return err;
     }
   }
 }
