@@ -15,6 +15,9 @@ void main() async {
       taskDeleteIndex;
   AlgoliaObjectSnapshot addedObject;
 
+  /// Storage for returned Object IDs
+  final List<String> ids = [];
+
   ///
   /// 1. Perform Adding Object to existing Index.
   ///
@@ -114,6 +117,10 @@ void main() async {
     expect(taskBatch.runtimeType, AlgoliaTask);
     print(taskBatch.data);
     print('\n\n');
+
+    // Add ids to list for test 7
+    final List batchIds = taskBatch.data['objectIDs'];
+    ids.addAll([batchIds[3], batchIds[4]]);
   });
 
   ///
@@ -136,9 +143,21 @@ void main() async {
   });
 
   ///
-  /// 7. Perform List all Indices
+  /// 7. Get Objects by ObjectID
   ///
-  test("7. Perform List all Indices", () async {
+  test('7. Get Objects by ObjectID', () async {
+    List<AlgoliaObjectSnapshot> results = await Future.delayed(
+        Duration(seconds: 3),
+        () => algolia.instance.index('contacts').getObjectsByIds(ids));
+
+    expect(results.length, 2);
+    expect(results.first.objectID, ids.first);
+  });
+
+  ///
+  /// 8. Perform List all Indices
+  ///
+  test("8. Perform List all Indices", () async {
     AlgoliaIndexesSnapshot indices = await algolia.instance.getIndices();
 
     // Checking if has [AlgoliaIndexesSnapshot]
@@ -148,9 +167,9 @@ void main() async {
   });
 
   ///
-  /// 8. Get Settings of 'contacts' index
+  /// 9. Get Settings of 'contacts' index
   ///
-  test("8. Get Settings of 'contacts' index", () async {
+  test("9. Get Settings of 'contacts' index", () async {
     Map<String, dynamic> settings =
         await algolia.instance.index('contacts').settings.getSettings();
 
@@ -161,9 +180,9 @@ void main() async {
   });
 
   ///
-  /// 9. Set Settings of 'contacts' index
+  /// 10. Set Settings of 'contacts' index
   ///
-  test("9. Set Settings of 'contacts' index", () async {
+  test("10. Set Settings of 'contacts' index", () async {
     AlgoliaSettings settings =
         await algolia.instance.index('contacts').settings;
 
@@ -179,9 +198,9 @@ void main() async {
   });
 
   ///
-  /// 10. Perform Clear Index.
+  /// 11. Perform Clear Index.
   ///
-  test("10. Perform Clear Index.", () async {
+  test("11. Perform Clear Index.", () async {
     taskClearIndex = await algolia.instance.index('contacts').clearIndex();
 
     // Checking if has [AlgoliaTask]
@@ -191,9 +210,12 @@ void main() async {
   });
 
   ///
-  /// 11. Perform Delete Index.
+  /// 12. Perform Delete Index.
   ///
-  test("11. Perform Delete Index.", () async {
+  test("12. Perform Delete Indexes.", () async {
+    taskDeleteIndex = await algolia.instance.index('contacts').deleteIndex();
+    taskDeleteIndex =
+        await algolia.instance.index('contacts_copy_1').deleteIndex();
     taskDeleteIndex =
         await algolia.instance.index('contacts_copy_2').deleteIndex();
 

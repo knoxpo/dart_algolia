@@ -83,6 +83,35 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   }
 
   ///
+  /// **GetObjects**///
+  ///
+  /// Retrieve objects from the index referred to by this [AlgoliaIndexReference].
+  ///
+  Future<List<AlgoliaObjectSnapshot>> getObjectsByIds(
+      [List<String> objectIds]) async {
+    assert(index != null, 'You can\'t get objects without an indexName.');
+    try {
+      String url = '${algolia._host}indexes/*/objects';
+      final List<Map> objects = List.generate(objectIds.length,
+          (int i) => {'indexName': index, 'objectID': objectIds[i]});
+      final Map requests = {'requests': objects};
+      Response response = await post(
+        url,
+        headers: algolia._header,
+        body: utf8.encode(json.encode(requests, toEncodable: jsonEncodeHelper)),
+        encoding: Encoding.getByName('utf-8'),
+      );
+      Map<String, dynamic> result = json.decode(response.body);
+      List<dynamic> results = result['results'];
+      return List.generate(results.length, (i) {
+        return AlgoliaObjectSnapshot.fromMap(algolia, _index, results[i]);
+      });
+    } catch (err) {
+      return err;
+    }
+  }
+
+  ///
   /// **ClearIndex**
   ///
   /// Clear the index referred to by this [AlgoliaIndexReference].
