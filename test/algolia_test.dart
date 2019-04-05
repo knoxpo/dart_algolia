@@ -1,3 +1,5 @@
+@Timeout(const Duration(seconds: 60))
+
 import 'dart:async';
 import 'package:test/test.dart';
 import 'package:algolia/algolia.dart';
@@ -11,6 +13,7 @@ void main() async {
       taskUpdated,
       taskDeleted,
       taskBatch,
+      taskReplace,
       taskClearIndex,
       taskDeleteIndex;
   AlgoliaObjectSnapshot addedObject;
@@ -32,6 +35,7 @@ void main() async {
       'modifiedAt': DateTime.now(),
     };
     taskAdded = await algolia.instance.index('contacts').addObject(addData);
+    await taskAdded.waitTask();
 
     // Checking if has [AlgoliaTask]
     expect(taskAdded.runtimeType, AlgoliaTask);
@@ -42,14 +46,11 @@ void main() async {
   ///
   /// 2. Perform Get Object to existing Index.
   ///
-  /// -- A Delay of 3 seconds is added for algolia to cdn the object for retrieval.
   test("2. Perform Get Object to existing Index.", () async {
-    addedObject = await Future.delayed(Duration(seconds: 3), () async {
-      return await algolia.instance
-          .index('contacts')
-          .object(taskAdded.data['objectID'].toString())
-          .getObject();
-    });
+    addedObject = await algolia.instance
+        .index('contacts')
+        .object(taskAdded.data['objectID'].toString())
+        .getObject();
 
     // Checking if has [AlgoliaObjectSnapshot]
     expect(addedObject.runtimeType, AlgoliaObjectSnapshot);
@@ -112,6 +113,7 @@ void main() async {
 
     // Get Result/Objects
     taskBatch = await batch.commit();
+    await taskBatch.waitTask();
 
     // Checking if has [AlgoliaTask]
     expect(taskBatch.runtimeType, AlgoliaTask);
@@ -146,9 +148,8 @@ void main() async {
   /// 7. Get Objects by ObjectID
   ///
   test('7. Get Objects by ObjectID', () async {
-    List<AlgoliaObjectSnapshot> results = await Future.delayed(
-        Duration(seconds: 3),
-        () => algolia.instance.index('contacts').getObjectsByIds(ids));
+    List<AlgoliaObjectSnapshot> results =
+        await algolia.instance.index('contacts').getObjectsByIds(ids);
 
     expect(results.length, 2);
     expect(results.first.objectID, ids.first);
@@ -198,9 +199,26 @@ void main() async {
   });
 
   ///
-  /// 11. Perform Clear Index.
+  /// 11. Replace all objects in index.
   ///
-  test("11. Perform Clear Index.", () async {
+
+  test("11. Replace all objects in index.", () async {
+    taskReplace = await algolia.instance.index('contacts').replaceAllObjects(
+      [
+        {'newObject': true}
+      ],
+    );
+
+    // Checking if has [AlgoliaTask]
+    expect(taskReplace.runtimeType, AlgoliaTask);
+    print(taskReplace.data);
+    print('\n\n');
+  });
+
+  ///
+  /// 12. Perform Clear Index.
+  ///
+  test("12. Perform Clear Index.", () async {
     taskClearIndex = await algolia.instance.index('contacts').clearIndex();
 
     // Checking if has [AlgoliaTask]
@@ -210,9 +228,13 @@ void main() async {
   });
 
   ///
-  /// 12. Perform Delete Index.
+  /// 13. Perform Delete Index.
   ///
-  test("12. Perform Delete Indexes.", () async {
+  test("13. Perform Delete Indexes.", () async {
+    AlgoliaSettings settings = algolia.instance.index('contacts').settings;
+    settings = settings.setReplicas([]);
+    final AlgoliaTask removeReplicas = await settings.setSettings();
+    await removeReplicas.waitTask();
     taskDeleteIndex = await algolia.instance.index('contacts').deleteIndex();
     taskDeleteIndex =
         await algolia.instance.index('contacts_copy_1').deleteIndex();
