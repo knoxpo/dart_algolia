@@ -9,6 +9,8 @@
 - Query / Search
 - Get Object
 - Add Object
+- Add Objects
+- Replace all objects in an Index
 - Update Object
 - Partial Update Object
 - Delete Object
@@ -16,6 +18,8 @@
 - Add Index
 - Delete Index
 - Clear Index
+- Copy Index
+- Move Index
 - Index Settings
 
 ## Version compatibility
@@ -138,8 +142,8 @@ version of the release.
 - `.setLength(int value)`
 
 ##### typos (5/5)
-- `.setMinWordSizefor1Typo(int value)`
-- `.setMinWordSizefor2Typos(int value)`
+- `.setMinWordSizeFor1Typo(int value)`
+- `.setMinWordSizeFor2Typos(int value)`
 - `.setTypoTolerance(dynamic value)`
 - `.setAllowTyposOnNumericTokens(bool value)`
 - `.setDisableTypoToleranceOnAttributes(List<String> value)`
@@ -202,8 +206,8 @@ version of the release.
 - `.setPaginationLimitedTo(int value)`
 
 ##### typos (7/7)
-- `.setMinWordSizefor1Typo(int value)`
-- `.setMinWordSizefor2Typos(int value)`
+- `.setMinWordSizeFor1Typo(int value)`
+- `.setMinWordSizeFor2Typos(int value)`
 - `.setTypoTolerance(dynamic value)`
 - `.setAllowTyposOnNumericTokens(bool value)`
 - `.setDisableTypoToleranceOnAttributes(List<String> value)`

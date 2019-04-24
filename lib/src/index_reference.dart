@@ -89,7 +89,24 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   }
 
   ///
-  /// **GetObjects**///
+  /// **AddObjects**
+  ///
+  /// Returns a `AlgoliaTask` with an auto-generated Task ID, after
+  /// populating it with provided [data].
+  ///
+  /// The unique key generated is prefixed with a client-generated timestamp
+  /// so that the resulting list will be chronologically-sorted.
+  ///
+  Future<AlgoliaTask> addObjects(List<Map<String, dynamic>> objects) async {
+    final AlgoliaBatch batch = this.batch();
+    for (final obj in objects) {
+      batch.addObject(obj);
+    }
+    return await batch.commit();
+  }
+
+  ///
+  /// **GetObjects**
   ///
   /// Retrieve objects from the index referred to by this [AlgoliaIndexReference].
   ///
@@ -180,8 +197,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
         'destination': destination,
       };
       if (scopes != null) {
-        data['scope'] =
-            List.generate(scopes.length, (i) => _scopeToString(scopes[i]));
+        data['scope'] = scopes.map<String>((s) => _scopeToString(s)).toList();
       }
       Response response = await post(
         url,
@@ -223,12 +239,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
         ],
       );
       await copyTask.waitTask();
-      // TODO: refactor this into `addObjects` method
-      final AlgoliaBatch batch = tempIndex.batch();
-      for (final obj in objects) {
-        batch.addObject(obj);
-      }
-      final AlgoliaTask batchTask = await batch.commit();
+      final AlgoliaTask batchTask = await tempIndex.addObjects(objects);
       await batchTask.waitTask();
       return await tempIndex.moveIndex(destination: index);
     } catch (err) {

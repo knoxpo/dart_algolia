@@ -317,26 +317,26 @@ class AlgoliaSettings {
   }
 
   ///
-  /// **MinWordSizefor1Typo (Typos)**
+  /// **MinWordSizeFor1Typo (Typos)**
   ///
   /// TODO: Documentation to be added.
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/minWordSizefor1Typo/)
   ///
-  AlgoliaSettings setMinWordSizefor1Typo(int value) {
+  AlgoliaSettings setMinWordSizeFor1Typo(int value) {
     assert(value != null);
     assert(!_parameters.containsKey('minWordSizefor1Typo'));
     return _copyWithParameters(<String, dynamic>{'minWordSizefor1Typo': value});
   }
 
   ///
-  /// **MinWordSizefor2Typos (Typos)**
+  /// **MinWordSizeFor2Typos (Typos)**
   ///
   /// TODO: Documentation to be added.
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/minWordSizefor2Typos/)
   ///
-  AlgoliaSettings setMinWordSizefor2Typos(int value) {
+  AlgoliaSettings setMinWordSizeFor2Typos(int value) {
     assert(value != null);
     assert(!_parameters.containsKey('minWordSizefor2Typos'));
     return _copyWithParameters(
