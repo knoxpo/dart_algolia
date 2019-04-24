@@ -1,3 +1,8 @@
+## [0.1.5] - Added New Functionalities.
+- [Bug] Solved a technical reported bug [#11](https://github.com/knoxpo/dart_algolia/issues/11)
+- [Added] Copy, Move Index functionalities.
+- [Added] PR implementation of ``replaceAllObjects()``
+ 
 ## [0.1.4+3] - Improve library health.
 - [Bug] Solved few health suggestion, to improve the health of the code.
 

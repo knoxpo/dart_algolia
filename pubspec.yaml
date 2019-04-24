@@ -1,5 +1,5 @@
 name: algolia
-version: 0.1.4+3
+version: 0.1.5
 authors: 
   - Nayan Hathiwala (Knoxpo) <nhathiwala@knoxpo.com>
 description: >
@@ -12,7 +12,7 @@ environment:
 dependencies:
   meta: ^1.1.6
   http: ^0.12.0
-
+  uuid: ^2.0.1
 
 dev_dependencies:
   test: ^1.0.0

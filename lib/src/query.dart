@@ -661,26 +661,26 @@ class AlgoliaQuery {
   }
 
   ///
-  /// **MinWordSizefor1Typo**
+  /// **MinWordSizeFor1Typo**
   ///
   /// TODO: Documentation to be added.
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/minWordSizefor1Typo/)
   ///
-  AlgoliaQuery setMinWordSizefor1Typo(int value) {
+  AlgoliaQuery setMinWordSizeFor1Typo(int value) {
     assert(value != null);
     assert(!_parameters.containsKey('minWordSizefor1Typo'));
     return _copyWithParameters(<String, dynamic>{'minWordSizefor1Typo': value});
   }
 
   ///
-  /// **MinWordSizefor2Typos**
+  /// **MinWordSizeFor2Typos**
   ///
   /// TODO: Documentation to be added.
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/minWordSizefor2Typos/)
   ///
-  AlgoliaQuery setMinWordSizefor2Typos(int value) {
+  AlgoliaQuery setMinWordSizeFor2Typos(int value) {
     assert(value != null);
     assert(!_parameters.containsKey('minWordSizefor2Typos'));
     return _copyWithParameters(
@@ -805,7 +805,7 @@ class AlgoliaQuery {
   AlgoliaQuery setAroundRadius(dynamic value) {
     assert(value != null);
     assert(!_parameters.containsKey('aroundRadius'));
-    assert(!(value is int || (value is String && value == 'all')),
+    assert((value is int || (value is String && value == 'all')),
         'value must be a `int` or `"all"`');
     return _copyWithParameters(<String, dynamic>{'aroundRadius': value});
   }
