@@ -16,4 +16,25 @@ class AlgoliaTask {
     d.remove('taskID');
     return d;
   }
+
+  Future<void> waitTask() async {
+    const int baseDelay = 100;
+    const int maxDelay = 5000;
+    int delay = 0;
+    int loop = 0;
+    while (!await Future.delayed(Duration(milliseconds: delay), taskStatus)) {
+      ++loop;
+      delay = (baseDelay * loop * loop).clamp(baseDelay, maxDelay);
+    }
+  }
+
+  Future<bool> taskStatus() async {
+    String url = '${algolia._host}indexes/$_index/task/$taskID';
+    Response response = await get(
+      url,
+      headers: algolia._header,
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+    return body['status'] == 'published';
+  }
 }
