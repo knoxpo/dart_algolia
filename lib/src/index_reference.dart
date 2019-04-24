@@ -1,5 +1,11 @@
 part of algolia;
 
+/// Scopes of the data to copy when copying an index.
+/// When copying, you may specify optional scopes to the operation. Doing
+/// so results in a partial copy: only the specified scopes are copied,
+/// replacing the corresponding scopes in the destination.
+enum CopyScope { Settings, Synonyms, Rules }
+
 ///
 /// **AlgoliaIndexReference**
 ///
@@ -83,6 +89,52 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   }
 
   ///
+  /// **AddObjects**
+  ///
+  /// Returns a `AlgoliaTask` with an auto-generated Task ID, after
+  /// populating it with provided [data].
+  ///
+  /// The unique key generated is prefixed with a client-generated timestamp
+  /// so that the resulting list will be chronologically-sorted.
+  ///
+  Future<AlgoliaTask> addObjects(List<Map<String, dynamic>> objects) async {
+    final AlgoliaBatch batch = this.batch();
+    for (final obj in objects) {
+      batch.addObject(obj);
+    }
+    return await batch.commit();
+  }
+
+  ///
+  /// **GetObjects**
+  ///
+  /// Retrieve objects from the index referred to by this [AlgoliaIndexReference].
+  ///
+  Future<List<AlgoliaObjectSnapshot>> getObjectsByIds(
+      [List<String> objectIds]) async {
+    assert(index != null, 'You can\'t get objects without an indexName.');
+    try {
+      String url = '${algolia._host}indexes/*/objects';
+      final List<Map> objects = List.generate(objectIds.length,
+          (int i) => {'indexName': index, 'objectID': objectIds[i]});
+      final Map requests = {'requests': objects};
+      Response response = await post(
+        url,
+        headers: algolia._header,
+        body: utf8.encode(json.encode(requests, toEncodable: jsonEncodeHelper)),
+        encoding: Encoding.getByName('utf-8'),
+      );
+      Map<String, dynamic> result = json.decode(response.body);
+      List<dynamic> results = result['results'];
+      return List.generate(results.length, (i) {
+        return AlgoliaObjectSnapshot.fromMap(algolia, _index, results[i]);
+      });
+    } catch (err) {
+      return err;
+    }
+  }
+
+  ///
   /// **ClearIndex**
   ///
   /// Clear the index referred to by this [AlgoliaIndexReference].
@@ -98,6 +150,98 @@ class AlgoliaIndexReference extends AlgoliaQuery {
       );
       Map<String, dynamic> body = json.decode(response.body);
       return AlgoliaTask._(algolia, index, body);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  ///
+  /// **MoveIndex**
+  ///
+  /// Move the index referred to by this [AlgoliaIndexReference].
+  ///
+  Future<AlgoliaTask> moveIndex({@required String destination}) async {
+    return await _copyOrMoveIndex(destination: destination, copy: false);
+  }
+
+  ///
+  /// **CopyIndex**
+  ///
+  /// Copy the index referred to by this [AlgoliaIndexReference].
+  ///
+  /// [scopes] represent the scopes of the index to copy. When absent, a full copy
+  /// is performed. When present, only the selected scopes are copied. When you
+  /// use the scopes parameter, you will no longer be copying records (objects)
+  /// but only the specified scopes.
+  Future<AlgoliaTask> copyIndex(
+      {@required String destination, List<CopyScope> scopes}) async {
+    return await _copyOrMoveIndex(
+        destination: destination, copy: true, scopes: scopes);
+  }
+
+  Future<AlgoliaTask> _copyOrMoveIndex({
+    @required String destination,
+    @required bool copy,
+    List<CopyScope> scopes,
+  }) async {
+    assert(index != null,
+        'You can\'t copy or move an index without an indexName.');
+    assert(destination != null,
+        'You can\'t copy or move an index without a destination.');
+    assert(copy != null,
+        'You can\'t copy or move an index without selecting which operation.');
+    try {
+      String url = '${algolia._host}indexes/$index/operation';
+      final Map<String, dynamic> data = {
+        'operation': copy ? 'copy' : 'move',
+        'destination': destination,
+      };
+      if (scopes != null) {
+        data['scope'] = scopes.map<String>((s) => _scopeToString(s)).toList();
+      }
+      Response response = await post(
+        url,
+        headers: algolia._header,
+        encoding: Encoding.getByName('utf-8'),
+        body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
+      );
+      Map<String, dynamic> body = json.decode(response.body);
+      return AlgoliaTask._(algolia, index, body);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  String _scopeToString(CopyScope scope) {
+    return scope
+        .toString()
+        .substring(scope.toString().indexOf('.') + 1)
+        .toLowerCase();
+  }
+
+  ///
+  /// **ReplaceAllObjects**
+  ///
+  /// Replace all the objerts in the index referred to by this [AlgoliaIndexReference].
+  ///
+  Future<AlgoliaTask> replaceAllObjects(
+      List<Map<String, dynamic>> objects) async {
+    assert(
+        index != null, 'You can\'t replace all objects without an indexName.');
+    try {
+      final AlgoliaIndexReference tempIndex = algolia.index(Uuid().v4());
+      final AlgoliaTask copyTask = await copyIndex(
+        destination: tempIndex.index,
+        scopes: [
+          CopyScope.Settings,
+          CopyScope.Synonyms,
+          CopyScope.Rules,
+        ],
+      );
+      await copyTask.waitTask();
+      final AlgoliaTask batchTask = await tempIndex.addObjects(objects);
+      await batchTask.waitTask();
+      return await tempIndex.moveIndex(destination: index);
     } catch (err) {
       return err;
     }
