@@ -1,3 +1,6 @@
+## [0.1.6+1] - Improve library health.
+- [Bug] Solved few health suggestion, to improve the health of the code.
+
 ## [0.1.6] - Added Multi-Query.
 - [Added] PR implementation of ``multipleQueries``
   ```dart

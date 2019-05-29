@@ -294,7 +294,7 @@ class AlgoliaMultiIndexesReference {
   }
 
   AlgoliaMultiIndexesReference addQueries(List<AlgoliaQuery> queries) {
-    assert(queries != null && queries.length > 0);
+    assert(queries != null && queries.isNotEmpty);
     _queries.addAll(queries);
     return AlgoliaMultiIndexesReference._(
       this._algolia,
@@ -318,7 +318,7 @@ class AlgoliaMultiIndexesReference {
   }
 
   Future<List<AlgoliaQuerySnapshot>> getObjects() async {
-    assert(queries != null && _queries.length > 0,
+    assert(queries != null && _queries.isNotEmpty,
         'You require at least one query added before performing `.getObject()`');
     List<Map<String, dynamic>> requests = [];
     for (AlgoliaQuery q in this._queries) {
@@ -353,7 +353,7 @@ class AlgoliaMultiIndexesReference {
     List<Map<String, dynamic>> results =
         (body['results'] as List).cast<Map<String, dynamic>>();
     List<AlgoliaQuerySnapshot> snapshots = <AlgoliaQuerySnapshot>[];
-    if (results.length > 0) {
+    if (results.isNotEmpty) {
       for (Map<String, dynamic> snap in results) {
         snapshots
             .add(AlgoliaQuerySnapshot.fromMap(_algolia, snap['index'], snap));
