@@ -1,3 +1,21 @@
+## [0.1.6] - Added Multi-Query.
+- [Added] PR implementation of ``multipleQueries``
+  ```dart
+    AlgoliaQuery queryA = algolia.instance.index('users').search('john');
+    AlgoliaQuery queryB = algolia.instance.index('jobs').search('business');
+
+    // Perform multiple facetFilters
+    queryA = queryA.setFacetFilter('status:active');
+    queryA = queryA.setFacetFilter('isDelete:false');
+
+    // Perform multiple facetFilters
+    queryB = queryB.setFacetFilter('isDelete:false');
+
+    // Get Result/Objects
+    List<AlgoliaQuerySnapshot> snap =
+        await algolia.multipleQueries.addQueries([queryA, queryB]).getObjects();  
+  ```
+
 ## [0.1.5] - Added New Functionalities.
 - [Bug] Solved a technical reported bug [#11](https://github.com/knoxpo/dart_algolia/issues/11)
 - [Added] Copy, Move Index functionalities.

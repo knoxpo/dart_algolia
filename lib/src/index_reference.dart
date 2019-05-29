@@ -267,3 +267,98 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     }
   }
 }
+
+class AlgoliaMultiIndexesReference {
+  AlgoliaMultiIndexesReference._(Algolia algolia,
+      {List<AlgoliaQuery> queries}) {
+    _algolia = algolia;
+    if (queries != null) {
+      this._queries = queries;
+    } else {
+      this._queries = [];
+    }
+  }
+
+  List<AlgoliaQuery> _queries;
+  Algolia _algolia;
+
+  List<AlgoliaQuery> get queries => this._queries;
+
+  AlgoliaMultiIndexesReference addQuery(AlgoliaQuery query) {
+    assert(query != null);
+    _queries.add(query);
+    return AlgoliaMultiIndexesReference._(
+      this._algolia,
+      queries: _queries,
+    );
+  }
+
+  AlgoliaMultiIndexesReference addQueries(List<AlgoliaQuery> queries) {
+    assert(queries != null && queries.length > 0);
+    _queries.addAll(queries);
+    return AlgoliaMultiIndexesReference._(
+      this._algolia,
+      queries: _queries,
+    );
+  }
+
+  AlgoliaMultiIndexesReference clearQueries() => AlgoliaMultiIndexesReference._(
+        this._algolia,
+        queries: [],
+      );
+
+  String _encodeMap(Map data) {
+    Uri outgoingUri = new Uri(
+      scheme: '',
+      host: '',
+      path: '',
+      queryParameters: data,
+    );
+    return outgoingUri.toString().substring(3);
+  }
+
+  Future<List<AlgoliaQuerySnapshot>> getObjects() async {
+    assert(queries != null && _queries.length > 0,
+        'You require at least one query added before performing `.getObject()`');
+    List<Map<String, dynamic>> requests = [];
+    for (AlgoliaQuery q in this._queries) {
+      AlgoliaQuery _q = q;
+      if (_q.parameters.containsKey('minimumAroundRadius')) {
+        assert(
+            (_q.parameters.containsKey('aroundLatLng') ||
+                _q.parameters.containsKey('aroundLatLngViaIP')),
+            'This setting only works within the context of a circular geo search, enabled by `aroundLatLng` or `aroundLatLngViaIP`.');
+      }
+      if (_q.parameters['attributesToRetrieve'] == null) {
+        _q = _q._copyWithParameters(<String, dynamic>{
+          'attributesToRetrieve': const ['*']
+        });
+      }
+      requests.add({
+        'indexName': q._index,
+        'params': _encodeMap(q.parameters),
+      });
+    }
+    String url = '${_algolia._host}indexes/*/queries';
+    Response response = await post(
+      url,
+      headers: _algolia._header,
+      body: utf8.encode(json.encode({
+        'requests': requests,
+        'strategy': 'none',
+      }, toEncodable: jsonEncodeHelper)),
+      encoding: Encoding.getByName('utf-8'),
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+    List<Map<String, dynamic>> results =
+        (body['results'] as List).cast<Map<String, dynamic>>();
+    List<AlgoliaQuerySnapshot> snapshots = <AlgoliaQuerySnapshot>[];
+    if (results.length > 0) {
+      for (Map<String, dynamic> snap in results) {
+        snapshots
+            .add(AlgoliaQuerySnapshot.fromMap(_algolia, snap['index'], snap));
+      }
+    }
+    return snapshots;
+  }
+}
