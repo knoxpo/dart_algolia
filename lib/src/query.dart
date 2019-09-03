@@ -54,31 +54,27 @@ class AlgoliaQuery {
   /// response.
   ///
   Future<AlgoliaQuerySnapshot> getObjects() async {
-    try {
-      if (_parameters.containsKey('minimumAroundRadius')) {
-        assert(
-            (_parameters.containsKey('aroundLatLng') ||
-                _parameters.containsKey('aroundLatLngViaIP')),
-            'This setting only works within the context of a circular geo search, enabled by `aroundLatLng` or `aroundLatLngViaIP`.');
-      }
-      if (_parameters['attributesToRetrieve'] == null) {
-        _copyWithParameters(<String, dynamic>{
-          'attributesToRetrieve': const ['*']
-        });
-      }
-      String url = '${algolia._host}indexes/$_index/query';
-      Response response = await post(
-        url,
-        headers: algolia._header,
-        body: utf8
-            .encode(json.encode(_parameters, toEncodable: jsonEncodeHelper)),
-        encoding: Encoding.getByName('utf-8'),
-      );
-      Map<String, dynamic> body = json.decode(response.body);
-      return AlgoliaQuerySnapshot.fromMap(algolia, _index, body);
-    } catch (err) {
-      return err;
+    if (_parameters.containsKey('minimumAroundRadius')) {
+      assert(
+          (_parameters.containsKey('aroundLatLng') ||
+              _parameters.containsKey('aroundLatLngViaIP')),
+          'This setting only works within the context of a circular geo search, enabled by `aroundLatLng` or `aroundLatLngViaIP`.');
     }
+    if (_parameters['attributesToRetrieve'] == null) {
+      _copyWithParameters(<String, dynamic>{
+        'attributesToRetrieve': const ['*']
+      });
+    }
+    String url = '${algolia._host}indexes/$_index/query';
+    Response response = await post(
+      url,
+      headers: algolia._header,
+      body:
+          utf8.encode(json.encode(_parameters, toEncodable: jsonEncodeHelper)),
+      encoding: Encoding.getByName('utf-8'),
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+    return AlgoliaQuerySnapshot.fromMap(algolia, _index, body);
   }
 
   ///

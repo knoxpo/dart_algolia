@@ -1,3 +1,7 @@
+## [0.1.7] - Bug fixes and added a new property.
+- [Bug] [#14](https://github.com/knoxpo/dart_algolia/issues/14) Solved few health suggestion, to improve the health of the code.
+- [Added] Add support for ``facets_stats`` property returned by Algolia query
+
 ## [0.1.6+1] - Improve library health.
 - [Bug] Solved few health suggestion, to improve the health of the code.
 
