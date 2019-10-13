@@ -12,6 +12,7 @@ environment:
 dependencies:
   meta: ^1.1.6
   http: ^0.12.0
+  node_http: ^1.0.0
   uuid: ^2.0.1
 
 dev_dependencies:

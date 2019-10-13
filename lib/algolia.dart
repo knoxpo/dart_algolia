@@ -3,7 +3,8 @@ library algolia;
 import 'dart:async';
 import 'dart:convert';
 import 'package:meta/meta.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart'
+    if (dart.library.js) 'package:node_http/node_http.dart';
 import 'package:uuid/uuid.dart';
 
 part 'src/algolia.dart';

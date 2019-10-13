@@ -12,6 +12,7 @@ class AlgoliaObjectReference {
 
   String get index => _index;
   String get objectID => _objectId;
+  String get encodedObjectID => Uri.encodeComponent(objectID);
 
   /// Get the object referred to by this [AlgoliaObjectReference].
   ///
@@ -19,7 +20,7 @@ class AlgoliaObjectReference {
   Future<AlgoliaObjectSnapshot> getObject() async {
     assert(_objectId != null, 'You can\'t get an object without an objectID.');
     try {
-      String url = '${algolia._host}indexes/$_index/$_objectId';
+      String url = '${algolia._host}indexes/$_index/$encodedObjectID';
       Response response = await get(
         url,
         headers: algolia._header,
@@ -40,7 +41,7 @@ class AlgoliaObjectReference {
           'IndexName is required, but it has `*` multiple flag or `null`.');
       String url = '${algolia._host}indexes/$_index';
       if (_objectId != null) {
-        url = '$url/$_objectId';
+        url = '$url/$encodedObjectID';
       }
       Response response = await post(
         url,
@@ -69,7 +70,7 @@ class AlgoliaObjectReference {
           'IndexName is required, but it has `*` multiple flag or `null`.');
       String url = '${algolia._host}indexes/$_index';
       if (_objectId != null) {
-        url = '$url/$_objectId';
+        url = '$url/$encodedObjectID';
       }
       data['objectID'] = _objectId;
       Response response = await put(
@@ -110,7 +111,7 @@ class AlgoliaObjectReference {
     try {
       String url = '${algolia._host}indexes/$_index';
       if (_objectId != null) {
-        url = '$url/$_objectId/partial';
+        url = '$url/$encodedObjectID/partial';
       }
       data['objectID'] = _objectId;
       data['createIfNotExists'] = createIfNotExists;
@@ -136,7 +137,7 @@ class AlgoliaObjectReference {
     try {
       String url = '${algolia._host}indexes/$_index';
       if (_objectId != null) {
-        url = '$url/$_objectId';
+        url = '$url/$encodedObjectID';
       }
       Response response = await delete(
         url,
