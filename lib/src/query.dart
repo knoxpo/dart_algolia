@@ -1013,8 +1013,12 @@ class AlgoliaQuery {
   AlgoliaQuery setExactOnSingleWordQuery(String value) {
     assert(value != null, 'value can not be empty');
     assert(!_parameters.containsKey('exactOnSingleWordQuery'));
-    assert(['attribute','none','word'].where((candidate) => candidate == value).length != 0);
-    return _copyWithParameters(<String, dynamic>{'exactOnSingleWordQuery': value});
+    assert(['attribute', 'none', 'word']
+            .where((candidate) => candidate == value)
+            .length !=
+        0);
+    return _copyWithParameters(
+        <String, dynamic>{'exactOnSingleWordQuery': value});
   }
 }
 
