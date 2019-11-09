@@ -998,6 +998,28 @@ class AlgoliaQuery {
     assert(!_parameters.containsKey('clickAnalytics'));
     return _copyWithParameters(<String, dynamic>{'clickAnalytics': enabled});
   }
+
+  ///
+  /// **exactOnSingleWordQuery**
+  ///
+  /// Controls how the exact ranking criterion is computed when the query contains only one word.
+  ///
+  /// TODO: Add documention.
+  /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/exactOnSingleWordQuery/)
+  ///
+  /// PARAMETER SYNTAX
+  /// value: 'attribute'|'none'|'word'
+  ///
+  AlgoliaQuery setExactOnSingleWordQuery(String value) {
+    assert(value != null, 'value can not be empty');
+    assert(!_parameters.containsKey('exactOnSingleWordQuery'));
+    assert(['attribute', 'none', 'word']
+            .where((candidate) => candidate == value)
+            .length !=
+        0);
+    return _copyWithParameters(
+        <String, dynamic>{'exactOnSingleWordQuery': value});
+  }
 }
 
 class BoundingBox {
