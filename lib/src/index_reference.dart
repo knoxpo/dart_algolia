@@ -312,7 +312,12 @@ class AlgoliaMultiIndexesReference {
       scheme: '',
       host: '',
       path: '',
-      queryParameters: data,
+      queryParameters: data.map((key, value) {
+        if (value is String) {
+          return MapEntry(key, value);
+        }
+        return MapEntry(key, jsonEncode(value));
+      }),
     );
     return outgoingUri.toString().substring(3);
   }
