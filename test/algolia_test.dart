@@ -1361,7 +1361,7 @@ void main() async {
 
 class Application {
   static final Algolia algolia = Algolia.init(
-    applicationId: 'QIFRWG5IBO',
-    apiKey: '0752d576fb3ac0557ae73b2c4897c9fb',
+    applicationId: 'YOUR_APPLICATION_ID',
+    apiKey: 'YOUR_API_KEY',
   );
 }
