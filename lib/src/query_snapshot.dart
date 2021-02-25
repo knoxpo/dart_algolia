@@ -32,7 +32,7 @@ class AlgoliaQuerySnapshot {
   AlgoliaQuerySnapshot.fromMap(algolia, index, Map<String, dynamic> map) {
     this.algolia = algolia;
     this.index = index;
-    List<AlgoliaObjectSnapshot> hitsReMap = (map['hits'] as List<dynamic>)
+    List<AlgoliaObjectSnapshot> hitsReMap = (map['hits'] as List<dynamic> ?? [])
         .map((dynamic o) {
           Map<String, dynamic> newMap = Map<String, dynamic>.from(o);
           return AlgoliaObjectSnapshot.fromMap(algolia, index, newMap);
