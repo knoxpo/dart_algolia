@@ -63,7 +63,7 @@ class AlgoliaBatch {
         List<Map<String, dynamic>> actions =
             _actions.map((a) => a.toMap()).toList();
         Response response = await post(
-          '${algolia._host}indexes/$_index/batch',
+          Uri(host: '${algolia._host}indexes/$_index/batch'),
           headers: algolia._header,
           body: utf8.encode(json
               .encode({'requests': actions}, toEncodable: jsonEncodeHelper)),

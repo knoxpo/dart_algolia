@@ -63,7 +63,7 @@ class Algolia {
     try {
       String _url = '${this._host}indexes';
       Response response = await get(
-        _url,
+        Uri(host: _url),
         headers: this._header,
       );
       print(response);

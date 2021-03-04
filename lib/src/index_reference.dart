@@ -119,7 +119,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
           (int i) => {'indexName': index, 'objectID': objectIds[i]});
       final Map requests = {'requests': objects};
       Response response = await post(
-        url,
+        Uri(host: url),
         headers: algolia._header,
         body: utf8.encode(json.encode(requests, toEncodable: jsonEncodeHelper)),
         encoding: Encoding.getByName('utf-8'),
@@ -144,7 +144,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     try {
       String url = '${algolia._host}indexes/$index/clear';
       Response response = await post(
-        url,
+        Uri(host: url),
         headers: algolia._header,
         encoding: Encoding.getByName('utf-8'),
       );
@@ -200,7 +200,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
         data['scope'] = scopes.map<String>((s) => _scopeToString(s)).toList();
       }
       Response response = await post(
-        url,
+        Uri(host: url),
         headers: algolia._header,
         encoding: Encoding.getByName('utf-8'),
         body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
@@ -257,7 +257,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     try {
       String url = '${algolia._host}indexes/$index';
       Response response = await delete(
-        url,
+        Uri(host: url),
         headers: algolia._header,
       );
       Map<String, dynamic> body = json.decode(response.body);
@@ -341,7 +341,7 @@ class AlgoliaMultiIndexesReference {
     }
     String url = '${_algolia._host}indexes/*/queries';
     Response response = await post(
-      url,
+      Uri(host: url),
       headers: _algolia._header,
       body: utf8.encode(json.encode({
         'requests': requests,
