@@ -67,7 +67,7 @@ class AlgoliaQuery {
     }
     String url = '${algolia._host}indexes/$_index/query';
     Response response = await post(
-      Uri(host: url),
+      Uri.parse(url),
       headers: algolia._header,
       body:
           utf8.encode(json.encode(_parameters, toEncodable: jsonEncodeHelper)),

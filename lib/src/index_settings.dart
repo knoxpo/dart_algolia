@@ -20,7 +20,7 @@ class AlgoliaIndexSettings extends AlgoliaSettings {
     try {
       String url = '${algolia._host}indexes/$_index/settings';
       Response response = await get(
-        Uri(host: url),
+        Uri.parse(url),
         headers: algolia._header,
       );
       Map<String, dynamic> body = json.decode(response.body);
@@ -62,7 +62,7 @@ class AlgoliaSettings {
 
       String url = '${algolia._host}indexes/$_index/settings';
       Response response = await put(
-        Uri(host: url),
+        Uri.parse(url),
         headers: algolia._header,
         body: utf8
             .encode(json.encode(_parameters, toEncodable: jsonEncodeHelper)),

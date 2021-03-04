@@ -21,7 +21,7 @@ class AlgoliaObjectReference {
     try {
       String url = '${algolia._host}indexes/$_index/$_objectId';
       Response response = await get(
-        Uri(host: url),
+        Uri.parse(url),
         headers: algolia._header,
       );
       Map<String, dynamic> body = json.decode(response.body);
@@ -43,7 +43,7 @@ class AlgoliaObjectReference {
         url = '$url/$_objectId';
       }
       Response response = await post(
-        Uri(host: url),
+        Uri.parse(url),
         headers: algolia._header,
         body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
         encoding: Encoding.getByName('utf-8'),
@@ -73,7 +73,7 @@ class AlgoliaObjectReference {
       }
       data['objectID'] = _objectId;
       Response response = await put(
-        Uri(host: url),
+        Uri.parse(url),
         headers: algolia._header,
         body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
         encoding: Encoding.getByName('utf-8'),
@@ -115,7 +115,7 @@ class AlgoliaObjectReference {
       data['objectID'] = _objectId;
       data['createIfNotExists'] = createIfNotExists;
       Response response = await put(
-        Uri(host: url),
+        Uri.parse(url),
         headers: algolia._header,
         body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
         encoding: Encoding.getByName('utf-8'),
@@ -139,7 +139,7 @@ class AlgoliaObjectReference {
         url = '$url/$_objectId';
       }
       Response response = await delete(
-        Uri(host: url),
+        Uri.parse(url),
         headers: algolia._header,
       );
       Map<String, dynamic> body = json.decode(response.body);
