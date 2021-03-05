@@ -43,12 +43,12 @@ class AlgoliaBatch {
   })  : _actions = actions ?? <AlgoliaBatchRequest>[],
         _index = index;
   Algolia algolia;
-  String _index;
+  final String _index;
 
   /// Indicator to whether or not this [AlgoliaBatch] has been committed.
   bool _committed = false;
 
-  List<AlgoliaBatchRequest> _actions;
+  final List<AlgoliaBatchRequest> _actions;
 
   ///
   /// **Commit**
@@ -81,10 +81,10 @@ class AlgoliaBatch {
         }
         return AlgoliaTask._(algolia, _index, body);
       } else {
-        throw StateError("This batch has no actions to commit.");
+        throw StateError('This batch has no actions to commit.');
       }
     } else {
-      throw StateError("This batch has already been committed.");
+      throw StateError('This batch has already been committed.');
     }
   }
 
@@ -102,7 +102,7 @@ class AlgoliaBatch {
       _actions.add(AlgoliaBatchRequest(action: 'addObject', body: data));
     } else {
       throw StateError(
-          "This batch has been committed and can no longer be changed.");
+          'This batch has been committed and can no longer be changed.');
     }
   }
 
@@ -119,7 +119,7 @@ class AlgoliaBatch {
       _actions.add(AlgoliaBatchRequest(action: 'updateObject', body: data));
     } else {
       throw StateError(
-          "This batch has been committed and can no longer be changed.");
+          'This batch has been committed and can no longer be changed.');
     }
   }
 
@@ -140,7 +140,7 @@ class AlgoliaBatch {
           .add(AlgoliaBatchRequest(action: 'partialUpdateObject', body: data));
     } else {
       throw StateError(
-          "This batch has been committed and can no longer be changed.");
+          'This batch has been committed and can no longer be changed.');
     }
   }
 
@@ -162,7 +162,7 @@ class AlgoliaBatch {
           action: 'partialUpdateObjectNoCreate', body: data));
     } else {
       throw StateError(
-          "This batch has been committed and can no longer be changed.");
+          'This batch has been committed and can no longer be changed.');
     }
   }
 
@@ -179,7 +179,7 @@ class AlgoliaBatch {
       }));
     } else {
       throw StateError(
-          "This batch has been committed and can no longer be changed.");
+          'This batch has been committed and can no longer be changed.');
     }
   }
 
@@ -193,7 +193,7 @@ class AlgoliaBatch {
       _actions.add(AlgoliaBatchRequest(action: 'delete', body: {}));
     } else {
       throw StateError(
-          "This batch has been committed and can no longer be changed.");
+          'This batch has been committed and can no longer be changed.');
     }
   }
 
@@ -208,7 +208,7 @@ class AlgoliaBatch {
       _actions.add(AlgoliaBatchRequest(action: 'clear', body: {}));
     } else {
       throw StateError(
-          "This batch has been committed and can no longer be changed.");
+          'This batch has been committed and can no longer be changed.');
     }
   }
 }

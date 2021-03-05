@@ -33,15 +33,15 @@ class AlgoliaIndexSnapshot {
   AlgoliaIndexReference get ref => AlgoliaIndexReference._(algolia, name!);
 
   AlgoliaIndexSnapshot.fromMap(algolia, Map<String, dynamic> map) {
-    this.algolia = algolia;
-    this.name = map['name'];
-    this.createdAt = DateTime.parse(map['createdAt']);
-    this.updatedAt = DateTime.parse(map['updatedAt']);
-    this.entries = map['entries'];
-    this.dataSize = map['dataSize'];
-    this.fileSize = map['fileSize'];
-    this.lastBuildTimeS = map['lastBuildTimeS'];
-    this.numberOfPendingTask = map['numberOfPendingTask'];
-    this.pendingTask = map['pendingTask'];
+    algolia = algolia;
+    name = map['name'];
+    createdAt = DateTime.parse(map['createdAt']);
+    updatedAt = DateTime.parse(map['updatedAt']);
+    entries = map['entries'];
+    dataSize = map['dataSize'];
+    fileSize = map['fileSize'];
+    lastBuildTimeS = map['lastBuildTimeS'];
+    numberOfPendingTask = map['numberOfPendingTask'];
+    pendingTask = map['pendingTask'];
   }
 }

@@ -28,8 +28,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   ///
   /// Delete the index referred to by this [AlgoliaIndexReference].
   ///
-  AlgoliaIndexSettings get settings =>
-      AlgoliaIndexSettings._(this.algolia, this._index);
+  AlgoliaIndexSettings get settings => AlgoliaIndexSettings._(algolia, _index);
 
   AlgoliaObjectReference object([String? path]) {
     String? objectId;
@@ -259,23 +258,23 @@ class AlgoliaMultiIndexesReference {
       {List<AlgoliaQuery>? queries}) {
     _algolia = algolia;
     if (queries != null) {
-      this._queries = queries;
+      _queries = queries;
     } else {
-      this._queries = [];
+      _queries = [];
     }
   }
 
   List<AlgoliaQuery>? _queries;
   Algolia? _algolia;
 
-  List<AlgoliaQuery>? get queries => this._queries;
+  List<AlgoliaQuery>? get queries => _queries;
 
   AlgoliaMultiIndexesReference addQuery(AlgoliaQuery query) {
     // ignore: unnecessary_null_comparison
     assert(query != null);
     _queries!.add(query);
     return AlgoliaMultiIndexesReference._(
-      this._algolia,
+      _algolia,
       queries: _queries,
     );
   }
@@ -284,18 +283,18 @@ class AlgoliaMultiIndexesReference {
     assert(queries.isNotEmpty);
     _queries!.addAll(queries);
     return AlgoliaMultiIndexesReference._(
-      this._algolia,
+      _algolia,
       queries: _queries,
     );
   }
 
   AlgoliaMultiIndexesReference clearQueries() => AlgoliaMultiIndexesReference._(
-        this._algolia,
+        _algolia,
         queries: [],
       );
 
   String _encodeMap(Map data) {
-    Uri outgoingUri = new Uri(
+    Uri outgoingUri = Uri(
       scheme: '',
       host: '',
       path: '',
@@ -308,7 +307,7 @@ class AlgoliaMultiIndexesReference {
     assert(queries != null && _queries!.isNotEmpty,
         'You require at least one query added before performing `.getObject()`');
     List<Map<String, dynamic>> requests = [];
-    for (AlgoliaQuery q in this._queries!) {
+    for (AlgoliaQuery q in _queries!) {
       AlgoliaQuery _q = q;
       if (_q.parameters.containsKey('minimumAroundRadius')) {
         assert(

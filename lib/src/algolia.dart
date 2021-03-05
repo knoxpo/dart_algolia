@@ -22,28 +22,28 @@ class Algolia {
   Algolia get instance => Algolia._(
         applicationId: applicationId,
         apiKey: _apiKey,
-        extraHeaders: this._header,
+        extraHeaders: _header,
       );
 
-  String get _host => 'https://${this.applicationId}-dsn.algolia.net/1/';
+  String get _host => 'https://$applicationId-dsn.algolia.net/1/';
 
   Map<String, String> get _header {
     Map<String, String> map = {
-      "X-Algolia-Application-Id": applicationId,
-      "X-Algolia-API-Key": _apiKey,
-      "Content-Type": "application/json",
+      'X-Algolia-Application-Id': applicationId,
+      'X-Algolia-API-Key': _apiKey,
+      'Content-Type': 'application/json',
     };
-    map.addEntries(this.extraHeaders.entries);
+    map.addEntries(extraHeaders.entries);
     return map;
   }
 
   Algolia setHeader(String key, String value) {
-    Map<String, String> map = this.extraHeaders;
+    Map<String, String> map = extraHeaders;
     map[key] = value;
     return Algolia._(
       applicationId: applicationId,
       apiKey: _apiKey,
-      extraHeaders: this._header,
+      extraHeaders: _header,
     );
   }
 
@@ -55,10 +55,10 @@ class Algolia {
       AlgoliaMultiIndexesReference._(this);
 
   Future<AlgoliaIndexesSnapshot> getIndices() async {
-    String _url = '${this._host}indexes';
+    String _url = '${_host}indexes';
     http.Response response = await http.get(
       Uri.parse(_url),
-      headers: this._header,
+      headers: _header,
     );
     Map<String, dynamic> body = json.decode(response.body);
 

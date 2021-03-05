@@ -8,7 +8,7 @@ class AlgoliaError {
       : _message = error,
         _statusCode = statusCode;
 
-  get error => _message;
+  Map get error => _message;
 
-  get statusCode => _statusCode;
+  int get statusCode => _statusCode;
 }

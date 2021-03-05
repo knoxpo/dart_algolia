@@ -1,3 +1,5 @@
+## [1.0.0+1] - Stable release with Null-Safety
+- Implemented ``analysis_options.yaml ``
 ## [1.0.0] - Stable release with Null-Safety
 - [Bug] [#26](https://github.com/knoxpo/dart_algolia/issues/26)
 - [Added] Add support of ``Null-safety`` 

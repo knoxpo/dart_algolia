@@ -1,8 +1,5 @@
 name: algolia
-version: 1.0.0
-authors: 
-  - Nayan Hathiwala (Knoxpo) <nhathiwala@knoxpo.com>
-  - Himanshu Gandhi (Knoxpo) <himanshu.gandhi@knoxpo.com>
+version: 1.0.0+1
 description: >
    Algolia is a pure dart SDK, wrapped around Algolia REST API for easy implementation for your Flutter or Dart projects.
 homepage: https://github.com/knoxpo/dart_algolia
@@ -16,4 +13,5 @@ dependencies:
   uuid: ^3.0.1
 
 dev_dependencies:
+  pedantic: ^1.11.0
   test: ^1.16.5

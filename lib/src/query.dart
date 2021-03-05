@@ -187,7 +187,7 @@ class AlgoliaQuery {
   ///
   /// You may want to ensure that under no circumstance should a particular set of attributes be returned.
   /// This is particularly important for security or business reasons, where some attributes are used only for ranking or other technical purposes, but should never be seen by your end users, for example, total_sales, permissions, and other private information.
-  /// This setting guarantees this.
+  /// This setting guarantees
   ///
   /// **Usage notes:**
   ///  - These attributes can still be used for indexing and/or ranking.
@@ -337,9 +337,9 @@ class AlgoliaQuery {
   ///   - When to use quotes (simple or double, depending on the language):
   ///     - If a value or attribute name contains spaces (see example).
   ///     - If a value or attribute name conflicts with a keyword (see example).
-  ///     - Phrases that includes quotes, like content:"It's a wonderful day" (see example).
-  ///     - Phrases that includes quotes, like attribute:"She said "Hello World"" (see example).
-  ///   - Nested attributes can be used for filtering, so authors.mainAuthor:"John Doe" is a valid filter, as long as authors.mainAuthor is declared as an attributesForFaceting.
+  ///     - Phrases that includes quotes, like content:'It's a wonderful day' (see example).
+  ///     - Phrases that includes quotes, like attribute:'She said 'Hello World'' (see example).
+  ///   - Nested attributes can be used for filtering, so authors.mainAuthor:'John Doe' is a valid filter, as long as authors.mainAuthor is declared as an attributesForFaceting.
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/filters/)
   ///
@@ -357,9 +357,9 @@ class AlgoliaQuery {
   /// Usage notes:
   ///   - **Format:** The general format for referencing a facet value is `${attributeName}:${value}`. This attribute/value combination represents a filter on a given facet value.
   ///   - **Multiple filters:** If you specify multiple filters, they are interpreted as a conjunction (AND). If you want to use a disjunction (OR), use a nested array.
-  ///     - `["category:Book", "author:John Doe"]` translates as `category:Book AND author:"John Doe"`.
-  ///     - `[["category:Book", "category:Movie"], "author:John Doe"]` translates as `(category:Book OR category:Movie) AND author:"John Doe"`.
-  ///   - **Negation** is supported by prefixing the value with a minus sign `(-)`, sometimes called a dash. For example: `["category:Book", "category:-Movie"]` translates as `category:Book AND NOT category:Movie`.
+  ///     - `['category:Book', 'author:John Doe']` translates as `category:Book AND author:'John Doe'`.
+  ///     - `[['category:Book', 'category:Movie'], 'author:John Doe']` translates as `(category:Book OR category:Movie) AND author:'John Doe'`.
+  ///   - **Negation** is supported by prefixing the value with a minus sign `(-)`, sometimes called a dash. For example: `['category:Book', 'category:-Movie']` translates as `category:Book AND NOT category:Movie`.
   ///   - **Escape characters:** On the other hand, if your facet value starts with a `-`, meaning it contains the `-`, then you can escape the character with a `\` to prevent the engine from interpreting this as a negative facet filter. For example, filtering on `category:\-Movie` will filter on all records that have a category equal to “-Movie”.
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/facetFilters/)
@@ -463,7 +463,7 @@ class AlgoliaQuery {
   /// **Usage notes:**
   ///   - ***_tags***: For this setting to work, your records need to have a `_tags` attribute.
   ///   - ***Multiple filters***: If you specify multiple tags, they are interpreted as a conjunction (AND). If you want to use a disjunction (OR), use a nested array.
-  ///   - ***Negation*** is supported by prefixing the tag value with a minus sign (`-`), sometimes called a dash. For example, `["tag1", "-tag2"]` translates as `tag1 AND NOT tag2`.
+  ///   - ***Negation*** is supported by prefixing the tag value with a minus sign (`-`), sometimes called a dash. For example, `['tag1', '-tag2']` translates as `tag1 AND NOT tag2`.
   ///   - ***No record count***: Tag filtering is used for filtering only. You will not get a count of records that match the filters. In this way, it is the same as using `filterOnly() in the attributesForFaceting`.
   ///
   ///
@@ -706,7 +706,7 @@ class AlgoliaQuery {
   ///
   /// **Usage notes:**
   ///   - Defaults to an empty string for all accounts created before February 10th, 2016.
-  ///   - Defaults to "…" (U+2026, HORIZONTAL ELLIPSIS) for accounts created after that date.
+  ///   - Defaults to '…' (U+2026, HORIZONTAL ELLIPSIS) for accounts created after that date.
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/snippetEllipsisText/)
   ///
@@ -936,7 +936,7 @@ class AlgoliaQuery {
   ///
   /// **Usage notes:**
   ///   - By default, separators are not indexed.
-  ///   - Here is a non-exhaustive list of separators frequently used by our customers: [!#()[]{}*+-_一,:;<>?@/\^|%&~£¥$§€`"'‘’“”†‡]
+  ///   - Here is a non-exhaustive list of separators frequently used by our customers: [!#()[]{}*+-_一,:;<>?@/\^|%&~£¥$§€`''‘’“”†‡]
   ///   - The search API treats separator characters as separate words. If you search “Google+” for example, the search API considers “Google” and “+” as two separate words, and counts as a match on two words in getRankingInfo.
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/separatorsToIndex/)
@@ -1030,7 +1030,7 @@ class AlgoliaQuery {
   ///     of distance. Ranking is still based on proxiùmity to the central axis point. This
   ///     option is faster than specifying a high integer value.
   ///
-  /// value must be a `int` or `"all"`
+  /// value must be a `int` or `'all'`
   ///
   /// `1 = 1 Meter`
   ///
@@ -1214,7 +1214,7 @@ class AlgoliaQuery {
     assert(!_parameters.containsKey('ignorePlurals'),
         '[ignorePlurals] can not be called multiple times.');
     assert(((value is bool) || (value is List<String>)),
-        "value must be true|false|['language ISO code', ...]; but value found was `${value.runtimeType}`");
+        'value must be true|false|["language ISO code", ...]; but value found was `${value.runtimeType}`');
     return _copyWithParameters(<String, dynamic>{'ignorePlurals': value});
   }
 
@@ -1255,7 +1255,7 @@ class AlgoliaQuery {
     assert(!_parameters.containsKey('removeStopWords'),
         '[removeStopWords] can not be called multiple times.');
     assert(((value is bool) || (value is List<String>)),
-        "value must be true|false|['language ISO code', ...]; but value found was `${value.runtimeType}`");
+        'value must be true|false|["language ISO code", ...]; but value found was `${value.runtimeType}`');
     return _copyWithParameters(<String, dynamic>{'removeStopWords': value});
   }
 
@@ -1264,7 +1264,7 @@ class AlgoliaQuery {
   ///
   /// List of attributes on which to do a decomposition of camel case words.
   ///
-  /// Camel case compounds are basically words glued together, and being able to find a camel case compound when searching for one of its words often makes sense. This setting automatically splits camel case compounds into separate words and allows for example to find "camelCaseAttributes" when searching for "case".
+  /// Camel case compounds are basically words glued together, and being able to find a camel case compound when searching for one of its words often makes sense. This setting automatically splits camel case compounds into separate words and allows for example to find 'camelCaseAttributes' when searching for 'case'.
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/camelCaseAttributes/)
   ///
@@ -1308,13 +1308,13 @@ class AlgoliaQuery {
   /// List of characters that the engine shouldn’t automatically normalize.
   ///
   /// By default, the Algolia search engine normalizes all characters to their lowercase counterpart, and strips them from their diacritics.
-  /// For example, "é" becomes "e", "ø" becomes "o", "で" becomes "て", and so on. This default behavior can be an issue for certain languages.
+  /// For example, 'é' becomes 'e', 'ø' becomes 'o', 'で' becomes 'て', and so on. This default behavior can be an issue for certain languages.
   /// This setting lets you disable automatic normalization on a given set of characters.
   ///
   /// **Usage notes:**
   ///   - The setting only accepts lowercase characters, but also applies to their uppercase counterpart.
-  ///     For example, "Ø" is an invalid value for this setting, but specifying "ø" prevents the normalization of both "ø" and "Ø".
-  ///   - The setting only accepts characters that would be transformed otherwise. For example, "o" is considered invalid because it doesn’t have any diacritic.
+  ///     For example, 'Ø' is an invalid value for this setting, but specifying 'ø' prevents the normalization of both 'ø' and 'Ø'.
+  ///   - The setting only accepts characters that would be transformed otherwise. For example, 'o' is considered invalid because it doesn’t have any diacritic.
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/keepDiacriticsOnCharacters/)
   ///
@@ -1560,22 +1560,22 @@ class AlgoliaQuery {
   ///
   /// This advanced syntax brings two additional features:
   ///   - Phrase query: a specific sequence of terms that must be matched next to one another.
-  ///                   A phrase query needs to be surrounded by double quotes (").
-  ///                   For example, the query "search engine" only returns a record if it contains “search engine” exactly in at least one attribute.
+  ///                   A phrase query needs to be surrounded by double quotes (').
+  ///                   For example, the query 'search engine' only returns a record if it contains “search engine” exactly in at least one attribute.
   ///
   ///   - Note: Typo tolerance is disabled inside the phrase (i.e. within the quotes).
   ///
   ///   - Prohibit operator: excludes records that contain a specific term.
   ///                        To exclude a term, you need to prefix it with a minus (-).
   ///                        The engine only interprets the minus (-) as a prohibit operator when you place it at the start of a word.
-  ///                        A minus (-) within double quotes (") is not treated as a prohibit operator.
+  ///                        A minus (-) within double quotes (') is not treated as a prohibit operator.
   ///
   /// **Some examples:**
   ///   - [search -engine] only matches records containing “search”, but not “engine”.
   ///   - [search-engine] matches records containing “search” and “engine” (there’s no exclusion because the minus (-) is in the middle of the word)
   ///   - search matches every record except those containing “search”
   ///   - search engine matches records containing “engine”, but not “search”
-  ///   - "-engine" matches records containing “-engine” (no exclusion performed)
+  ///   - '-engine' matches records containing “-engine” (no exclusion performed)
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/advancedSyntax/)
   ///
@@ -1690,7 +1690,7 @@ class AlgoliaQuery {
   /// List of numeric attributes that can be used as numerical filters.
   ///
   /// By default, all numeric attributes are automatically indexed and available as numerical filters.
-  /// For faster indexing, it is best to reduce the number of numeric attributes used for filtering. This setting enables you to do this.
+  /// For faster indexing, it is best to reduce the number of numeric attributes used for filtering. This setting enables you to do
   ///
   /// **Usage notes:**
   ///   - Acceptable values:
