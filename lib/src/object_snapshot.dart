@@ -5,12 +5,12 @@ part of algolia;
 // - snippetResult [Implementation] (commit ref: 0d76d24fe8aa347a0933920afe5ded43bdcbd68b)
 
 class AlgoliaObjectSnapshot {
-  Algolia algolia;
-  String objectID;
-  String index;
-  Map<String, dynamic> highlightResult;
-  Map<String, dynamic> snippetResult;
-  Map<String, dynamic> data;
+  late Algolia algolia;
+  String? objectID;
+  String? index;
+  Map<String, dynamic>? highlightResult;
+  Map<String, dynamic>? snippetResult;
+  Map<String, dynamic>? data;
 
   AlgoliaObjectReference get ref =>
       AlgoliaObjectReference._(algolia, index, objectID);

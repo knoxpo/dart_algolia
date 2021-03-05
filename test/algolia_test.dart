@@ -7,19 +7,19 @@ void main() async {
   /// Initiate Algolia in your project
   ///
   Algolia algolia = Application.algolia;
-  AlgoliaTask taskAdded,
+  late AlgoliaTask taskAdded,
       taskUpdated,
       taskDeleted,
       taskBatch,
       taskReplace,
       taskClearIndex,
       taskDeleteIndex;
-  AlgoliaObjectSnapshot addedObject;
+  late AlgoliaObjectSnapshot addedObject;
 
   /// Storage for returned Object IDs
   final List<String> ids = [];
 
-   ///
+  ///
   /// 1. Perform Adding Object to existing Index.
   ///
   test("1. Perform Adding Object to existing Index.", () async {
@@ -62,7 +62,7 @@ void main() async {
   ///
   test("3. Perform Updating Object to existing Index.", () async {
     Map<String, dynamic> updateData =
-        Map<String, dynamic>.from(addedObject.data);
+        Map<String, dynamic>.from(addedObject.data!);
     updateData['contact'] = '+1 609 567890';
     updateData['modifiedAt'] = DateTime.now();
     taskUpdated = await algolia.instance
@@ -107,9 +107,9 @@ void main() async {
         'status': 'published',
         'createdAt': DateTime.now(),
         'modifiedAt': DateTime.now(),
-        'price': i+200,
+        'price': i + 200,
       };
-     
+
       batch.addObject(addData);
     }
 
@@ -127,8 +127,6 @@ void main() async {
     ids.addAll([batchIds[3], batchIds[4]]);
   });
 
-  
-
   ///
   /// 7. Perform Query
   ///
@@ -139,13 +137,17 @@ void main() async {
     // Perform multiple facetFilters
     queryA = queryA.setFacetFilter('status:published');
     queryA = queryA.setFacetFilter('isDelete:false');
-
-    // Get Result/Objects
-    List<AlgoliaQuerySnapshot> snap =
-        await algolia.multipleQueries.addQueries([queryA, queryB]).getObjects();
-    // Checking if has [List<AlgoliaQuerySnapshot>]
-    expect(snap.length, 2);
-    print('Queries count: ${snap.length}');
+    try {
+      // Get Result/Objects
+      List<AlgoliaQuerySnapshot> snap = await algolia.multipleQueries
+          .addQueries([queryA, queryB]).getObjects();
+      // Checking if has [List<AlgoliaQuerySnapshot>]
+      expect(snap.length, 2);
+      print('Queries count: ${snap.length}');
+    } on AlgoliaError catch (err) {
+      print(err.error.toString());
+      expect(err.runtimeType, AlgoliaError);
+    }
     print('\n\n');
   });
 
@@ -176,15 +178,16 @@ void main() async {
   /// 10. Get Settings of 'contacts' index
   ///
   test("10. Get Settings of 'contacts' index", () async {
-    Map<String, dynamic> settings =
-        await algolia.instance.index('contacts').settings.getSettings();
+    Map<String, dynamic> settings = await (algolia.instance
+        .index('contacts')
+        .settings
+        .getSettings() as Future<Map<String, dynamic>>);
 
     // Checking if has [Map<String, dynamic>]
     expect(settings.isEmpty, false);
     print(settings);
     print('\n\n');
   });
-
 
   ///
   /// 12. Replace all objects in index.
@@ -238,29 +241,31 @@ void main() async {
   /**
 	 * Search TEST
 	 */
-  test("1. Perform Query", () async {
-    AlgoliaQuery query = algolia.instance.index('contacts').search('john');
+  group("15. Perform Query", () {
+    test("1. Perform Query", () async {
+      AlgoliaQuery query = algolia.instance.index('contacts').search('john');
 
-    // Get Result/Objects
-    AlgoliaQuerySnapshot snap = await query.getObjects();
+      // Get Result/Objects
+      AlgoliaQuerySnapshot snap = await query.getObjects();
 
-    // Checking if has [AlgoliaQuerySnapshot]
-    expect(snap.runtimeType, AlgoliaQuerySnapshot);
-    print('Hits count: ${snap.nbHits}');
-    print('\n\n');
-  });
+      // Checking if has [AlgoliaQuerySnapshot]
+      expect(snap.runtimeType, AlgoliaQuerySnapshot);
+      print('Hits count: ${snap.nbHits}');
+      print('\n\n');
+    });
 
-  test("2. Perform SimilarQuery", () async {
-    AlgoliaQuery query =
-        algolia.instance.index('contacts').setSimilarQuery('775');
+    test("2. Perform SimilarQuery", () async {
+      AlgoliaQuery query =
+          algolia.instance.index('contacts').setSimilarQuery('775');
 
-    // Get Result/Objects
-    AlgoliaQuerySnapshot snap = await query.getObjects();
+      // Get Result/Objects
+      AlgoliaQuerySnapshot snap = await query.getObjects();
 
-    // Checking if has [AlgoliaQuerySnapshot]
-    expect(snap.runtimeType, AlgoliaQuerySnapshot);
-    print('Hits count: ${snap.nbHits}');
-    print('\n\n');
+      // Checking if has [AlgoliaQuerySnapshot]
+      expect(snap.runtimeType, AlgoliaQuerySnapshot);
+      print('Hits count: ${snap.nbHits}');
+      print('\n\n');
+    });
   });
 
   /**
@@ -380,7 +385,6 @@ void main() async {
     print('\n\n');
   });*/
 
-  
   /**
 	 * Filter TEST
 	 */
@@ -444,12 +448,12 @@ void main() async {
 
   test("5. Tag Filter", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setTagFilter('name');
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -458,30 +462,29 @@ void main() async {
 
   test("6. Sum Or Filter Scores Filter", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setSumOrFiltersScore(true);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
-  
-  
+
   /**
-   * Facets TEST
-   */
+	 * Facets TEST
+	 */
   test("1. Perform Facets", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
-    query = query.setFacets(['name','email']);
-  
+
+    query = query.setFacets(['name', 'email']);
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -490,12 +493,12 @@ void main() async {
 
   test("2. Perform Max value per facets", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setMaxValuesPerFacet(50);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -504,12 +507,12 @@ void main() async {
 
   test("3. Perform faceting After Distinct", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setFacetingAfterDistinct(enable: true);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -518,30 +521,29 @@ void main() async {
 
   test("4. Perform sortFacetValuesBy", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setSortFacetValuesBy(AlgoliaSortFacetValuesBy.count);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
 
-
   /**
-     * Highlighting / Snippeting TEST
-   */
+	 * Highlighting / Snippeting TEST
+	 */
   test("1. Perform attributes To Highlight", () async {
     var settings = algolia.instance
         .index('contacts')
         .settings
         .setAttributesToHighlight(['email']);
-  
+
     AlgoliaTask response = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaTask]
     expect(response.runtimeType, AlgoliaTask);
     print(response);
@@ -553,24 +555,24 @@ void main() async {
         .index('contacts')
         .settings
         .setAttributesToSnippet(['contact']);
-  
+
     AlgoliaTask response = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaTask]
     expect(response.runtimeType, AlgoliaTask);
     print(response);
     print('\n\n');
   });
-  
+
   test("3. Perform highlight Pre Tag & highlight Post Tag", () async {
     var settings = algolia.instance
         .index('contacts')
         .settings
         .setHighlightPreTag('<em>')
         .setHighlightPostTag('</em>');
-  
+
     AlgoliaTask response = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaTask]
     expect(response.runtimeType, AlgoliaTask);
     print(response);
@@ -582,27 +584,26 @@ void main() async {
         .index('contacts')
         .settings
         .setRestrictHighlightAndSnippetArrays(enable: true);
-  
+
     AlgoliaTask response = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaTask]
     expect(response.runtimeType, AlgoliaTask);
     print(response);
     print('\n\n');
   });
 
-
   /**
-   * Pagination TEST
-   */
+	 * Pagination TEST
+	 */
   test("1. Perform page", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setPage(0);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -611,12 +612,12 @@ void main() async {
 
   test("2. Perform hit per page", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setHitsPerPage(5);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -625,12 +626,12 @@ void main() async {
 
   test("3. Perform offset", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setOffset(4);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -639,26 +640,26 @@ void main() async {
 
   test("4. Perform length", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setLength(4);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
-  
+
   test("5. Perform pagination limited to", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setPaginationLimitedTo(1000);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -666,16 +667,16 @@ void main() async {
   });
 
   /**
-   * Typos TEST
-   */
+	 * Typos TEST
+	 */
   test("1. Perform min word size for 1 typo", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setMinWordSizeFor1Typo(2);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -684,32 +685,32 @@ void main() async {
 
   test("2. Perform min word size for 2 typo", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setMinWordSizeFor2Typos(4);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
-  
+
   test("3. Perform typo Tolerance", () async {
-    
     //Set default typo tolerance mode
-    var settings = algolia.instance.index('contacts').settings.setTypoTolerance(true);
-  
+    var settings =
+        algolia.instance.index('contacts').settings.setTypoTolerance(true);
+
     await settings.setSettings();
-    
+
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setTypoTolerance(false);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -717,19 +718,21 @@ void main() async {
   });
 
   test("4. Perform allow typos on numericTokens", () async {
-  
     //Set default typo tolerance mode
-    var settings = algolia.instance.index('contacts').settings.setAllowTyposOnNumericTokens(false);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setAllowTyposOnNumericTokens(false);
+
     await settings.setSettings();
-  
+
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setAllowTyposOnNumericTokens(false);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -737,19 +740,21 @@ void main() async {
   });
 
   test("5. Perform disable typo Tolerance on Attributes", () async {
-  
     //Set default typo tolerance mode
-    var settings = algolia.instance.index('contacts').settings.setDisableTypoToleranceOnAttributes(['status']);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setDisableTypoToleranceOnAttributes(['status']);
+
     await settings.setSettings();
-  
+
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setDisableTypoToleranceOnAttributes(['status']);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -757,32 +762,30 @@ void main() async {
   });
 
   test("6. Perform separators to index", () async {
-  
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setSeparatorsToIndex('+#');
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
 
-
   /**
-   * Geo Search TEST
-   */
+	 * Geo Search TEST
+	 */
   test("1. Perform around LatLng", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setAroundLatLng('40.71, -74.01');
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -791,12 +794,12 @@ void main() async {
 
   test("2. Perform around LatLng ViaIP", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setAroundLatLngViaIP(true);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -805,12 +808,12 @@ void main() async {
 
   test("3. Perform around Radius", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setAroundRadius('all');
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -819,58 +822,58 @@ void main() async {
 
   test("4. Perform around PrecisetCamelCaseAttributession", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setAroundPrecision(100);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
 
-  test("5. Perform inside polygon",   () async {
+  test("5. Perform inside polygon", () async {
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setInsidePolygon([
       BoundingPolygonBox(
-        p1Lat:  46.650828100116044,
-        p1Lng: 7.123046875,
-        p2Lat: 45.17210966999772,
-        p2Lng: 1.009765625,
-        p3Lat: 49.62625916704081,
-        p3Lng: 4.6181640625
-      )
+          p1Lat: 46.650828100116044,
+          p1Lng: 7.123046875,
+          p2Lat: 45.17210966999772,
+          p2Lng: 1.009765625,
+          p3Lat: 49.62625916704081,
+          p3Lng: 4.6181640625)
     ]);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
-  
-  
+
   /**
-   * Language TEST
-   */
+	 * Language TEST
+	 */
   test("1. Perform ignore Plurals", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setQueryLanguages(['es']).setIgnorePlurals(true);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setQueryLanguages(['es']).setIgnorePlurals(true);
+
     await settings.setSettings();
-  
+
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setIgnorePlurals(true);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -878,28 +881,32 @@ void main() async {
   });
 
   test("2. Perform remove stopWords", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setQueryLanguages(['es']).setRemoveStopWords(true);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setQueryLanguages(['es']).setRemoveStopWords(true);
+
     await settings.setSettings();
-  
+
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
-    query = query.setRemoveStopWords(['ca','es']);
-  
+
+    query = query.setRemoveStopWords(['ca', 'es']);
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
-  
+
   test("3. Perform camel case attributes", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setCamelCaseAttributes(['name']);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setCamelCaseAttributes(['name']);
+
     var response = await settings.setSettings();
 
     // Checking if has [AlgoliaTask]
@@ -909,11 +916,13 @@ void main() async {
   });
 
   test("4. Perform decompounded attributes", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setDecompoundedAttributes(['name']);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setDecompoundedAttributes(['name']);
+
     var response = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaTask]
     expect(response.runtimeType, AlgoliaTask);
     print(response);
@@ -921,23 +930,27 @@ void main() async {
   });
 
   test("5. Perform keep diacritics on characters", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setkeepDiacriticsOnCharacters('øé');
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setkeepDiacriticsOnCharacters('øé');
+
     var response = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaTask]
     expect(response.runtimeType, AlgoliaTask);
     print(response);
     print('\n\n');
   });
-  
+
   test("6. Perform query languages", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setQueryLanguages(['es','ja']);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setQueryLanguages(['es', 'ja']);
+
     var response = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaTask]
     expect(response.runtimeType, AlgoliaTask);
     print(response);
@@ -945,11 +958,13 @@ void main() async {
   });
 
   test("7. Perform index languages", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setIndexLanguages(['es','ja']);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setIndexLanguages(['es', 'ja']);
+
     var response = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaTask]
     expect(response.runtimeType, AlgoliaTask);
     print(response);
@@ -957,34 +972,35 @@ void main() async {
   });
 
   test("8. Perform natural languages", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setNaturalLanguages(['fr']);
-  
+    var settings =
+        algolia.instance.index('contacts').settings.setNaturalLanguages(['fr']);
+
     var response = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaTask]
     expect(response.runtimeType, AlgoliaTask);
     print(response);
     print('\n\n');
   });
-  
-  
+
   /**
-   * Rules TEST
-   */
+	 * Rules TEST
+	 */
   test("1. Perform enable rules", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setEnableRules(enabled: true);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setEnableRules(enabled: true);
+
     await settings.setSettings();
-  
+
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setEnableRules(enabled: false);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -992,39 +1008,39 @@ void main() async {
   });
 
   test("2. Perform rule contexts", () async {
-    
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setRuleContexts(['email']);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
 
-
   /**
-   * Personalization TEST
-   */
+	 * Personalization TEST
+	 */
   test("1. Perform enable personalization", () async {
-  
     //Enable personalization for every search
-    var settings = algolia.instance.index('contacts').settings.setEnablePersonalization(enabled: true);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setEnablePersonalization(enabled: true);
+
     await settings.setSettings();
-  
+
     //Enable personalization for the current search
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setEnablePersonalization(enabled: false);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1032,14 +1048,13 @@ void main() async {
   });
 
   test("2. Perform personalization impact", () async {
-    
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setPersonalizationImpact(value: 20);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1047,39 +1062,39 @@ void main() async {
   });
 
   test("2. Perform userToken", () async {
-  
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setUserToken(value: '123456');
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
-  
-  
+
   /**
-   * Query Strategy
-   */
+	 * Query Strategy
+	 */
   test("1. Perform queryType", () async {
-  
     //Set default query type
-    var settings = algolia.instance.index('contacts').settings.setQueryType(QueryType.prefixLast);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setQueryType(QueryType.prefixLast);
+
     await settings.setSettings();
 
     //Override default query type for the current search
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setQueryType(QueryType.prefixAll);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1087,20 +1102,22 @@ void main() async {
   });
 
   test("2. Perform remove words if no results", () async {
-  
     //Set default strategy to remove words from the query
-    var settings = algolia.instance.index('contacts').settings.setRemoveWordsIfNoResults(RemoveWordsIfNoResults.none);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setRemoveWordsIfNoResults(RemoveWordsIfNoResults.none);
+
     await settings.setSettings();
-  
+
     //Override default strategy to remove words from the query for the current search
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setRemoveWordsIfNoResults(RemoveWordsIfNoResults.firstWords);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1108,11 +1125,13 @@ void main() async {
   });
 
   test("3. Perform disable Prefix On Attributes", () async {
-    
-    var settings = algolia.instance.index('contacts').settings.setDisablePrefixOnAttributes(['sku']);
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setDisablePrefixOnAttributes(['sku']);
 
     AlgoliaTask result = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(result.runtimeType, AlgoliaTask);
     print(result);
@@ -1120,11 +1139,13 @@ void main() async {
   });
 
   test("4. Perform disable exact on attributes", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setDisableExactOnAttributes(['email']);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setDisableExactOnAttributes(['email']);
+
     AlgoliaTask result = await settings.setSettings();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(result.runtimeType, AlgoliaTask);
     print(result);
@@ -1132,87 +1153,92 @@ void main() async {
   });
 
   test("6. Perform exact on singleWordQuery", () async {
-  
     //Set default exact ranking criterion computation on single word query
-    var settings = algolia.instance.index('contacts').settings.setExactOnSingleWordQuery(ExactOnSingleWordQuery.attribute);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setExactOnSingleWordQuery(ExactOnSingleWordQuery.attribute);
+
     await settings.setSettings();
-  
+
     //Override default exact ranking criterion computation on single word query for the current search
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setExactOnSingleWordQuery(ExactOnSingleWordQuery.none);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
-  
-  
+
   /**
-   * Performance TEST
-   */
+	 * Performance TEST
+	 */
   test("1. Perform numericAttributesForFiltering", () async {
-    
-    var settings = algolia.instance.index('contacts').settings.setNumericAttributesForFiltering(value: ['quantity']);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setNumericAttributesForFiltering(value: ['quantity']);
+
     AlgoliaTask result = await settings.setSettings();
-    
+
     expect(result.runtimeType, AlgoliaTask);
     print(result);
     print('\n\n');
   });
 
   test("2. Perform allowCompressionOfIntegerArray", () async {
-    
-    var settings = algolia.instance.index('contacts').settings.setAllowCompressionOfIntegerArray(enabled: true);
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setAllowCompressionOfIntegerArray(enabled: true);
+
     AlgoliaTask result = await settings.setSettings();
-    
+
     expect(result.runtimeType, AlgoliaTask);
     print(result);
     print('\n\n');
   });
-  
-  
+
   /**
-   * Advance TEST
-   */
+	 * Advance TEST
+	 */
   test("1. Perform attributeForDistinct", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setAttributeForDistinct('url');
-  
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setAttributeForDistinct('url');
+
     AlgoliaTask result = await settings.setSettings();
-  
+
     expect(result.runtimeType, AlgoliaTask);
     print(result);
     print('\n\n');
   });
 
   test("2. Perform distinct", () async {
-  
-    var settings = algolia.instance.index('contacts').settings.setDistinct(value: 0);
-  
+    var settings =
+        algolia.instance.index('contacts').settings.setDistinct(value: 0);
+
     AlgoliaTask result = await settings.setSettings();
-  
+
     expect(result.runtimeType, AlgoliaTask);
     print(result);
     print('\n\n');
   });
 
   test("3. Perform getRankingInfo", () async {
-  
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setGetRankingInfo(enabled: true);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1220,14 +1246,13 @@ void main() async {
   });
 
   test("4. Perform clickAnalytics", () async {
-  
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setClickAnalytics(enabled: true);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1235,14 +1260,13 @@ void main() async {
   });
 
   test("5. Perform analytics", () async {
-  
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setAnalytics(enabled: false);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1250,14 +1274,13 @@ void main() async {
   });
 
   test("6. Perform analyticsTags", () async {
-  
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setAnalyticsTags(['front_end']);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1265,14 +1288,13 @@ void main() async {
   });
 
   test("7. Perform synonyms", () async {
-  
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setSynonyms(enabled: false);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1280,14 +1302,13 @@ void main() async {
   });
 
   test("8. Perform replaceSynonymsInHighlight", () async {
-  
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setReplaceSynonymsInHighlight(enabled: false);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1295,20 +1316,20 @@ void main() async {
   });
 
   test("9. Perform maxFacetHits", () async {
-  
     //Set default number of facet values to return during a search for facet values.
-    var settings = algolia.instance.index('contacts').settings.setMaxFacetHits(10);
-  
+    var settings =
+        algolia.instance.index('contacts').settings.setMaxFacetHits(10);
+
     await settings.setSettings();
-  
+
     //Override default number of facet values to return during a search for facet values for the current search
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setMaxFacetHits(5);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1316,11 +1337,13 @@ void main() async {
   });
 
   test("10. Perform attributeCriteriaComputedByMinProximity", () async {
-    
-    var settings = algolia.instance.index('contacts').settings.setAttributeCriteriaComputedByMinProximity(enabled: true);
-  
-    AlgoliaTask result =await settings.setSettings();
-    
+    var settings = algolia.instance
+        .index('contacts')
+        .settings
+        .setAttributeCriteriaComputedByMinProximity(enabled: true);
+
+    AlgoliaTask result = await settings.setSettings();
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(result.runtimeType, AlgoliaTask);
     print(result);
@@ -1328,14 +1351,13 @@ void main() async {
   });
 
   test("11. Perform enableABTest", () async {
-  
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setEnableABTest(enabled: true);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
@@ -1343,20 +1365,18 @@ void main() async {
   });
 
   test("12. Perform percentileComputation", () async {
-  
     AlgoliaQuery query = algolia.instance.index('contacts');
-  
+
     query = query.setPercentileComputation(enabled: false);
-  
+
     // Get Result/Objects
     AlgoliaQuerySnapshot snap = await query.getObjects();
-  
+
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
     print('\n\n');
   });
-  
 }
 
 class Application {

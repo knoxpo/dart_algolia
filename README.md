@@ -157,13 +157,53 @@ version of the release.
 - `.setInsideBoundingBox(List<BoundingBox> value)`
 - `.setInsidePolygon(List<BoundingPolygonBox> value)`
 
-##### languages (0/3)
+##### languages (8/11)
+- `.setIgnorePlurals(dynamic value)`
+- `.setRemoveStopWords(dynamic value)`
+- `.setCamelCaseAttributes(List<String> value)`
+- `.setDecompoundedAttributes(dynamic value)`
+- `.setkeepDiacriticsOnCharacters(String value)`
+- `.setQueryLanguages(List<String> value)`
+- `.setIndexLanguages(List<String> value)`
+- `.setNaturalLanguages(List<String> value)`
 
-##### query-rules (0/2)
 
-##### query-strategy (0/7)
 
-##### advanced (0/11)
+##### query-rules (3/3)
+- `.setEnableRules({bool enabled = false})`
+- `.setFilterPromotes({bool enabled = false})`
+- `.setRuleContexts(List<String> value)`
+
+##### personalization (3/3)
+- `.setEnablePersonalization({bool enabled = false})`
+- `.setPersonalizationImpact({required int value})`
+- `.setUserToken({required String value})`
+
+##### query-strategy (7/7)
+- `.setQueryType(QueryType value)`
+- `.setRemoveWordsIfNoResults(RemoveWordsIfNoResults value)`
+- `.setAdvancedSyntax({bool enabled = false})`
+- `.setOptionalWords(List<String> value)`
+- `.setDisablePrefixOnAttributes(List<String> value)`
+- `.setDisableExactOnAttributes(List<String> value)`
+- `.setExactOnSingleWordQuery(ExactOnSingleWordQuery value)`
+
+##### performance (2/2)
+- `.setNumericAttributesForFiltering({required List<String> value})`
+- `.setAllowCompressionOfIntegerArray({bool enabled = false})`
+
+##### advanced (11/15)
+- `.setAttributeForDistinct(String value)`
+- `.setDistinct({dynamic value = 0})`
+- `.setGetRankingInfo({bool enabled = true})`
+- `.setClickAnalytics({bool enabled = false})`
+- `.setAnalytics({bool enabled = false})`
+- `.setAnalyticsTags(List<String> value)`
+- `.setSynonyms({bool enabled = false})`
+- `.setReplaceSynonymsInHighlight({bool enabled = false})`
+- `.setMaxFacetHits(int value)`
+- `.setPercentileComputation({bool enabled = false})`
+- `.setEnableABTest({bool enabled = false})`
 
 ##### GET RESULT
 - `.getObjects()`
@@ -214,19 +254,51 @@ version of the release.
 - `.setDisableTypoToleranceOnWords(List<String> value)`
 - `.setSeparatorsToIndex(List<String> value)`
 
-##### languages (0/3)
+##### languages (8/11)
+- `.setIgnorePlurals(dynamic value)`
+- `.setRemoveStopWords(dynamic value)`
+- `.setCamelCaseAttributes(List<String> value)`
+- `.setDecompoundedAttributes(dynamic value)`
+- `.setkeepDiacriticsOnCharacters(String value)`
+- `.setQueryLanguages(List<String> value)`
+- `.setIndexLanguages(List<String> value)`
+- `.setNaturalLanguages(List<String> value)`
 
-##### query-rules (0/2)
+##### query-rules (3/3)
+- `.setEnableRules({bool enabled = false})`
+- `.setFilterPromotes({bool enabled = false})`
+- `.setRuleContexts(List<String> value)`
 
-##### query-strategy (0/7)
+##### personalization (3/3)
+- `.setEnablePersonalization({bool enabled = false})`
+- `.setPersonalizationImpact({required int value})`
+- `.setUserToken({required String value})`
 
-##### performance (0/2)
+##### query-strategy (7/7)
+- `.setQueryType(QueryType value)`
+- `.setRemoveWordsIfNoResults(RemoveWordsIfNoResults value)`
+- `.setAdvancedSyntax({bool enabled = false})`
+- `.setOptionalWords(List<String> value)`
+- `.setDisablePrefixOnAttributes(List<String> value)`
+- `.setDisableExactOnAttributes(List<String> value)`
+- `.setExactOnSingleWordQuery(ExactOnSingleWordQuery value)`
 
-##### advanced (4/11)
+##### performance (2/2)
+- `.setNumericAttributesForFiltering({required List<String> value})`
+- `.setAllowCompressionOfIntegerArray({bool enabled = false})`
+
+##### advanced (11/15)
 - `.setAttributeForDistinct(String value)`
 - `.setDistinct({dynamic value = 0})`
 - `.setGetRankingInfo({bool enabled = true})`
 - `.setClickAnalytics({bool enabled = false})`
+- `.setAnalytics({bool enabled = false})`
+- `.setAnalyticsTags(List<String> value)`
+- `.setSynonyms({bool enabled = false})`
+- `.setReplaceSynonymsInHighlight({bool enabled = false})`
+- `.setMaxFacetHits(int value)`
+- `.setPercentileComputation({bool enabled = false})`
+- `.setEnableABTest({bool enabled = false})`
 
 ##### GET Settings
 - `.getSettings()`

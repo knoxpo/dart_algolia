@@ -12,9 +12,9 @@ enum AlgoliaSortFacetValuesBy {
 ///
 class AlgoliaQuery {
   AlgoliaQuery._(
-      {@required this.algolia,
-      @required String index,
-      Map<String, dynamic> parameters})
+      {required this.algolia,
+      required String index,
+      Map<String, dynamic>? parameters})
       : _index = index,
         _parameters = parameters ??
             Map<String, dynamic>.unmodifiable(<String, dynamic>{
@@ -25,9 +25,7 @@ class AlgoliaQuery {
               'numericFilters':
                   List<List<String>>.unmodifiable(<List<String>>[]),
               'tagFilters': List<List<String>>.unmodifiable(<List<String>>[]),
-            }),
-        assert(algolia != null),
-        assert(index != null);
+            });
   final Algolia algolia;
   final String _index;
   final Map<String, dynamic> _parameters;
@@ -66,14 +64,18 @@ class AlgoliaQuery {
       });
     }
     String url = '${algolia._host}indexes/$_index/query';
-    Response response = await post(
-      url,
+    http.Response response = await http.post(
+      Uri.parse(url),
       headers: algolia._header,
       body:
           utf8.encode(json.encode(_parameters, toEncodable: jsonEncodeHelper)),
       encoding: Encoding.getByName('utf-8'),
     );
     Map<String, dynamic> body = json.decode(response.body);
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
+    }
+
     return AlgoliaQuerySnapshot.fromMap(algolia, _index, body);
   }
 
@@ -90,7 +92,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/query/)
   ///
   AlgoliaQuery search(String value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('search'));
     return _copyWithParameters(<String, dynamic>{'query': value});
   }
@@ -108,7 +110,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/similarQuery/)
   ///
   AlgoliaQuery setSimilarQuery(String value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('similarQuery'));
     return _copyWithParameters(<String, dynamic>{'similarQuery': value});
   }
@@ -141,7 +143,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/searchableAttributes/)
   ///
   AlgoliaQuery setSearchableAttributes(List<String> value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('searchableAttributes'));
     return _copyWithParameters(
         <String, dynamic>{'searchableAttributes': value});
@@ -172,7 +174,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/attributesForFaceting/)
   ///
   AlgoliaQuery setAttributesForFaceting(List<String> value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('attributesForFaceting'));
     return _copyWithParameters(
         <String, dynamic>{'attributesForFaceting': value});
@@ -194,12 +196,12 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/unretrievableAttributes/)
   ///
   AlgoliaQuery setUnRetrievableAttributes(List<String> value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('unretrievableAttributes'));
     return _copyWithParameters(
         <String, dynamic>{'unretrievableAttributes': value});
   }
-  
+
   ///
   /// **AttributesToRetrieve**
   ///
@@ -222,12 +224,11 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/attributesToRetrieve/)
   ///
   AlgoliaQuery setAttributesToRetrieve(List<String> value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('attributesToRetrieve'));
     return _copyWithParameters(
         <String, dynamic>{'attributesToRetrieve': value});
   }
-
 
   ///
   /// **RestrictSearchableAttributes**
@@ -244,7 +245,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/restrictSearchableAttributes/)
   ///
   AlgoliaQuery setRestrictSearchableAttributes(List<String> value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('restrictSearchableAttributes'));
     return _copyWithParameters(
         <String, dynamic>{'restrictSearchableAttributes': value});
@@ -343,7 +344,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/filters/)
   ///
   AlgoliaQuery setFilters(String value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('filters'));
     return _copyWithParameters(<String, dynamic>{'filters': value});
   }
@@ -530,7 +531,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/facets/)
   ///
   AlgoliaQuery setFacets(List<String> value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('facets'));
     return _copyWithParameters(<String, dynamic>{'facets': value});
   }
@@ -551,7 +552,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/maxValuesPerFacet/)
   ///
   AlgoliaQuery setMaxValuesPerFacet(int value) {
-    assert(value != null);
     assert(!_parameters.containsKey('maxValuesPerFacet'));
     return _copyWithParameters(<String, dynamic>{'maxValuesPerFacet': value});
   }
@@ -578,7 +578,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/facetingAfterDistinct/)
   ///
   AlgoliaQuery setFacetingAfterDistinct({bool enable = true}) {
-    assert(enable != null);
     assert(!_parameters.containsKey('facetingAfterDistinct'));
     return _copyWithParameters(
         <String, dynamic>{'facetingAfterDistinct': enable});
@@ -609,7 +608,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/sortFacetValuesBy/)
   ///
   AlgoliaQuery setSortFacetValuesBy(AlgoliaSortFacetValuesBy value) {
-    assert(value != null);
     assert(!_parameters.containsKey('sortFacetValuesBy'));
     return _copyWithParameters(<String, dynamic>{
       'sortFacetValuesBy':
@@ -638,7 +636,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/attributesToHighlight/)
   ///
   AlgoliaQuery setAttributesToHighlight(List<String> value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('attributesToHighlight'));
     return _copyWithParameters(
         <String, dynamic>{'attributesToHighlight': value});
@@ -664,7 +662,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/attributesToSnippet/)
   ///
   AlgoliaQuery setAttributesToSnippet(List<String> value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('attributesToSnippet'));
     return _copyWithParameters(<String, dynamic>{'attributesToSnippet': value});
   }
@@ -680,7 +678,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/highlightPreTag/)
   ///
   AlgoliaQuery setHighlightPreTag(String value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('highlightPreTag'));
     return _copyWithParameters(<String, dynamic>{'highlightPreTag': value});
   }
@@ -696,7 +694,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/highlightPostTag/)
   ///
   AlgoliaQuery setHighlightPostTag(String value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('highlightPostTag'));
     return _copyWithParameters(<String, dynamic>{'highlightPostTag': value});
   }
@@ -713,7 +711,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/snippetEllipsisText/)
   ///
   AlgoliaQuery setSnippetEllipsisText(String value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('snippetEllipsisText'));
     return _copyWithParameters(<String, dynamic>{'snippetEllipsisText': value});
   }
@@ -730,7 +728,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/restrictHighlightAndSnippetArrays/)
   ///
   AlgoliaQuery setRestrictHighlightAndSnippetArrays({bool enable = true}) {
-    assert(enable != null);
     assert(!_parameters.containsKey('restrictHighlightAndSnippetArrays'));
     return _copyWithParameters(
         <String, dynamic>{'restrictHighlightAndSnippetArrays': enable});
@@ -749,7 +746,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/page/)
   ///
   AlgoliaQuery setPage(int value) {
-    assert(value != null);
     assert(!_parameters.containsKey('page'));
     return _copyWithParameters(<String, dynamic>{'page': value});
   }
@@ -768,7 +764,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/hitsPerPage/)
   ///
   AlgoliaQuery setHitsPerPage(int value) {
-    assert(value != null);
     assert(!_parameters.containsKey('hitsPerPage'));
     return _copyWithParameters(<String, dynamic>{'hitsPerPage': value});
   }
@@ -792,7 +787,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/offset/)
   ///
   AlgoliaQuery setOffset(int value) {
-    assert(value != null);
     assert(!_parameters.containsKey('offset'));
     return _copyWithParameters(<String, dynamic>{'offset': value});
   }
@@ -813,7 +807,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/length/)
   ///
   AlgoliaQuery setLength(int value) {
-    assert(value != null);
     assert(!_parameters.containsKey('length'));
     return _copyWithParameters(<String, dynamic>{'length': value});
   }
@@ -836,11 +829,10 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/paginationLimitedTo/)
   ///
   AlgoliaQuery setPaginationLimitedTo(int value) {
-    assert(value != null);
     assert(!_parameters.containsKey('paginationLimitedTo'));
     return _copyWithParameters(<String, dynamic>{'paginationLimitedTo': value});
   }
-  
+
   ///
   /// **MinWordSizeFor1Typo**
   ///
@@ -849,7 +841,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/minWordSizefor1Typo/)
   ///
   AlgoliaQuery setMinWordSizeFor1Typo(int value) {
-    assert(value != null);
     assert(!_parameters.containsKey('minWordSizefor1Typo'));
     return _copyWithParameters(<String, dynamic>{'minWordSizefor1Typo': value});
   }
@@ -862,7 +853,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/minWordSizefor2Typos/)
   ///
   AlgoliaQuery setMinWordSizeFor2Typos(int value) {
-    assert(value != null);
     assert(!_parameters.containsKey('minWordSizefor2Typos'));
     return _copyWithParameters(
         <String, dynamic>{'minWordSizefor2Typos': value});
@@ -901,7 +891,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/allowTyposOnNumericTokens/)
   ///
   AlgoliaQuery setAllowTyposOnNumericTokens(bool value) {
-    assert(value != null);
     assert(!_parameters.containsKey('allowTyposOnNumericTokens'));
     return _copyWithParameters(
         <String, dynamic>{'allowTyposOnNumericTokens': value});
@@ -919,7 +908,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/disableTypoToleranceOnAttributes/)
   ///
   AlgoliaQuery setDisableTypoToleranceOnAttributes(List<String> value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('disableTypoToleranceOnAttributes'));
     return _copyWithParameters(
         <String, dynamic>{'disableTypoToleranceOnAttributes': value});
@@ -933,12 +922,11 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/disableTypoToleranceOnWords/)
   ///
   AlgoliaQuery setDisableTypoToleranceOnWords(List<String> value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('disableTypoToleranceOnWords'));
     return _copyWithParameters(
         <String, dynamic>{'disableTypoToleranceOnWords': value});
   }
-  
 
   ///
   /// **SeparatorsToIndex**
@@ -954,10 +942,9 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/separatorsToIndex/)
   ///
   AlgoliaQuery setSeparatorsToIndex(String value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('separatorsToIndex'));
-    return _copyWithParameters(
-        <String, dynamic>{'separatorsToIndex': value});
+    return _copyWithParameters(<String, dynamic>{'separatorsToIndex': value});
   }
 
   ///
@@ -982,7 +969,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/aroundLatLng/)
   ///
   AlgoliaQuery setAroundLatLng(String value) {
-    assert(value != null);
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('aroundLatLng'));
     return _copyWithParameters(<String, dynamic>{'aroundLatLng': value});
   }
@@ -1009,10 +996,8 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/aroundLatLngViaIP/)
   ///
   AlgoliaQuery setAroundLatLngViaIP(bool value) {
-    assert(value != null);
     assert(!_parameters.containsKey('aroundLatLngViaIP'));
-    return _copyWithParameters(
-        <String, dynamic>{'aroundLatLngViaIP': value ?? false});
+    return _copyWithParameters(<String, dynamic>{'aroundLatLngViaIP': value});
   }
 
   ///
@@ -1090,7 +1075,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/aroundPrecision/)
   ///
   AlgoliaQuery setAroundPrecision(int value) {
-    assert(value != null);
     assert(!_parameters.containsKey('aroundPrecision'));
     return _copyWithParameters(<String, dynamic>{'aroundPrecision': value});
   }
@@ -1118,7 +1102,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/minimumAroundRadius/)
   ///
   AlgoliaQuery setMinimumAroundRadius(int value) {
-    assert(value != null);
     assert(!_parameters.containsKey('minimumAroundRadius'));
     return _copyWithParameters(<String, dynamic>{'minimumAroundRadius': value});
   }
@@ -1147,7 +1130,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/insideBoundingBox/)
   ///
   AlgoliaQuery setInsideBoundingBox(List<BoundingBox> value) {
-    assert(value != null && value.isNotEmpty, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('insideBoundingBox'));
     List<List<num>> list =
         value.map((v) => [v.p1Lat, v.p1Lng, v.p2Lat, v.p2Lng]).toList();
@@ -1186,7 +1169,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/insidePolygon/)
   ///
   AlgoliaQuery setInsidePolygon(List<BoundingPolygonBox> value) {
-    assert(value != null && value.isNotEmpty, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('insidePolygon'));
     List<List<num>> list = value
         .map((v) => [v.p1Lat, v.p1Lng, v.p2Lat, v.p2Lng, v.p3Lat, v.p3Lng])
@@ -1227,11 +1210,12 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/ignorePlurals/)
   ///
   AlgoliaQuery setIgnorePlurals(dynamic value) {
-    assert(value != null ,'value can not be empty');
-    assert(!_parameters.containsKey('ignorePlurals'), '[ignorePlurals] can not be called multiple times.');
-    assert(((value is bool) || (value is List<String>)), "value must be true|false|['language ISO code', ...]; but value found was `${value.runtimeType}`");
-    return _copyWithParameters(
-        <String, dynamic>{'ignorePlurals': value});
+    assert(value != null, 'value can not be empty');
+    assert(!_parameters.containsKey('ignorePlurals'),
+        '[ignorePlurals] can not be called multiple times.');
+    assert(((value is bool) || (value is List<String>)),
+        "value must be true|false|['language ISO code', ...]; but value found was `${value.runtimeType}`");
+    return _copyWithParameters(<String, dynamic>{'ignorePlurals': value});
   }
 
   ///
@@ -1267,13 +1251,14 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/removeStopWords/)
   ///
   AlgoliaQuery setRemoveStopWords(dynamic value) {
-    assert(value != null ,'value can not be empty');
-    assert(!_parameters.containsKey('removeStopWords'), '[removeStopWords] can not be called multiple times.');
-    assert(((value is bool) || (value is List<String>)), "value must be true|false|['language ISO code', ...]; but value found was `${value.runtimeType}`");
-    return _copyWithParameters(
-        <String, dynamic>{'removeStopWords': value});
+    assert(value != null, 'value can not be empty');
+    assert(!_parameters.containsKey('removeStopWords'),
+        '[removeStopWords] can not be called multiple times.');
+    assert(((value is bool) || (value is List<String>)),
+        "value must be true|false|['language ISO code', ...]; but value found was `${value.runtimeType}`");
+    return _copyWithParameters(<String, dynamic>{'removeStopWords': value});
   }
-  
+
   ///
   /// **CamelCaseAttributes**
   ///
@@ -1284,7 +1269,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/camelCaseAttributes/)
   ///
   AlgoliaQuery setCamelCaseAttributes(List<String> value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('camelCaseAttributes'));
     return _copyWithParameters(<String, dynamic>{'camelCaseAttributes': value});
   }
@@ -1313,7 +1298,8 @@ class AlgoliaQuery {
   AlgoliaQuery setDecompoundedAttributes(dynamic value) {
     assert(value != null, 'value can not be empty');
     assert(!_parameters.containsKey('decompoundedAttributes'));
-    return _copyWithParameters(<String, dynamic>{'decompoundedAttributes': value});
+    return _copyWithParameters(
+        <String, dynamic>{'decompoundedAttributes': value});
   }
 
   ///
@@ -1333,11 +1319,12 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/keepDiacriticsOnCharacters/)
   ///
   AlgoliaQuery setkeepDiacriticsOnCharacters(String value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('decompoundedAttributes'));
-    return _copyWithParameters(<String, dynamic>{'decompoundedAttributes': value});
+    return _copyWithParameters(
+        <String, dynamic>{'decompoundedAttributes': value});
   }
-  
+
   ///
   /// **QueryLanguages**
   ///
@@ -1366,7 +1353,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/queryLanguages/)
   ///
   AlgoliaQuery setQueryLanguages(List<String> value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('queryLanguages'));
     return _copyWithParameters(<String, dynamic>{'queryLanguages': value});
   }
@@ -1380,11 +1367,11 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/indexLanguages/)
   ///
   AlgoliaQuery setIndexLanguages(List<String> value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('indexLanguages'));
     return _copyWithParameters(<String, dynamic>{'indexLanguages': value});
   }
-  
+
   ///
   /// **NaturalLanguages**
   ///
@@ -1414,7 +1401,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/naturalLanguages/)
   ///
   AlgoliaQuery setNaturalLanguages(List<String> value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('naturalLanguages'));
     return _copyWithParameters(<String, dynamic>{'naturalLanguages': value});
   }
@@ -1433,7 +1420,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/enableRules/)
   ///
   AlgoliaQuery setEnableRules({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('enableRules'));
     return _copyWithParameters(<String, dynamic>{'enableRules': enabled});
   }
@@ -1453,7 +1439,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/filterPromotes/)
   ///
   AlgoliaQuery setFilterPromotes({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('filterPromotes'));
     return _copyWithParameters(<String, dynamic>{'filterPromotes': enabled});
   }
@@ -1472,12 +1457,11 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/ruleContexts/)
   ///
   AlgoliaQuery setRuleContexts(List<String> value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('ruleContexts'));
     return _copyWithParameters(<String, dynamic>{'ruleContexts': value});
   }
-  
-  
+
   ///
   /// **EnablePersonalization**
   ///
@@ -1488,9 +1472,9 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/enablePersonalization/)
   ///
   AlgoliaQuery setEnablePersonalization({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('enablePersonalization'));
-    return _copyWithParameters(<String, dynamic>{'enablePersonalization': enabled});
+    return _copyWithParameters(
+        <String, dynamic>{'enablePersonalization': enabled});
   }
 
   ///
@@ -1509,10 +1493,10 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/personalizationImpact/)
   ///
-  AlgoliaQuery setPersonalizationImpact({int value}) {
-    assert(value != null, 'value can not be empty');
+  AlgoliaQuery setPersonalizationImpact({required int value}) {
     assert(!_parameters.containsKey('personalizationImpact'));
-    return _copyWithParameters(<String, dynamic>{'personalizationImpact': value});
+    return _copyWithParameters(
+        <String, dynamic>{'personalizationImpact': value});
   }
 
   ///
@@ -1524,8 +1508,7 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/userToken/)
   ///
-  AlgoliaQuery setUserToken({String value}) {
-    assert(value != null, 'value can not be empty');
+  AlgoliaQuery setUserToken({required String value}) {
     assert(!_parameters.containsKey('userToken'));
     return _copyWithParameters(<String, dynamic>{'userToken': value});
   }
@@ -1543,9 +1526,9 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/queryType/)
   ///
   AlgoliaQuery setQueryType(QueryType value) {
-    assert(value != null, 'value can not be empty');
     assert(!_parameters.containsKey('queryType'));
-    return _copyWithParameters(<String, dynamic>{'queryType': value.toString()});
+    return _copyWithParameters(
+        <String, dynamic>{'queryType': value.toString()});
   }
 
   ///
@@ -1565,9 +1548,9 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/removeWordsIfNoResults/)
   ///
   AlgoliaQuery setRemoveWordsIfNoResults(RemoveWordsIfNoResults value) {
-    assert(value != null, 'value can not be empty');
     assert(!_parameters.containsKey('removeWordsIfNoResults'));
-    return _copyWithParameters(<String, dynamic>{'removeWordsIfNoResults': value.toString()});
+    return _copyWithParameters(
+        <String, dynamic>{'removeWordsIfNoResults': value.toString()});
   }
 
   ///
@@ -1597,7 +1580,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/advancedSyntax/)
   ///
   AlgoliaQuery setAdvancedSyntax({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('advancedSyntax'));
     return _copyWithParameters(<String, dynamic>{'advancedSyntax': enabled});
   }
@@ -1632,7 +1614,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/optionalWords/)
   ///
   AlgoliaQuery setOptionalWords(List<String> value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('optionalWords'));
     return _copyWithParameters(<String, dynamic>{'optionalWords': value});
   }
@@ -1652,9 +1634,10 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/disablePrefixOnAttributes/)
   ///
   AlgoliaQuery setDisablePrefixOnAttributes(List<String> value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('disablePrefixOnAttributes'));
-    return _copyWithParameters(<String, dynamic>{'disablePrefixOnAttributes': value});
+    return _copyWithParameters(
+        <String, dynamic>{'disablePrefixOnAttributes': value});
   }
 
   ///
@@ -1669,9 +1652,10 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/disableExactOnAttributes/)
   ///
   AlgoliaQuery setDisableExactOnAttributes(List<String> value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('disableExactOnAttributes'));
-    return _copyWithParameters(<String, dynamic>{'disableExactOnAttributes': value});
+    return _copyWithParameters(
+        <String, dynamic>{'disableExactOnAttributes': value});
   }
 
   ///
@@ -1695,11 +1679,11 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/exactOnSingleWordQuery/)
   ///
   AlgoliaQuery setExactOnSingleWordQuery(ExactOnSingleWordQuery value) {
-    assert(value != null, 'value can not be empty');
     assert(!_parameters.containsKey('exactOnSingleWordQuery'));
-    return _copyWithParameters(<String, dynamic>{'exactOnSingleWordQuery': value.toString()});
+    return _copyWithParameters(
+        <String, dynamic>{'exactOnSingleWordQuery': value.toString()});
   }
-  
+
   ///
   /// **NumericAttributesForFiltering**
   ///
@@ -1719,12 +1703,12 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/numericAttributesForFiltering/)
   ///
-  AlgoliaQuery setNumericAttributesForFiltering({List<String> value}) {
-    assert(value != null, 'value can not be empty');
+  AlgoliaQuery setNumericAttributesForFiltering({required List<String> value}) {
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('numericAttributesForFiltering'));
-    return _copyWithParameters(<String, dynamic>{'numericAttributesForFiltering': value});
+    return _copyWithParameters(
+        <String, dynamic>{'numericAttributesForFiltering': value});
   }
-
 
   ///
   /// **AllowCompressionOfIntegerArray**
@@ -1739,11 +1723,10 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/allowCompressionOfIntegerArray/)
   ///
   AlgoliaQuery setAllowCompressionOfIntegerArray({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('allowCompressionOfIntegerArray'));
-    return _copyWithParameters(<String, dynamic>{'allowCompressionOfIntegerArray': enabled});
+    return _copyWithParameters(
+        <String, dynamic>{'allowCompressionOfIntegerArray': enabled});
   }
-
 
   ///
   /// **attributeForDistinct**
@@ -1757,7 +1740,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/attributeForDistinct/)
   ///
   AlgoliaQuery setAttributeForDistinct(String value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('attributeForDistinct'));
     return _copyWithParameters(
         <String, dynamic>{'attributeForDistinct': value});
@@ -1836,7 +1819,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/getRankingInfo/)
   ///
   AlgoliaQuery setGetRankingInfo({bool enabled = true}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('getRankingInfo'));
     return _copyWithParameters(<String, dynamic>{'getRankingInfo': enabled});
   }
@@ -1855,7 +1837,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/clickAnalytics/)
   ///
   AlgoliaQuery setClickAnalytics({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('clickAnalytics'));
     return _copyWithParameters(<String, dynamic>{'clickAnalytics': enabled});
   }
@@ -1871,7 +1852,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/analytics/)
   ///
   AlgoliaQuery setAnalytics({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('analytics'));
     return _copyWithParameters(<String, dynamic>{'analytics': enabled});
   }
@@ -1895,7 +1875,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/analyticsTags/)
   ///
   AlgoliaQuery setAnalyticsTags(List<String> value) {
-    assert(value != null, 'value can not be empty');
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('analyticsTags'));
     return _copyWithParameters(<String, dynamic>{'analyticsTags': value});
   }
@@ -1910,7 +1890,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/synonyms/)
   ///
   AlgoliaQuery setSynonyms({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('synonyms'));
     return _copyWithParameters(<String, dynamic>{'synonyms': enabled});
   }
@@ -1935,9 +1914,9 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/replaceSynonymsInHighlight/)
   ///
   AlgoliaQuery setReplaceSynonymsInHighlight({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('replaceSynonymsInHighlight'));
-    return _copyWithParameters(<String, dynamic>{'replaceSynonymsInHighlight': enabled});
+    return _copyWithParameters(
+        <String, dynamic>{'replaceSynonymsInHighlight': enabled});
   }
 
   ///
@@ -1954,7 +1933,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/maxFacetHits/)
   ///
   AlgoliaQuery setMaxFacetHits(int value) {
-    assert(value != null, 'value can not be empty');
     assert(!_parameters.containsKey('maxFacetHits'));
     return _copyWithParameters(<String, dynamic>{'maxFacetHits': value});
   }
@@ -1971,9 +1949,9 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/percentileComputation/)
   ///
   AlgoliaQuery setPercentileComputation({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('percentileComputation'));
-    return _copyWithParameters(<String, dynamic>{'percentileComputation': enabled});
+    return _copyWithParameters(
+        <String, dynamic>{'percentileComputation': enabled});
   }
 
   ///
@@ -1988,10 +1966,11 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/attributeCriteriaComputedByMinProximity/)
   ///
-  AlgoliaQuery setAttributeCriteriaComputedByMinProximity({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
+  AlgoliaQuery setAttributeCriteriaComputedByMinProximity(
+      {bool enabled = false}) {
     assert(!_parameters.containsKey('attributeCriteriaComputedByMinProximity'));
-    return _copyWithParameters(<String, dynamic>{'attributeCriteriaComputedByMinProximity': enabled});
+    return _copyWithParameters(
+        <String, dynamic>{'attributeCriteriaComputedByMinProximity': enabled});
   }
 
   ///
@@ -2006,21 +1985,19 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/enableABTest/)
   ///
   AlgoliaQuery setEnableABTest({bool enabled = false}) {
-    assert(enabled != null, 'value can not be empty');
     assert(!_parameters.containsKey('enableABTest'));
     return _copyWithParameters(<String, dynamic>{'enableABTest': enabled});
   }
-  
-  
 }
 
 class BoundingBox {
   BoundingBox({
-    @required this.p1Lat,
-    @required this.p1Lng,
-    @required this.p2Lat,
-    @required this.p2Lng,
+    required this.p1Lat,
+    required this.p1Lng,
+    required this.p2Lat,
+    required this.p2Lng,
   });
+
   num p1Lat;
   num p1Lng;
   num p2Lat;
@@ -2029,13 +2006,14 @@ class BoundingBox {
 
 class BoundingPolygonBox {
   BoundingPolygonBox({
-    @required this.p1Lat,
-    @required this.p1Lng,
-    @required this.p2Lat,
-    @required this.p2Lng,
-    @required this.p3Lat,
-    @required this.p3Lng,
+    required this.p1Lat,
+    required this.p1Lng,
+    required this.p2Lat,
+    required this.p2Lng,
+    required this.p3Lat,
+    required this.p3Lng,
   });
+
   num p1Lat;
   num p1Lng;
   num p2Lat;
@@ -2044,21 +2022,20 @@ class BoundingPolygonBox {
   num p3Lng;
 }
 
-
-enum QueryType{
+enum QueryType {
   prefixLast,
   prefixAll,
   prefixNone,
 }
 
-enum RemoveWordsIfNoResults{
+enum RemoveWordsIfNoResults {
   none,
   lastWords,
   firstWords,
   allOptional,
 }
 
-enum ExactOnSingleWordQuery{
+enum ExactOnSingleWordQuery {
   attribute,
   none,
   word,

@@ -1,3 +1,23 @@
+## [1.0.0] - Stable release with Null-Safety
+- [Bug] [#26](https://github.com/knoxpo/dart_algolia/issues/26)
+- [Added] Add support of ``Null-safety`` 
+- [Added] Under *Query* options:
+  - In ``languages`` 8/11
+  - In ``query-rules`` 3/3
+  - In ``personalization`` 3/3
+  - In ``query-strategy`` 7/7
+  - In ``performance`` 2/2
+  - In ``advanced`` 11/15
+- [Added] Under *Setting* options:
+  - In ``languages`` 8/11
+  - In ``query-rules`` 3/3
+  - In ``personalization`` 3/3
+  - In ``query-strategy`` 7/7
+  - In ``performance`` 2/2
+  - In ``advanced`` 11/15
+- [Added] Add new error handling class ``AlgoliaError``
+- [Upgrade] Bumped up ``http`` version
+
 ## [0.1.7] - Bug fixes and added a new property.
 - [Bug] [#14](https://github.com/knoxpo/dart_algolia/issues/14) Solved few health suggestion, to improve the health of the code.
 - [Added] Add support for ``facets_stats`` property returned by Algolia query

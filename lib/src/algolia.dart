@@ -2,21 +2,17 @@ part of algolia;
 
 class Algolia {
   const Algolia.init({
-    @required String applicationId,
-    @required String apiKey,
+    required String applicationId,
+    required String apiKey,
     this.extraHeaders = const {},
-  })  : assert(applicationId != null, 'Application ID is required.'),
-        assert(apiKey != null, 'API Key is required.'),
-        applicationId = applicationId,
+  })  : applicationId = applicationId,
         _apiKey = apiKey;
 
   const Algolia._({
-    @required String applicationId,
-    @required String apiKey,
+    required String applicationId,
+    required String apiKey,
     this.extraHeaders = const {},
-  })  : assert(applicationId != null, 'Application ID is required.'),
-        assert(apiKey != null, 'API Key is required.'),
-        applicationId = applicationId,
+  })  : applicationId = applicationId,
         _apiKey = apiKey;
 
   final String applicationId;
@@ -52,7 +48,6 @@ class Algolia {
   }
 
   AlgoliaIndexReference index(String index) {
-    assert(index != null);
     return AlgoliaIndexReference._(this, index);
   }
 
@@ -60,18 +55,17 @@ class Algolia {
       AlgoliaMultiIndexesReference._(this);
 
   Future<AlgoliaIndexesSnapshot> getIndices() async {
-    try {
-      String _url = '${this._host}indexes';
-      Response response = await get(
-        _url,
-        headers: this._header,
-      );
-      print(response);
-      Map<String, dynamic> body = json.decode(response.body);
-      print(body);
-      return AlgoliaIndexesSnapshot._(this, body);
-    } catch (err) {
-      return err;
+    String _url = '${this._host}indexes';
+    http.Response response = await http.get(
+      Uri.parse(_url),
+      headers: this._header,
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
     }
+
+    return AlgoliaIndexesSnapshot._(this, body);
   }
 }

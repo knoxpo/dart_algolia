@@ -1,14 +1,13 @@
 part of algolia;
 
 class AlgoliaTask {
-  AlgoliaTask._(this.algolia, String index, Map<String, dynamic> data)
+  AlgoliaTask._(this.algolia, String? index, Map<String, dynamic> data)
       : _index = index,
         _data = data,
-        taskID = data['taskID'],
-        assert(algolia != null);
+        taskID = data['taskID'];
   final Algolia algolia;
-  final String _index;
-  final int taskID;
+  final String? _index;
+  final int? taskID;
   final Map<String, dynamic> _data;
 
   Map<String, dynamic> get data {
@@ -30,11 +29,16 @@ class AlgoliaTask {
 
   Future<bool> taskStatus() async {
     String url = '${algolia._host}indexes/$_index/task/$taskID';
-    Response response = await get(
-      url,
+
+    http.Response response = await http.get(
+      Uri.parse(url),
       headers: algolia._header,
     );
     Map<String, dynamic> body = json.decode(response.body);
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
+    }
+
     return body['status'] == 'published';
   }
 }

@@ -39,7 +39,7 @@ class AlgoliaBatch {
   AlgoliaBatch._(
     this.algolia,
     String index, {
-    List<AlgoliaBatchRequest> actions,
+    List<AlgoliaBatchRequest>? actions,
   })  : _actions = actions ?? <AlgoliaBatchRequest>[],
         _index = index;
   Algolia algolia;
@@ -60,16 +60,25 @@ class AlgoliaBatch {
     if (!_committed) {
       if (_actions.isNotEmpty) {
         _committed = true;
+
         List<Map<String, dynamic>> actions =
             _actions.map((a) => a.toMap()).toList();
-        Response response = await post(
-          '${algolia._host}indexes/$_index/batch',
+
+        String url = '${algolia._host}indexes/$_index/batch';
+
+        http.Response response = await http.post(
+          Uri.parse(url),
           headers: algolia._header,
           body: utf8.encode(json
               .encode({'requests': actions}, toEncodable: jsonEncodeHelper)),
           encoding: Encoding.getByName('utf-8'),
         );
+
         Map<String, dynamic> body = json.decode(response.body);
+
+        if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+          throw AlgoliaError._(body, response.statusCode);
+        }
         return AlgoliaTask._(algolia, _index, body);
       } else {
         throw StateError("This batch has no actions to commit.");
@@ -125,7 +134,7 @@ class AlgoliaBatch {
   ///
   void partialUpdateObject(Map<String, dynamic> data) {
     if (!_committed) {
-      assert(_index != null && _index != '*' && _index != '',
+      assert(_index != '*' && _index != '',
           'IndexName is required, but it has `*` multiple flag or `null`.');
       _actions
           .add(AlgoliaBatchRequest(action: 'partialUpdateObject', body: data));
@@ -145,7 +154,7 @@ class AlgoliaBatch {
   ///
   void partialUpdateObjectNoCreate(Map<String, dynamic> data) {
     if (!_committed) {
-      assert(_index != null && _index != '*' && _index != '',
+      assert(_index != '*' && _index != '',
           'IndexName is required, but it has `*` multiple flag or `null`.');
       assert(data['objectID'] != null,
           'In batch action [partialUpdateObjectNoCreate] objectID field is required.');
@@ -207,8 +216,8 @@ class AlgoliaBatch {
 /// Batch list element wrapper class [AlgoliaBatchRequest] for commit.
 class AlgoliaBatchRequest {
   AlgoliaBatchRequest({
-    @required this.action,
-    @required this.body,
+    required this.action,
+    required this.body,
   });
   String action;
   Map<String, dynamic> body;

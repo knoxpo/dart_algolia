@@ -1,58 +1,62 @@
 part of algolia;
 
 class AlgoliaObjectReference {
-  AlgoliaObjectReference._(this.algolia, String index, String objectId)
+  AlgoliaObjectReference._(this.algolia, String? index, String? objectId)
       : _index = index,
-        _objectId = objectId,
-        assert(algolia != null);
+        _objectId = objectId;
 
   final Algolia algolia;
-  final String _index;
-  final String _objectId;
+  final String? _index;
+  final String? _objectId;
 
-  String get index => _index;
-  String get objectID => _objectId;
+  String? get index => _index;
+
+  String? get objectID => _objectId;
 
   /// Get the object referred to by this [AlgoliaObjectReference].
   ///
   /// If the object does not yet exist, it will be created.
   Future<AlgoliaObjectSnapshot> getObject() async {
     assert(_objectId != null, 'You can\'t get an object without an objectID.');
-    try {
-      String url = '${algolia._host}indexes/$_index/$_objectId';
-      Response response = await get(
-        url,
-        headers: algolia._header,
-      );
-      Map<String, dynamic> body = json.decode(response.body);
-      return AlgoliaObjectSnapshot.fromMap(algolia, _index, body);
-    } catch (err) {
-      return err;
+
+    String url = '${algolia._host}indexes/$_index/$_objectId';
+    http.Response response = await http.get(
+      Uri.parse(url),
+      headers: algolia._header,
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
     }
+    return AlgoliaObjectSnapshot.fromMap(algolia, _index, body);
   }
 
   /// Writes to the object referred to by this [AlgoliaObjectReference].
   ///
   /// If the object does not yet exist, it will be created.
   Future<AlgoliaTask> setData(Map<String, dynamic> data) async {
-    try {
-      assert(_index != null && _index != '*' && _index != '',
-          'IndexName is required, but it has `*` multiple flag or `null`.');
-      String url = '${algolia._host}indexes/$_index';
-      if (_objectId != null) {
-        url = '$url/$_objectId';
-      }
-      Response response = await post(
-        url,
-        headers: algolia._header,
-        body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
-        encoding: Encoding.getByName('utf-8'),
-      );
-      Map<String, dynamic> body = json.decode(response.body);
-      return AlgoliaTask._(algolia, _index, body);
-    } catch (err) {
-      return err;
+    assert(_index != null && _index != '*' && _index != '',
+        'IndexName is required, but it has `*` multiple flag or `null`.');
+
+    String url = '${algolia._host}indexes/$_index';
+
+    if (_objectId != null) {
+      url += '/$_objectId';
     }
+
+    http.Response response = await http.post(
+      Uri.parse(url),
+      headers: algolia._header,
+      body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
+      encoding: Encoding.getByName('utf-8'),
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
+    }
+
+    return AlgoliaTask._(algolia, _index, body);
   }
 
   ///
@@ -64,25 +68,26 @@ class AlgoliaObjectReference {
   ///
   /// If no object exists yet, the update will fail.
   Future<AlgoliaTask> updateData(Map<String, dynamic> data) async {
-    try {
-      assert(_index != null && _index != '*' && _index != '',
-          'IndexName is required, but it has `*` multiple flag or `null`.');
-      String url = '${algolia._host}indexes/$_index';
-      if (_objectId != null) {
-        url = '$url/$_objectId';
-      }
-      data['objectID'] = _objectId;
-      Response response = await put(
-        url,
-        headers: algolia._header,
-        body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
-        encoding: Encoding.getByName('utf-8'),
-      );
-      Map<String, dynamic> body = json.decode(response.body);
-      return AlgoliaTask._(algolia, _index, body);
-    } catch (err) {
-      return err;
+    assert(_index != null && _index != '*' && _index != '',
+        'IndexName is required, but it has `*` multiple flag or `null`.');
+    String url = '${algolia._host}indexes/$_index';
+    if (_objectId != null) {
+      url = '$url/$_objectId';
     }
+    data['objectID'] = _objectId;
+    http.Response response = await http.put(
+      Uri.parse(url),
+      headers: algolia._header,
+      body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
+      encoding: Encoding.getByName('utf-8'),
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
+    }
+
+    return AlgoliaTask._(algolia, _index, body);
   }
 
   ///
@@ -107,24 +112,25 @@ class AlgoliaObjectReference {
         'You can\'t partialUpdateObject when createIfNotExists=false and data without an objectID.');
     assert(_index != null && _index != '*' && _index != '',
         'IndexName is required, but it has `*` multiple flag or `null`.');
-    try {
-      String url = '${algolia._host}indexes/$_index';
-      if (_objectId != null) {
-        url = '$url/$_objectId/partial';
-      }
-      data['objectID'] = _objectId;
-      data['createIfNotExists'] = createIfNotExists;
-      Response response = await put(
-        url,
-        headers: algolia._header,
-        body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
-        encoding: Encoding.getByName('utf-8'),
-      );
-      Map<String, dynamic> body = json.decode(response.body);
-      return AlgoliaTask._(algolia, _index, body);
-    } catch (err) {
-      return err;
+
+    String url = '${algolia._host}indexes/$_index';
+    if (_objectId != null) {
+      url = '$url/$_objectId/partial';
     }
+    data['objectID'] = _objectId;
+    data['createIfNotExists'] = createIfNotExists;
+    http.Response response = await http.put(
+      Uri.parse(url),
+      headers: algolia._header,
+      body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
+      encoding: Encoding.getByName('utf-8'),
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
+    }
+
+    return AlgoliaTask._(algolia, _index, body);
   }
 
   /// Delete the object referred to by this [AlgoliaObjectReference].
@@ -133,19 +139,20 @@ class AlgoliaObjectReference {
   Future<AlgoliaTask> deleteObject() async {
     assert(
         _objectId != null, 'You can\'t delete an object without an objectID.');
-    try {
-      String url = '${algolia._host}indexes/$_index';
-      if (_objectId != null) {
-        url = '$url/$_objectId';
-      }
-      Response response = await delete(
-        url,
-        headers: algolia._header,
-      );
-      Map<String, dynamic> body = json.decode(response.body);
-      return AlgoliaTask._(algolia, _index, body);
-    } catch (err) {
-      return err;
+
+    String url = '${algolia._host}indexes/$_index';
+    if (_objectId != null) {
+      url = '$url/$_objectId';
     }
+    http.Response response = await http.delete(
+      Uri.parse(url),
+      headers: algolia._header,
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
+    }
+
+    return AlgoliaTask._(algolia, _index, body);
   }
 }
