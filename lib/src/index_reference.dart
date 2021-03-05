@@ -21,6 +21,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   /// ID of the referenced index.
   ///
   String get index => _index;
+  String get encodedIndex => Uri.encodeFull(_index);
 
   ///
   /// **Settings**
@@ -139,7 +140,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   /// Clear the index referred to by this [AlgoliaIndexReference].
   ///
   Future<AlgoliaTask> clearIndex() async {
-    String url = '${algolia._host}indexes/$index/clear';
+    String url = '${algolia._host}indexes/$encodedIndex/clear';
     http.Response response = await http.post(
       Uri.parse(url),
       headers: algolia._header,
@@ -182,7 +183,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     required bool copy,
     List<CopyScope>? scopes,
   }) async {
-    String url = '${algolia._host}indexes/$index/operation';
+    String url = '${algolia._host}indexes/$encodedIndex/operation';
     final Map<String, dynamic> data = {
       'operation': copy ? 'copy' : 'move',
       'destination': destination,
@@ -240,7 +241,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   /// Delete the index referred to by this [AlgoliaIndexReference].
   ///
   Future<AlgoliaTask> deleteIndex() async {
-    String url = '${algolia._host}indexes/$index';
+    String url = '${algolia._host}indexes/$encodedIndex';
     http.Response response = await http.delete(
       Uri.parse(url),
       headers: algolia._header,

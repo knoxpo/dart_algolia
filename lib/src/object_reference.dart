@@ -13,13 +13,17 @@ class AlgoliaObjectReference {
 
   String? get objectID => _objectId;
 
+  String? get encodedObjectID =>
+      _objectId != null ? Uri.encodeFull(_objectId!) : null;
+  String? get encodedIndex => _index != null ? Uri.encodeFull(_index!) : null;
+
   /// Get the object referred to by this [AlgoliaObjectReference].
   ///
   /// If the object does not yet exist, it will be created.
   Future<AlgoliaObjectSnapshot> getObject() async {
     assert(_objectId != null, 'You can\'t get an object without an objectID.');
 
-    String url = '${algolia._host}indexes/$_index/$_objectId';
+    String url = '${algolia._host}indexes/$encodedIndex/$encodedObjectID';
     http.Response response = await http.get(
       Uri.parse(url),
       headers: algolia._header,
@@ -38,10 +42,10 @@ class AlgoliaObjectReference {
     assert(_index != null && _index != '*' && _index != '',
         'IndexName is required, but it has `*` multiple flag or `null`.');
 
-    String url = '${algolia._host}indexes/$_index';
+    String url = '${algolia._host}indexes/$encodedIndex';
 
     if (_objectId != null) {
-      url += '/$_objectId';
+      url += '/$encodedObjectID';
     }
 
     http.Response response = await http.post(
@@ -70,9 +74,9 @@ class AlgoliaObjectReference {
   Future<AlgoliaTask> updateData(Map<String, dynamic> data) async {
     assert(_index != null && _index != '*' && _index != '',
         'IndexName is required, but it has `*` multiple flag or `null`.');
-    String url = '${algolia._host}indexes/$_index';
+    String url = '${algolia._host}indexes/$encodedIndex';
     if (_objectId != null) {
-      url = '$url/$_objectId';
+      url = '$url/$encodedObjectID';
     }
     data['objectID'] = _objectId;
     http.Response response = await http.put(
@@ -113,9 +117,9 @@ class AlgoliaObjectReference {
     assert(_index != null && _index != '*' && _index != '',
         'IndexName is required, but it has `*` multiple flag or `null`.');
 
-    String url = '${algolia._host}indexes/$_index';
+    String url = '${algolia._host}indexes/$encodedIndex';
     if (_objectId != null) {
-      url = '$url/$_objectId/partial';
+      url = '$url/$encodedObjectID/partial';
     }
     data['objectID'] = _objectId;
     data['createIfNotExists'] = createIfNotExists;
@@ -140,9 +144,9 @@ class AlgoliaObjectReference {
     assert(
         _objectId != null, 'You can\'t delete an object without an objectID.');
 
-    String url = '${algolia._host}indexes/$_index';
+    String url = '${algolia._host}indexes/$encodedIndex';
     if (_objectId != null) {
-      url = '$url/$_objectId';
+      url = '$url/$encodedObjectID';
     }
     http.Response response = await http.delete(
       Uri.parse(url),
