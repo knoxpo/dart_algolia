@@ -32,7 +32,7 @@ If you wish to contribute in our development process, refer to our [Contributing
 You should ensure that you add the router as a dependency in your flutter project.
 ```yaml
 dependencies:
- algolia: ^0.1.6+1
+ algolia: ^1.0.0
 ```
 You should then run `flutter packages upgrade` or update your packages in IntelliJ.
 
