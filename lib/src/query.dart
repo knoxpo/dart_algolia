@@ -92,7 +92,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/query/)
   ///
   AlgoliaQuery search(String value) {
-    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('search'));
     return _copyWithParameters(<String, dynamic>{'query': value});
   }
