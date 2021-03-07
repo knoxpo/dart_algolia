@@ -1,3 +1,7 @@
+## 1.0.0+2
+
+* Remove incorrect assertion from `search`.
+
 ## [1.0.0+1] - Stable release with Null-Safety
 - Implemented ``analysis_options.yaml ``
 ## [1.0.0] - Stable release with Null-Safety
