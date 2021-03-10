@@ -61,12 +61,11 @@ class AlgoliaBatch {
       if (_actions.isNotEmpty) {
         _committed = true;
 
-        List<Map<String, dynamic>> actions =
-            _actions.map((a) => a.toMap()).toList();
+        var actions = _actions.map((a) => a.toMap()).toList();
 
-        String url = '${algolia._host}indexes/$_index/batch';
+        var url = '${algolia._host}indexes/$_index/batch';
 
-        http.Response response = await http.post(
+        var response = await http.post(
           Uri.parse(url),
           headers: algolia._header,
           body: utf8.encode(json

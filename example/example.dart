@@ -5,18 +5,14 @@ void main() async {
   ///
   /// Initiate Algolia in your project
   ///
-  Algolia algolia = Application.algolia;
-  AlgoliaTask taskAdded,
-      taskUpdated,
-      taskDeleted,
-      taskBatch,
-      taskClearIndex;
+  var algolia = Application.algolia;
+  AlgoliaTask taskAdded, taskUpdated, taskDeleted, taskBatch, taskClearIndex;
   AlgoliaObjectSnapshot addedObject;
 
   ///
   /// 1. Perform Adding Object to existing Index.
   ///
-  Map<String, dynamic> addData = {
+  var addData = <String, dynamic>{
     'name': 'John Smith',
     'contact': '+1 609 123456',
     'email': 'johan@example.com',
@@ -48,7 +44,7 @@ void main() async {
   ///
   /// 3. Perform Updating Object to existing Index.
   ///
-  Map<String, dynamic> updateData = Map<String, dynamic>.from(addedObject.data!);
+  var updateData = Map<String, dynamic>.from(addedObject.data);
   updateData['contact'] = '+1 609 567890';
   updateData['modifiedAt'] = DateTime.now();
   taskUpdated = await algolia.instance
@@ -75,10 +71,10 @@ void main() async {
   ///
   /// 5. Perform Batch
   ///
-  AlgoliaBatch batch = algolia.instance.index('contacts').batch();
+  var batch = algolia.instance.index('contacts').batch();
   batch.clearIndex();
-  for (int i = 0; i < 10; i++) {
-    Map<String, dynamic> addData = {
+  for (var i = 0; i < 10; i++) {
+    var addData = <String, dynamic>{
       'name': 'John ${DateTime.now().microsecond}',
       'contact': '+1 ${DateTime.now().microsecondsSinceEpoch}',
       'email': 'johan.${DateTime.now().microsecond}@example.com',
@@ -100,14 +96,14 @@ void main() async {
   ///
   /// 6. Perform Query
   ///
-  AlgoliaQuery query = algolia.instance.index('contacts').search('john');
+  var query = algolia.instance.index('contacts').query('john');
 
   // Perform multiple facetFilters
-  query = query.setFacetFilter('status:published');
-  query = query.setFacetFilter('isDelete:false');
+  query = query.facetFilter('status:published');
+  query = query.facetFilter('isDelete:false');
 
   // Get Result/Objects
-  AlgoliaQuerySnapshot snap = await query.getObjects();
+  var snap = await query.getObjects();
 
   // Checking if has [AlgoliaQuerySnapshot]
   print('\n\n');
@@ -116,7 +112,7 @@ void main() async {
   ///
   /// 7. Perform List all Indices
   ///
-  AlgoliaIndexesSnapshot indices = await algolia.instance.getIndices();
+  var indices = await algolia.instance.getIndices();
 
   // Checking if has [AlgoliaIndexesSnapshot]
   print('\n\n');
@@ -138,10 +134,10 @@ void main() async {
   ///
   /// 10. Get Index Setting Instance.
   ///
-  AlgoliaIndexSettings settingsRef = algolia.instance.index('contact').settings;
+  var settingsRef = algolia.instance.index('contact').settings;
 
   // Get Settings
-  Map<String, dynamic>? currentSettings = await settingsRef.getSettings();
+  var currentSettings = await settingsRef.getSettings();
 
   // Checking if has [Map]
   print('\n\n');
@@ -149,8 +145,9 @@ void main() async {
 
   // Set Settings
   AlgoliaSettings settingsData = settingsRef;
-  settingsData = settingsData.setReplicas(const ['index_copy_1', 'index_copy_2']);
-  AlgoliaTask setSettings = await settingsData.setSettings();
+  settingsData =
+      settingsData.setReplicas(const ['index_copy_1', 'index_copy_2']);
+  var setSettings = await settingsData.setSettings();
 
   // Checking if has [AlgoliaTask]
   print('\n\n');

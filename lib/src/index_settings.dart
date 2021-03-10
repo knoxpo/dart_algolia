@@ -17,9 +17,9 @@ class AlgoliaIndexSettings extends AlgoliaSettings {
             'Index Name is required, but was found: $indexName'),
         super._(algolia, indexName);
 
-  Future<Map<String, dynamic>?> getSettings() async {
-    String url = '${algolia._host}indexes/$_index/settings';
-    http.Response response = await http.get(
+  Future<Map<String, dynamic>> getSettings() async {
+    var url = '${algolia._host}indexes/$_index/settings';
+    var response = await http.get(
       Uri.parse(url),
       headers: algolia._header,
     );
@@ -56,12 +56,22 @@ class AlgoliaSettings {
     );
   }
 
+  @override
+  String toString() {
+    return {
+      'url': '${algolia._host}indexes' +
+          (_index.isNotEmpty ? '/' + Uri.encodeFull(_index) : ''),
+      'headers': algolia._header,
+      'parameters': _parameters,
+    }.toString();
+  }
+
   Future<AlgoliaTask> setSettings() async {
     assert(
         _parameters.keys.isNotEmpty, 'No setting parameter to update found.');
 
-    String url = '${algolia._host}indexes/$_index/settings';
-    http.Response response = await http.put(
+    var url = '${algolia._host}indexes/$_index/settings';
+    var response = await http.put(
       Uri.parse(url),
       headers: algolia._header,
       body:
@@ -73,7 +83,7 @@ class AlgoliaSettings {
       throw AlgoliaError._(body, response.statusCode);
     }
 
-    AlgoliaTask task = AlgoliaTask._(algolia, _index, body);
+    var task = AlgoliaTask._(algolia, _index, body);
     return task;
   }
 
@@ -328,8 +338,7 @@ class AlgoliaSettings {
   AlgoliaSettings setFacetFilter(dynamic value) {
     assert(value is String || value is List<String>,
         'value must be either String | List<String> but was found `${value.runtimeType}`');
-    final List<dynamic> facetFilters =
-        List<dynamic>.from(_parameters['facetFilters']);
+    final facetFilters = List<dynamic>.from(_parameters['facetFilters']);
     assert(facetFilters.where((dynamic item) => value == item).isEmpty,
         'FacetFilters $value already exists in this query');
     facetFilters.add(value);
@@ -355,8 +364,7 @@ class AlgoliaSettings {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/facetFilters/)
   ///
   AlgoliaSettings setOptionalFilter(String value) {
-    final List<String> optionalFilters =
-        List<String>.from(_parameters['optionalFilters']);
+    final optionalFilters = List<String>.from(_parameters['optionalFilters']);
     assert(optionalFilters.where((String item) => value == item).isEmpty,
         'OptionalFilters $value already exists in this query');
     optionalFilters.add(value);
@@ -397,8 +405,7 @@ class AlgoliaSettings {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/numericFilters/)
   ///
   AlgoliaSettings setNumericFilter(String value) {
-    final List<String> numericFilters =
-        List<String>.from(_parameters['numericFilters']);
+    final numericFilters = List<String>.from(_parameters['numericFilters']);
     assert(numericFilters.where((String item) => value == item).isEmpty,
         'NumericFilters $value already exists in this query');
     numericFilters.add(value);
@@ -431,8 +438,7 @@ class AlgoliaSettings {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/tagFilters/)
   ///
   AlgoliaSettings setTagFilter(String value) {
-    final List<String> tagFilters =
-        List<String>.from(_parameters['tagFilters']);
+    final tagFilters = List<String>.from(_parameters['tagFilters']);
     assert(tagFilters.where((String item) => value == item).isEmpty,
         'TagFilters $value already exists in this query');
     tagFilters.add(value);
@@ -1093,8 +1099,7 @@ class AlgoliaSettings {
   AlgoliaSettings setInsideBoundingBox(List<BoundingBox> value) {
     assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('insideBoundingBox'));
-    List<List<num>> list =
-        value.map((v) => [v.p1Lat, v.p1Lng, v.p2Lat, v.p2Lng]).toList();
+    var list = value.map((v) => [v.p1Lat, v.p1Lng, v.p2Lat, v.p2Lng]).toList();
     return _copyWithParameters(<String, dynamic>{'insideBoundingBox': list});
   }
 
@@ -1132,7 +1137,7 @@ class AlgoliaSettings {
   AlgoliaSettings setInsidePolygon(List<BoundingPolygonBox> value) {
     assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('insidePolygon'));
-    List<List<num>> list = value
+    var list = value
         .map((v) => [v.p1Lat, v.p1Lng, v.p2Lat, v.p2Lng, v.p3Lat, v.p3Lng])
         .toList();
     return _copyWithParameters(<String, dynamic>{'insidePolygon': list});
@@ -1256,11 +1261,16 @@ class AlgoliaSettings {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/decompoundedAttributes/)
   ///
-  AlgoliaSettings setDecompoundedAttributes(dynamic value) {
-    assert(value != null, 'value can not be empty');
+  AlgoliaSettings setDecompoundedAttributes(List<DecompoundedAttribute> value) {
+    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('decompoundedAttributes'));
+    var list = <String, dynamic>{};
+    for (var attr in value) {
+      list = Map<String, dynamic>.unmodifiable(
+          Map<String, dynamic>.from(list)..addAll(attr.toMap()));
+    }
     return _copyWithParameters(
-        <String, dynamic>{'decompoundedAttributes': value});
+        <String, dynamic>{'decompoundedAttributes': list});
   }
 
   ///
@@ -1281,9 +1291,9 @@ class AlgoliaSettings {
   ///
   AlgoliaSettings setkeepDiacriticsOnCharacters(String value) {
     assert(value.isNotEmpty, 'value can not be empty');
-    assert(!_parameters.containsKey('decompoundedAttributes'));
+    assert(!_parameters.containsKey('keepDiacriticsOnCharacters'));
     return _copyWithParameters(
-        <String, dynamic>{'decompoundedAttributes': value});
+        <String, dynamic>{'keepDiacriticsOnCharacters': value});
   }
 
   ///
@@ -1331,40 +1341,6 @@ class AlgoliaSettings {
     assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('indexLanguages'));
     return _copyWithParameters(<String, dynamic>{'indexLanguages': value});
-  }
-
-  ///
-  /// **NaturalLanguages**
-  ///
-  /// This parameter changes the default values of certain parameters and settings that work best for a natural language query, such as [ignorePlurals], [removeStopWords], [removeWordsIfNoResults], [analyticsTags] and [ruleContexts].
-  /// These parameters and settings work well together when the query is formatted in natural language instead of keywords, for example when your user performs a voice search.
-  ///
-  /// The naturalLanguages parameter changes the following parameters and setttings:
-  ///   - removeStopWords and ignorePlurals are set to the given list of languages.
-  ///   - removeWordsIfNoResults is set allOptional.
-  ///   - It adds the natural_language value to ruleContexts.
-  ///   - It adds the natural_language value to analyticsTags.
-  ///
-  ///  **Usage notes:**
-  ///   - For optimal relevance, we recommend to only pass languages that occur in your data.
-  ///   - List of supported languages with their associated language ISO code:
-  ///
-  ///         Afrikaans=af    Arabic=ar     Azerbaijani=az    Bulgarian=bg    Bengali=bn     Catalan=ca    Czech=cs        Welsh=cy
-  ///         Danish=da       German=de     Greek=el          English=en      Esperanto=eo   Spanish=es    Estonian=et     Basque=eu
-  ///         Persian (Farsi)=fa            Finnish=fi        Faroese=fo      French=fr      Irish=ga      Galician=gl     Hebrew=he
-  ///         Hindi=hi        Hungarian=hu  Armenian=hy       Indonesian=id   Icelandic=is   Italian=it    Japanese=ja     Georgian=ka
-  ///         Kazakh=kk       Korean=ko     Kurdish=ku        Kirghiz=ky      Lithuanian=lt  Latvian=lv    Maori=mi        Mongolian=mn
-  ///         Marathi=mr      Malay=ms      Maltese=mt        Norwegian Bokmål=nb            Dutch=nl      Norwegian=no    Northern Sotho=ns
-  ///         Polish=pl       Pashto=ps     Portuguese=pt     Brazilian=pt-br                Quechua=qu    Romanian=ro     Russian=ru
-  ///         Slovak=sk       Albanian=sq   Swedish=sv        Swahili=sw     Tamil=ta        Telugu=te     Thai=th         Tagalog=tl
-  ///         Tswana=tn       Turkish=tr    Tatar=tt          Ukranian=uk    Urdu=ur         Uzbek=uz      Chinese=zh
-  ///
-  /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/naturalLanguages/)
-  ///
-  AlgoliaSettings setNaturalLanguages(List<String> value) {
-    assert(value.isNotEmpty, 'value can not be empty');
-    assert(!_parameters.containsKey('naturalLanguages'));
-    return _copyWithParameters(<String, dynamic>{'naturalLanguages': value});
   }
 
   ///
@@ -1490,7 +1466,7 @@ class AlgoliaSettings {
   AlgoliaSettings setQueryType(QueryType value) {
     assert(!_parameters.containsKey('queryType'));
     return _copyWithParameters(
-        <String, dynamic>{'queryType': value.toString()});
+        <String, dynamic>{'queryType': value.toString().split('.').last});
   }
 
   ///
@@ -1511,8 +1487,9 @@ class AlgoliaSettings {
   ///
   AlgoliaSettings setRemoveWordsIfNoResults(RemoveWordsIfNoResults value) {
     assert(!_parameters.containsKey('removeWordsIfNoResults'));
-    return _copyWithParameters(
-        <String, dynamic>{'removeWordsIfNoResults': value.toString()});
+    return _copyWithParameters(<String, dynamic>{
+      'removeWordsIfNoResults': value.toString().split('.').last
+    });
   }
 
   ///
@@ -1642,8 +1619,9 @@ class AlgoliaSettings {
   ///
   AlgoliaSettings setExactOnSingleWordQuery(ExactOnSingleWordQuery value) {
     assert(!_parameters.containsKey('exactOnSingleWordQuery'));
-    return _copyWithParameters(
-        <String, dynamic>{'exactOnSingleWordQuery': value.toString()});
+    return _copyWithParameters(<String, dynamic>{
+      'exactOnSingleWordQuery': value.toString().split('.').last
+    });
   }
 
   ///
@@ -1665,8 +1643,7 @@ class AlgoliaSettings {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/numericAttributesForFiltering/)
   ///
-  AlgoliaSettings setNumericAttributesForFiltering(
-      {required List<String> value}) {
+  AlgoliaSettings setNumericAttributesForFiltering(List<String> value) {
     assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('numericAttributesForFiltering'));
     return _copyWithParameters(
@@ -2040,5 +2017,20 @@ class AlgoliaSettings {
     assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('replicas'));
     return _copyWithParameters(<String, dynamic>{'replicas': value});
+  }
+}
+
+class DecompoundedAttribute {
+  const DecompoundedAttribute({
+    required this.languageCode,
+    required this.attributes,
+  }) : assert(languageCode.length == 2,
+            '`languageCode` must be 2-character language code');
+
+  final String languageCode;
+  final List<String> attributes;
+
+  Map<String, List<String>> toMap() {
+    return Map<String, List<String>>.unmodifiable({languageCode: attributes});
   }
 }

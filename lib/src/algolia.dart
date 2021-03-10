@@ -28,7 +28,7 @@ class Algolia {
   String get _host => 'https://$applicationId-dsn.algolia.net/1/';
 
   Map<String, String> get _header {
-    Map<String, String> map = {
+    var map = <String, String>{
       'X-Algolia-Application-Id': applicationId,
       'X-Algolia-API-Key': _apiKey,
       'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ class Algolia {
   }
 
   Algolia setHeader(String key, String value) {
-    Map<String, String> map = extraHeaders;
+    var map = extraHeaders;
     map[key] = value;
     return Algolia._(
       applicationId: applicationId,
@@ -55,8 +55,8 @@ class Algolia {
       AlgoliaMultiIndexesReference._(this);
 
   Future<AlgoliaIndexesSnapshot> getIndices() async {
-    String _url = '${_host}indexes';
-    http.Response response = await http.get(
+    var _url = '${_host}indexes';
+    var response = await http.get(
       Uri.parse(_url),
       headers: _header,
     );

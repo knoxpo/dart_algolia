@@ -3,18 +3,19 @@ name: Bug report
 about: Create a report to help us improve
 title: ''
 labels: bug
-assignees: nhathiwala
+assignees: ''
 
 ---
 
-Dart version: [eg: 2.0.0]
-Flutter version: [eg: 1.1.9 (dev)]
+Dart version: [eg: 2.12.0]
+Flutter version: [eg: 2.0.0 (stable)]
 
 **Describe the bug**
 A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
@@ -27,15 +28,17 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+
+- OS: [e.g. iOS]
+- Browser [e.g. chrome, safari]
+- Version [e.g. 22]
 
 **Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+
+- Device: [e.g. iPhone6]
+- OS: [e.g. iOS8.1]
+- Browser [e.g. stock browser, safari]
+- Version [e.g. 22]
 
 **Additional context**
 Add any other context about the problem here.

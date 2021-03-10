@@ -45,6 +45,16 @@ class AlgoliaQuery {
   /// Obtains a AlgoliaIndex corresponding to this query's location.
   AlgoliaIndexReference reference() => AlgoliaIndexReference._(algolia, _index);
 
+  @override
+  String toString() {
+    return {
+      'url': '${algolia._host}indexes' +
+          (_index.isNotEmpty ? '/' + Uri.encodeFull(_index) : ''),
+      'headers': algolia._header,
+      'parameters': _parameters,
+    }.toString();
+  }
+
   ///
   /// **GetObjects**
   ///
@@ -63,8 +73,8 @@ class AlgoliaQuery {
         'attributesToRetrieve': const ['*']
       });
     }
-    String url = '${algolia._host}indexes/$_index/query';
-    http.Response response = await http.post(
+    var url = '${algolia._host}indexes/$_index/query';
+    var response = await http.post(
       Uri.parse(url),
       headers: algolia._header,
       body:
@@ -76,7 +86,7 @@ class AlgoliaQuery {
       throw AlgoliaError._(body, response.statusCode);
     }
 
-    return AlgoliaQuerySnapshot.fromMap(algolia, _index, body);
+    return AlgoliaQuerySnapshot._(algolia, _index, body);
   }
 
   ///
@@ -91,14 +101,32 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/query/)
   ///
+  @Deprecated(
+      'Use `query(String value)` instead. This method will be deprecated from version ^1.1.0')
   AlgoliaQuery search(String value) {
-    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('search'));
     return _copyWithParameters(<String, dynamic>{'query': value});
   }
 
   ///
-  /// **Search (similarQuery)**
+  /// **Query**
+  ///
+  /// The text to search in the index.
+  ///
+  /// **Usage notes:**
+  ///   - If the text is empty or absent, the search will match every object in your index.
+  ///   - In our documentation, we use the terms [query], “query terms”, or “search text” to mean the same thing, namely: the text used to search the index.
+  ///   - There’s a hard limit of 512 characters per query. If a search query is longer, the API will return an error.
+  ///
+  /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/query/)
+  ///
+  AlgoliaQuery query(String value) {
+    assert(!_parameters.containsKey('search'));
+    return _copyWithParameters(<String, dynamic>{'query': value});
+  }
+
+  ///
+  /// **SimilarQuery)**
   ///
   /// Overrides the query parameter and performs a more generic search that can be used to find “similar” results.
   ///
@@ -109,7 +137,27 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/similarQuery/)
   ///
+  @Deprecated(
+      'Use `similarQuery(String value)` instead. This method will be deprecated from version ^1.1.0')
   AlgoliaQuery setSimilarQuery(String value) {
+    assert(value.isNotEmpty, 'value can not be empty');
+    assert(!_parameters.containsKey('similarQuery'));
+    return _copyWithParameters(<String, dynamic>{'similarQuery': value});
+  }
+
+  ///
+  /// **SimilarQuery)**
+  ///
+  /// Overrides the query parameter and performs a more generic search that can be used to find “similar” results.
+  ///
+  /// **Usage notes:**
+  ///   - similarQuery should be constructed from the tags and keywords of the object you are trying to find related results to.
+  ///   - similarQuery is not automatically generated. You need to select which keywords you think would be useful.
+  ///     For example, a similarQuery for a movie could use the genre, principle actors, and tags attributes. After extracting information from those categories, you might end up with a similarQuery that looks like: “Romance Comedy Gordon-Levitt NY”. Check out the examples section for a more detailed walk-through.
+  ///
+  /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/similarQuery/)
+  ///
+  AlgoliaQuery similarQuery(String value) {
     assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('similarQuery'));
     return _copyWithParameters(<String, dynamic>{'similarQuery': value});
@@ -343,7 +391,107 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/filters/)
   ///
+  @Deprecated(
+      'Use `filters(String value)` instead. This method will be deprecated from version ^1.1.0')
   AlgoliaQuery setFilters(String value) {
+    assert(value.isNotEmpty, 'value can not be empty');
+    assert(!_parameters.containsKey('filters'));
+    return _copyWithParameters(<String, dynamic>{'filters': value});
+  }
+
+  ///
+  /// **Filters**
+  ///
+  /// Filter the query with numeric, facet and/or tag filters.
+  ///
+  /// This parameter uses SQL-like syntax, where you can use boolean operators and parentheses to combine individual filters.
+  ///
+  /// ---
+  ///
+  /// ***Numeric Comparisons***
+  ///
+  /// Format: `${attributeName} ${operator} ${value}`
+  /// Example: `price > 12.99`
+  ///
+  /// The `${value}` must be numeric. Supported operators are `<`, `<=`, `=`, `!=`, `>=` and `>`, with the same semantics as in virtually all programming languages.
+  ///
+  /// ---
+  ///
+  /// ***Numeric Range***
+  ///
+  /// Format: `${attributeName}:${lowerBound} TO ${upperBound}`
+  /// Example: `price:5.99 TO 100`
+  ///
+  /// `${lowerBound}` and `${upperBound}` must be numeric. Both are inclusive.
+  ///
+  /// ---
+  ///
+  /// ***Facet filters***
+  ///
+  /// Format: `${facetName}:${facetValue}`
+  /// Example: `category:Book`
+  ///
+  /// Facet matching is not case sensitive.
+  ///
+  /// When $`{facetName}` contains string values, it needs to be declared inside attributesForFaceting
+  ///
+  /// ---
+  ///
+  ///
+  /// ***Tag filters***
+  ///
+  /// Format: `_tags:${value} (or, alternatively, just ${value})`
+  /// Example: `_tags:published`
+  ///
+  /// Tag matching is case sensitive.
+  ///
+  /// If no attribute name is specified, the filter applies to `_tags`. For example: `public OR user_42` will translate into `_tags:public OR _tags:user_42`.
+  ///
+  /// ---
+  ///
+  /// **Boolean filters**
+  ///
+  /// Format: `facetName:${boolean_value}`
+  /// Example: `isEnabled:true`
+  ///
+  /// When `${facetName}` needs to be declared inside [attributesForFaceting]
+  ///
+  /// ---
+  ///
+  /// ***Boolean operators***
+  ///
+  /// Example:
+  ///
+  /// ```price < 10 AND (category:Book OR NOT category:Ebook)```
+  ///
+  /// Individual filters can be combined via **boolean operators**. The following operators are supported:
+  ///   - `OR`: must match any of the combined conditions (disjunction)
+  ///   - `AND`: must match all of the combined conditions (conjunction)
+  ///   - `NOT`: negate a filter
+  ///
+  /// Parentheses, `(` and `)`, can be used for grouping.
+  ///
+  /// You cannot mix different filter categories inside a disjunction (OR). For example, `num=3 OR tag1 OR facet:value` is not allowed.
+  ///
+  /// You cannot negate a group of filters, only an individual filter. For example, `NOT(filter1 OR filter2)` is not allowed.
+  ///
+  /// For performance reasons, filter expressions are limited to a conjunction (ANDs) of disjunctions (ORs). In other words, you can have ANDs of ORs (e.g. `filter1 AND (filter2 OR filter3)`), but not ORs of ANDs (e.g. `filter1 OR (filter2 AND filter3)`).
+  ///
+  /// ---
+  ///
+  /// **Usage notes:**
+  ///   - Array Attributes: Any attribute set up as an array will match the filter as soon as one of the values in the array match.
+  ///   - Keywords are case-sensitive.
+  ///   - When to use quotes (simple or double, depending on the language):
+  ///     - If a value or attribute name contains spaces (see example).
+  ///     - If a value or attribute name conflicts with a keyword (see example).
+  ///     - Phrases that includes quotes, like content:'It's a wonderful day' (see example).
+  ///     - Phrases that includes quotes, like attribute:'She said 'Hello World'' (see example).
+  ///   - Nested attributes can be used for filtering, so authors.mainAuthor:'John Doe' is a valid filter, as long as authors.mainAuthor is declared as an attributesForFaceting.
+  ///
+  /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/filters/)
+  ///
+  AlgoliaQuery filters(String value) {
     assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('filters'));
     return _copyWithParameters(<String, dynamic>{'filters': value});
@@ -364,11 +512,37 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/facetFilters/)
   ///
+  @Deprecated(
+      'Use `facetFilter(String value)` instead. This method will be deprecated from version ^1.1.0')
   AlgoliaQuery setFacetFilter(dynamic value) {
     assert(value is String || value is List<String>,
         'value must be either String | List<String> but was found `${value.runtimeType}`');
-    final List<dynamic> facetFilters =
-        List<dynamic>.from(_parameters['facetFilters']);
+    final facetFilters = List<dynamic>.from(_parameters['facetFilters']);
+    assert(facetFilters.where((dynamic item) => value == item).isEmpty,
+        'FacetFilters $value already exists in this query');
+    facetFilters.add(value);
+    return _copyWithParameters(<String, dynamic>{'facetFilters': facetFilters});
+  }
+
+  ///
+  /// **FacetFilters**
+  ///
+  /// Filter hits by facet value.
+  ///
+  /// Usage notes:
+  ///   - **Format:** The general format for referencing a facet value is `${attributeName}:${value}`. This attribute/value combination represents a filter on a given facet value.
+  ///   - **Multiple filters:** If you specify multiple filters, they are interpreted as a conjunction (AND). If you want to use a disjunction (OR), use a nested array.
+  ///     - `['category:Book', 'author:John Doe']` translates as `category:Book AND author:'John Doe'`.
+  ///     - `[['category:Book', 'category:Movie'], 'author:John Doe']` translates as `(category:Book OR category:Movie) AND author:'John Doe'`.
+  ///   - **Negation** is supported by prefixing the value with a minus sign `(-)`, sometimes called a dash. For example: `['category:Book', 'category:-Movie']` translates as `category:Book AND NOT category:Movie`.
+  ///   - **Escape characters:** On the other hand, if your facet value starts with a `-`, meaning it contains the `-`, then you can escape the character with a `\` to prevent the engine from interpreting this as a negative facet filter. For example, filtering on `category:\-Movie` will filter on all records that have a category equal to “-Movie”.
+  ///
+  /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/facetFilters/)
+  ///
+  AlgoliaQuery facetFilter(dynamic value) {
+    assert(value is String || value is List<String>,
+        'value must be either String | List<String> but was found `${value.runtimeType}`');
+    final facetFilters = List<dynamic>.from(_parameters['facetFilters']);
     assert(facetFilters.where((dynamic item) => value == item).isEmpty,
         'FacetFilters $value already exists in this query');
     facetFilters.add(value);
@@ -394,8 +568,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/facetFilters/)
   ///
   AlgoliaQuery setOptionalFilter(String value) {
-    final List<String> optionalFilters =
-        List<String>.from(_parameters['optionalFilters']);
+    final optionalFilters = List<String>.from(_parameters['optionalFilters']);
     assert(optionalFilters.where((String item) => value == item).isEmpty,
         'OptionalFilters $value already exists in this query');
     optionalFilters.add(value);
@@ -436,8 +609,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/numericFilters/)
   ///
   AlgoliaQuery setNumericFilter(String value) {
-    final List<String> numericFilters =
-        List<String>.from(_parameters['numericFilters']);
+    final numericFilters = List<String>.from(_parameters['numericFilters']);
     assert(numericFilters.where((String item) => value == item).isEmpty,
         'NumericFilters $value already exists in this query');
     numericFilters.add(value);
@@ -470,8 +642,7 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/tagFilters/)
   ///
   AlgoliaQuery setTagFilter(String value) {
-    final List<String> tagFilters =
-        List<String>.from(_parameters['tagFilters']);
+    final tagFilters = List<String>.from(_parameters['tagFilters']);
     assert(tagFilters.where((String item) => value == item).isEmpty,
         'TagFilters $value already exists in this query');
     tagFilters.add(value);
@@ -828,9 +999,10 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/paginationLimitedTo/)
   ///
+  @Deprecated('This method is deprecated, not part of query parameters')
   AlgoliaQuery setPaginationLimitedTo(int value) {
     assert(!_parameters.containsKey('paginationLimitedTo'));
-    return _copyWithParameters(<String, dynamic>{'paginationLimitedTo': value});
+    return this;
   }
 
   ///
@@ -941,10 +1113,11 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/separatorsToIndex/)
   ///
+  @Deprecated('This method is deprecated, not part of query parameters')
   AlgoliaQuery setSeparatorsToIndex(String value) {
     assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('separatorsToIndex'));
-    return _copyWithParameters(<String, dynamic>{'separatorsToIndex': value});
+    return this;
   }
 
   ///
@@ -1132,8 +1305,7 @@ class AlgoliaQuery {
   AlgoliaQuery setInsideBoundingBox(List<BoundingBox> value) {
     assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('insideBoundingBox'));
-    List<List<num>> list =
-        value.map((v) => [v.p1Lat, v.p1Lng, v.p2Lat, v.p2Lng]).toList();
+    var list = value.map((v) => [v.p1Lat, v.p1Lng, v.p2Lat, v.p2Lng]).toList();
     return _copyWithParameters(<String, dynamic>{'insideBoundingBox': list});
   }
 
@@ -1171,7 +1343,7 @@ class AlgoliaQuery {
   AlgoliaQuery setInsidePolygon(List<BoundingPolygonBox> value) {
     assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('insidePolygon'));
-    List<List<num>> list = value
+    var list = value
         .map((v) => [v.p1Lat, v.p1Lng, v.p2Lat, v.p2Lng, v.p3Lat, v.p3Lng])
         .toList();
     return _copyWithParameters(<String, dynamic>{'insidePolygon': list});
@@ -1508,7 +1680,7 @@ class AlgoliaQuery {
   ///
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/userToken/)
   ///
-  AlgoliaQuery setUserToken({required String value}) {
+  AlgoliaQuery setUserToken(String value) {
     assert(!_parameters.containsKey('userToken'));
     return _copyWithParameters(<String, dynamic>{'userToken': value});
   }
@@ -1528,7 +1700,7 @@ class AlgoliaQuery {
   AlgoliaQuery setQueryType(QueryType value) {
     assert(!_parameters.containsKey('queryType'));
     return _copyWithParameters(
-        <String, dynamic>{'queryType': value.toString()});
+        <String, dynamic>{'queryType': value.toString().split('.').last});
   }
 
   ///
@@ -1549,8 +1721,9 @@ class AlgoliaQuery {
   ///
   AlgoliaQuery setRemoveWordsIfNoResults(RemoveWordsIfNoResults value) {
     assert(!_parameters.containsKey('removeWordsIfNoResults'));
-    return _copyWithParameters(
-        <String, dynamic>{'removeWordsIfNoResults': value.toString()});
+    return _copyWithParameters(<String, dynamic>{
+      'removeWordsIfNoResults': value.toString().split('.').last
+    });
   }
 
   ///
@@ -1680,8 +1853,9 @@ class AlgoliaQuery {
   ///
   AlgoliaQuery setExactOnSingleWordQuery(ExactOnSingleWordQuery value) {
     assert(!_parameters.containsKey('exactOnSingleWordQuery'));
-    return _copyWithParameters(
-        <String, dynamic>{'exactOnSingleWordQuery': value.toString()});
+    return _copyWithParameters(<String, dynamic>{
+      'exactOnSingleWordQuery': value.toString().split('.').last
+    });
   }
 
   ///

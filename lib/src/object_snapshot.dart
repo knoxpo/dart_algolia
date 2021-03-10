@@ -5,27 +5,37 @@ part of algolia;
 // - snippetResult [Implementation] (commit ref: 0d76d24fe8aa347a0933920afe5ded43bdcbd68b)
 
 class AlgoliaObjectSnapshot {
-  late Algolia algolia;
-  String? objectID;
-  String? index;
-  Map<String, dynamic>? highlightResult;
-  Map<String, dynamic>? snippetResult;
-  Map<String, dynamic>? data;
+  final Algolia algolia;
+  final String objectID;
+  final String index;
+  final Map<String, dynamic>? highlightResult;
+  final Map<String, dynamic>? snippetResult;
+  final Map<String, dynamic> _data;
 
   AlgoliaObjectReference get ref =>
       AlgoliaObjectReference._(algolia, index, objectID);
 
-  AlgoliaObjectSnapshot.fromMap(algolia, index, Map<String, dynamic> map) {
-    algolia = algolia;
-    index = index;
-    objectID = map['objectID'];
+  AlgoliaObjectSnapshot._(algolia, index, Map<String, dynamic> map)
+      : algolia = algolia,
+        index = index,
+        objectID = map['objectID'],
+        highlightResult = map['_highlightResult'],
+        snippetResult = map['_snippetResult'],
+        _data = map;
 
-    highlightResult = map['_highlightResult'];
-    snippetResult = map['_snippetResult'];
+  Map<String, dynamic> get data {
+    var _d = _data;
+    _d.remove('_highlightResult');
+    _d.remove('_snippetResult');
+    return _d;
+  }
 
-    map.remove('objectID');
-    map.remove('_highlightResult');
-    map.remove('_snippetResult');
-    data = map;
+  @override
+  String toString() {
+    return _data.toString();
+  }
+
+  Map<String, dynamic> toMap() {
+    return _data;
   }
 }
