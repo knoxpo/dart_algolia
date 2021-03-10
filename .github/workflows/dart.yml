@@ -12,43 +12,64 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout source code
+      uses: actions/checkout@v2
 
     # Note: This workflow uses the latest stable version of the Dart SDK.
     # You can specify other versions if desired, see documentation here:
     # https://github.com/dart-lang/setup-dart/blob/main/README.md
-    - uses: dart-lang/setup-dart@v1
+    # - uses: dart-lang/setup-dart@v1
     # - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
 
-    - env:
+    - name: Install dependencies
+      uses: dart-lang/setup-dart@v1
+      env:
         ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
         ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-
-    - name: Install dependencies
       run: dart pub get
 
-    - name: Activate dotenv 
+    - name: Activate dotenv
+      uses: dart-lang/setup-dart@v1
+      env:
+          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
+          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
       run: pub global activate dotenv
 
     - name: Load dotenv 
+      env:
+        ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
+        ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
       run: pub global run dotenv
 
     # Uncomment this step to verify the use of 'dart format' on each commit.
     - name: Verify formatting
+      uses: dart-lang/setup-dart@v1
+      env:
+        ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
+        ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
       run: dart format --output=none --set-exit-if-changed .
 
     # Consider passing '--fatal-infos' for slightly stricter analysis.
     - name: Analyze project source
+      uses: dart-lang/setup-dart@v1
+      env:
+        ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
+        ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
       run: dart analyze --fatal-infos
 
     # Your project will need to have tests in test/ and a dependency on
     # package:test for this step to succeed. Note that Flutter projects will
     # want to change this to 'flutter test'.
     - name: Run tests
+      uses: dart-lang/setup-dart@v1
+      env:
+        ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
+        ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
       run: dart test
 
 
     - name: Setup credentials
+      uses: dart-lang/setup-dart@v1
       run: | 
         mkdir -p ~/.pub-cache 
         cat <<EOF > ~/.pub-cache/credentials.json
@@ -61,4 +82,5 @@ jobs:
         }
         EOF
     - name: Publish package
+      uses: dart-lang/setup-dart@v1
       run: pub publish -f

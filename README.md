@@ -4,7 +4,7 @@
 
 **[UNOFFICIAL]** Algolia is a pure dart SDK, wrapped around Algolia REST API for easy implementation for your Flutter or Dart projects.
 
-[![pub package](https://img.shields.io/pub/v/algolia.svg)](https://pub.dartlang.org/packages/algolia)  [![dart workflow](https://github.com/knxopo/dart_algolia/actions/workflows/dart.yml/badge.svg)](https://github.com/knoxpo/dart_algolia)
+[![pub package](https://img.shields.io/pub/v/algolia.svg)](https://pub.dartlang.org/packages/algolia)  [![.github/workflows/dart.yml](https://github.com/knoxpo/dart_algolia/actions/workflows/dart.yml/badge.svg)](https://github.com/knoxpo/dart_algolia/actions/workflows/dart.yml)
 
 [Pub](https://pub.dartlang.org/packages/algolia) - [API Docs](https://pub.dartlang.org/documentation/algolia/latest/) - [GitHub](https://github.com/knoxpo/dart_algolia)
 
