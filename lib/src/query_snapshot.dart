@@ -20,6 +20,7 @@ class AlgoliaQuerySnapshot {
         processingTimeMS = map['processingTimeMS'],
         exhaustiveNbHits = map['exhaustiveNbHits'],
         query = map['query'],
+        queryId = map["queryID"],
         params = map['params'],
         facets = map['facets'] ?? {},
         facetsStats = map['facets_stats'] ?? {};
@@ -34,6 +35,7 @@ class AlgoliaQuerySnapshot {
   final int processingTimeMS;
   final bool exhaustiveNbHits;
   final String query;
+  final String queryId;
   final String params;
   final String index;
   final Map<String, dynamic> facets;
