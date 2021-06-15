@@ -27,6 +27,8 @@ class Algolia {
 
   String get _host => 'https://$applicationId-dsn.algolia.net/1/';
 
+  String get _insightsHost => 'https://insights.algolia.io/1/';
+
   Map<String, String> get _header {
     var map = <String, String>{
       'X-Algolia-Application-Id': applicationId,
@@ -67,5 +69,24 @@ class Algolia {
     }
 
     return AlgoliaIndexesSnapshot._(this, body);
+  }
+
+  Future<void> pushEvents(List<AlgoliaEvent> events) async {
+    if (events.isEmpty) return;
+    var _url = '${_insightsHost}events';
+    var eventList = events.map((e) => e.toMap()).toList();
+    var response = await http.post(
+      Uri.parse(_url),
+      headers: _header,
+      body: utf8.encode(json.encode({'events': eventList})),
+      encoding: Encoding.getByName('utf-8'),
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
+    }
+
+    return;
   }
 }
