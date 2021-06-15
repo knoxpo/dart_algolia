@@ -71,6 +71,28 @@ class Algolia {
     return AlgoliaIndexesSnapshot._(this, body);
   }
 
+  ///
+  /// **Push events**
+  ///
+  /// This command pushes an array of events to the Insights API.
+  ///
+  /// An event is
+  ///  - an action: `eventName`
+  ///  - performed in a context: `eventType`
+  ///  - at some point in time provided: `timestamp`
+  ///  - by an end user: `userToken`
+  ///  - on something: `index`
+  ///
+  ///
+  /// **Notes:**
+  ///  - The number of events that can be sent at the same time is limited to 1000.
+  ///  - To be accepted, all events sent must be valid.
+  ///  - When an event is tied to an Algolia search, it must also provide a `queryID`. If that event is a click, their absolute `positions` should also be passed.
+  ///  - We consider that an index provides access to 2 resources: objects and filters. An event can only interact with a single resource type,
+  ///    but not necessarily on a single item. As such an event will accept an array of `objectIDs` or `filters`.
+  ///
+  /// Source: [Learn more](https://www.algolia.com/doc/rest-api/insights/)
+  ///
   Future<void> pushEvents(List<AlgoliaEvent> events) async {
     if (events.isEmpty) return;
     var _url = '${_insightsHost}events';

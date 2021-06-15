@@ -17,7 +17,7 @@ void main() async {
     expect(env['ALGOLIA_APP_ID'].runtimeType, String);
     expect(env['ALGOLIA_API_KEY'].runtimeType, String);
   });
-  
+
   ///
   /// Initiate Algolia in your project
   ///
@@ -1476,6 +1476,26 @@ void main() async {
     // Checking if has [AlgoliaQuerySnapshot]
     expect(snap.runtimeType, AlgoliaQuerySnapshot);
     print('Hits count: ${snap.nbHits}');
+    print('\n\n');
+  });
+
+  ///
+  /// 1. Perform pushing event to Algolia Insights.
+  ///
+  test('1. Perform pushing event to Algolia Insights.', () async {
+    var event = AlgoliaEvent(
+      eventType: AlgoliaEventType.view,
+      eventName: 'View contact',
+      index: 'contacts',
+      userToken: 'user123',
+    );
+    try {
+      await algolia.instance
+          .pushEvents([event]).then((_) => print('Event push completed'));
+    } on AlgoliaError catch (err) {
+      print(err.error.toString());
+      expect(err.runtimeType, AlgoliaError);
+    }
     print('\n\n');
   });
 }
