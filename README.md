@@ -1,10 +1,10 @@
 # Algolia Search (Dart Client)
 
-![Algolia](https://res.cloudinary.com/hilnmyskv/image/upload/q_auto/v1614950376/Algolia_com_Website_assets/images/shared/algolia_logo/logo-algolia-nebula-blue-full.svg 'Algolia')
+![Algolia](https://res.cloudinary.com/hilnmyskv/image/upload/q_auto/v1614950376/Algolia_com_Website_assets/images/shared/algolia_logo/logo-algolia-nebula-blue-full.svg "Algolia")
 
 **[UNOFFICIAL]** Algolia is a pure dart SDK, wrapped around Algolia REST API for easy implementation for your Flutter or Dart projects.
 
-[![pub package](https://img.shields.io/pub/v/algolia.svg)](https://pub.dartlang.org/packages/algolia)  [![.github/workflows/dart.yml](https://github.com/knoxpo/dart_algolia/actions/workflows/dart.yml/badge.svg)](https://github.com/knoxpo/dart_algolia/actions/workflows/dart.yml)
+[![pub package](https://img.shields.io/pub/v/algolia.svg)](https://pub.dartlang.org/packages/algolia) [![.github/workflows/dart.yml](https://github.com/knoxpo/dart_algolia/actions/workflows/dart.yml/badge.svg)](https://github.com/knoxpo/dart_algolia/actions/workflows/dart.yml)
 
 [Pub](https://pub.dartlang.org/packages/algolia) - [API Docs](https://pub.dartlang.org/documentation/algolia/latest/) - [GitHub](https://github.com/knoxpo/dart_algolia)
 
@@ -25,6 +25,7 @@
 - Copy Index
 - Move Index
 - Index Settings
+- Push Insights Events
 
 ## Version compatibility
 
@@ -40,7 +41,7 @@ You should ensure that you add the router as a dependency in your flutter projec
 
 ```yaml
 dependencies:
- algolia: ^1.0.1
+  algolia: ^1.0.2
 ```
 
 You should then run `flutter packages upgrade` or update your packages in IntelliJ.
@@ -61,7 +62,7 @@ There is a pretty sweet example project in the `example` folder. Check it out. O
       apiKey: 'YOUR_API_KEY',
     );
   }
-  
+
   void main() async {
     ///
     /// Initiate Algolia in your project
@@ -103,6 +104,15 @@ There is a pretty sweet example project in the `example` folder. Check it out. O
     // Checking if has [AlgoliaTask]
     print('\n\n');
     print(setSettings.data);
+
+    // Pushing Event
+    AlgoliaEvent event = AlgoliaEvent(
+      eventType: AlgoliaEventType.view,
+      eventName: 'View contact',
+      index: 'contacts',
+      userToken: 'user123',
+    );
+    await algolia.instance.pushEvents([event]);
   }
 ```
 
@@ -344,7 +354,14 @@ version of the release.
 
 - `.setSettings()`
 
-------
-*Algolia [Unofficial SDK for Dart] is a Knoxpo original.*
+## Insights
+
+The Insights API lets you push a collection of events related to how your product is being used. Sending those events is a required step for using several Algolia features like Click analytics, A/B Testing, Personalization and Dynamic Re-Ranking.
+
+- `.pushEvents(List<AlgoliaEvent> events)`
+
+---
+
+_Algolia [Unofficial SDK for Dart] is a Knoxpo original._
 
 <a href="https://knoxpo.com" target="_knoxpo"><img src="https://www.knoxpo.com/assets/logo.png" width="80"></a>

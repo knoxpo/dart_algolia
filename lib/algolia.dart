@@ -26,6 +26,8 @@ part 'src/batch.dart';
 
 part 'src/task.dart';
 
+part 'src/event.dart';
+
 part 'src/error.dart';
 
 part 'src/util/json_encode.dart';
