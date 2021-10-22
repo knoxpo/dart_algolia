@@ -21,7 +21,7 @@ class AlgoliaIndexSettings extends AlgoliaSettings {
     var url = '${algolia._host}indexes/$_index/settings';
     var response = await http.get(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
     );
     Map<String, dynamic> body = json.decode(response.body);
 
@@ -61,7 +61,7 @@ class AlgoliaSettings {
     return {
       'url': '${algolia._host}indexes' +
           (_index.isNotEmpty ? '/' + Uri.encodeFull(_index) : ''),
-      'headers': algolia._header,
+      'headers': algolia._headers,
       'parameters': _parameters,
     }.toString();
   }
@@ -73,7 +73,7 @@ class AlgoliaSettings {
     var url = '${algolia._host}indexes/$_index/settings';
     var response = await http.put(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       body:
           utf8.encode(json.encode(_parameters, toEncodable: jsonEncodeHelper)),
       encoding: Encoding.getByName('utf-8'),

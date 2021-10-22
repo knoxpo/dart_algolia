@@ -26,7 +26,7 @@ class AlgoliaObjectReference {
     var url = '${algolia._host}indexes/$encodedIndex/$encodedObjectID';
     var response = await http.get(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
@@ -50,7 +50,7 @@ class AlgoliaObjectReference {
 
     var response = await http.post(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
       encoding: Encoding.getByName('utf-8'),
     );
@@ -81,7 +81,7 @@ class AlgoliaObjectReference {
     data['objectID'] = _objectId;
     var response = await http.put(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
       encoding: Encoding.getByName('utf-8'),
     );
@@ -125,7 +125,7 @@ class AlgoliaObjectReference {
     data['createIfNotExists'] = createIfNotExists;
     var response = await http.put(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
       encoding: Encoding.getByName('utf-8'),
     );
@@ -150,7 +150,7 @@ class AlgoliaObjectReference {
     }
     var response = await http.delete(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {

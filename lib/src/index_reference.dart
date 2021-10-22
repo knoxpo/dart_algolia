@@ -118,7 +118,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     final requests = {'requests': objects};
     var response = await http.post(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       body: utf8.encode(json.encode(requests, toEncodable: jsonEncodeHelper)),
       encoding: Encoding.getByName('utf-8'),
     );
@@ -142,7 +142,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     var url = '${algolia._host}indexes/$encodedIndex/clear';
     var response = await http.post(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       encoding: Encoding.getByName('utf-8'),
     );
     Map<String, dynamic> body = json.decode(response.body);
@@ -192,7 +192,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     }
     var response = await http.post(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       encoding: Encoding.getByName('utf-8'),
       body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
     );
@@ -243,7 +243,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     var url = '${algolia._host}indexes/$encodedIndex';
     var response = await http.delete(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
@@ -328,7 +328,7 @@ class AlgoliaMultiIndexesReference {
     var url = '${_algolia!._host}indexes/*/queries';
     var response = await http.post(
       Uri.parse(url),
-      headers: _algolia!._header,
+      headers: _algolia!._headers,
       body: utf8.encode(json.encode({
         'requests': requests,
         'strategy': 'none',

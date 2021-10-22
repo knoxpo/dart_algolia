@@ -50,7 +50,7 @@ class AlgoliaQuery {
     return {
       'url': '${algolia._host}indexes' +
           (_index.isNotEmpty ? '/' + Uri.encodeFull(_index) : ''),
-      'headers': algolia._header,
+      'headers': algolia._headers,
       'parameters': _parameters,
     }.toString();
   }
@@ -76,7 +76,7 @@ class AlgoliaQuery {
     var url = '${algolia._host}indexes/$_index/query';
     var response = await http.post(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       body:
           utf8.encode(json.encode(_parameters, toEncodable: jsonEncodeHelper)),
       encoding: Encoding.getByName('utf-8'),
