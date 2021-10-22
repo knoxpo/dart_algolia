@@ -1264,9 +1264,7 @@ void main() async {
       print('\n\n');
     });
 
-    /**
-     * Advance TEST
-     */
+    /// Advance TEST
     test('Perform attributeForDistinct', () async {
       var settings = algolia.instance
           .index('contacts')

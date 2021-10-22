@@ -28,9 +28,8 @@ class AlgoliaFacetValueSnapshot {
     return _d;
   }
 
-
   Map<String, dynamic> raw() => _data;
-  
+
   @override
   String toString() => _data.toString();
 

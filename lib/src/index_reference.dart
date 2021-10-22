@@ -61,13 +61,13 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   ///
   ///
   /// The response body contains the following fields:
-  ///  - `facetHits` (array): Matched values. Each hit contains the following 
+  ///  - `facetHits` (array): Matched values. Each hit contains the following
   ///     fields:
   ///     - `value` (string): Raw value of the facet
   ///     - `highlighted` (string): Highlighted facet value
-  ///     - `count` (integer): How many objects contain this facet value. 
-  ///        This takes into account the extra search parameters specified 
-  ///        in the query. Like for a regular search query, the counts may 
+  ///     - `count` (integer): How many objects contain this facet value.
+  ///        This takes into account the extra search parameters specified
+  ///        in the query. Like for a regular search query, the counts may
   ///        not be exhaustive. See the related discussion.
   ///
   Future<List<AlgoliaFacetValueSnapshot>> facetQuery(
