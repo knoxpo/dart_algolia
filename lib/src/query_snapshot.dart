@@ -14,9 +14,11 @@ class AlgoliaQuerySnapshot {
             .cast<AlgoliaObjectSnapshot>(),
         empty = (map['hits'] as List<dynamic>? ?? []).isEmpty,
         nbHits = map['nbHits'],
-        page = map['page'],
-        nbPages = map['nbPages'],
-        hitsPerPage = map['hitsPerPage'],
+        page = map['page'] ?? 0,
+        nbPages = map['nbPages'] ?? 0,
+        offset = map['offset'] ?? 0,
+        length = map['length'] ?? 0,
+        hitsPerPage = map['hitsPerPage'] ?? 0,
         processingTimeMS = map['processingTimeMS'],
         exhaustiveNbHits = map['exhaustiveNbHits'],
         query = map['query'],
@@ -30,6 +32,8 @@ class AlgoliaQuerySnapshot {
   final int nbHits;
   final int page;
   final int nbPages;
+  final int offset;
+  final int length;
   final int hitsPerPage;
   final int processingTimeMS;
   final bool exhaustiveNbHits;

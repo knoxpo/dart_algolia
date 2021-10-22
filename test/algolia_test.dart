@@ -1,7 +1,7 @@
-@Timeout(Duration(seconds: 60))
-import 'package:test/test.dart';
 import 'package:algolia/algolia.dart';
 import 'package:dotenv/dotenv.dart' show env;
+@Timeout(Duration(seconds: 60))
+import 'package:test/test.dart';
 
 class Application {
   static final Algolia algolia = Algolia.init(
@@ -17,7 +17,7 @@ void main() async {
     expect(env['ALGOLIA_APP_ID'].runtimeType, String);
     expect(env['ALGOLIA_API_KEY'].runtimeType, String);
   });
-  
+
   ///
   /// Initiate Algolia in your project
   ///
@@ -271,6 +271,31 @@ void main() async {
 
     test('2. Perform SimilarQuery', () async {
       var query = algolia.instance.index('contacts').similarQuery('775');
+
+      // Get Result/Objects
+      var snap = await query.getObjects();
+
+      // Checking if has [AlgoliaQuerySnapshot]
+      expect(snap.runtimeType, AlgoliaQuerySnapshot);
+      print('Hits count: ${snap.nbHits}');
+      print('\n\n');
+    });
+
+    test('3. Perform Query with offset and length', () async {
+      var query = algolia.instance.index('contacts').setOffset(0).setLength(10);
+
+      // Get Result/Objects
+      var snap = await query.getObjects();
+
+      // Checking if has [AlgoliaQuerySnapshot]
+      expect(snap.runtimeType, AlgoliaQuerySnapshot);
+      print('Hits count: ${snap.nbHits}');
+      print('\n\n');
+    });
+
+    test('4. Perform Query with page and Hits Per Page', () async {
+      var query =
+          algolia.instance.index('contacts').setPage(1).setHitsPerPage(10);
 
       // Get Result/Objects
       var snap = await query.getObjects();
