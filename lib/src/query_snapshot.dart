@@ -11,45 +11,38 @@ class AlgoliaQuerySnapshot {
               return AlgoliaObjectSnapshot._(algolia, index, newMap);
             })
             .toList()
-            .cast<AlgoliaObjectSnapshot>(),
-        empty = (map['hits'] as List<dynamic>? ?? []).isEmpty,
-        nbHits = map['nbHits'],
-        page = map['page'],
-        nbPages = map['nbPages'],
-        hitsPerPage = map['hitsPerPage'],
-        processingTimeMS = map['processingTimeMS'],
-        exhaustiveNbHits = map['exhaustiveNbHits'],
-        query = map['query'],
-        params = map['params'],
-        facets = map['facets'] ?? {},
-        facetsStats = map['facets_stats'] ?? {};
+            .cast<AlgoliaObjectSnapshot>();
 
-  final List<AlgoliaObjectSnapshot> hits;
   final Algolia algolia;
-  final bool empty;
-  final int nbHits;
-  final int page;
-  final int nbPages;
-  final int hitsPerPage;
-  final int processingTimeMS;
-  final bool exhaustiveNbHits;
-  final String query;
-  final String params;
   final String index;
-  final Map<String, dynamic> facets;
-  final Map<String, dynamic> facetsStats;
   final Map<String, dynamic> _map;
+  final List<AlgoliaObjectSnapshot> hits;
+
+  String get params => _map['params'];
+  String get queryId => _map['queryID'];
+  String get query => _map['query'];
+
+  bool get empty => hits.isEmpty;
+  bool get hasHits => hits.isNotEmpty;
+
+  int get hitsPerPage => _map['hitsPerPage'] ?? 0;
+  int get length => _map['length'] ?? 0;
+  int get nbHits => _map['nbHits'] ?? 0;
+  int get nbPages => _map['nbPages'] ?? 0;
+  int get offset => _map['offset'] ?? 0;
+  int get page => _map['page'] ?? 0;
+
+  Map<String, dynamic> get facets => _map['facets'] ?? {};
+  Map<String, dynamic> get facetsStats => _map['facets_stats'] ?? {};
+
+  bool get exhaustiveNbHits => _map['exhaustiveNbHits'];
+  int get processingTimeMS => _map['processingTimeMS'] ?? 0;
+
+  Map<String, dynamic> toMap() => _map;
+
+  @Deprecated('Use `.raw()` instead.')
+  Map<String, dynamic> raw() => _map;
 
   @override
-  String toString() {
-    return _map.toString();
-  }
-
-  Map<String, dynamic> toMap() {
-    return _map;
-  }
-
-  bool get hasHits {
-    return hits.isNotEmpty;
-  }
+  String toString() => _map.toString();
 }

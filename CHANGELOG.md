@@ -1,3 +1,26 @@
+## [1.0.2] - Added support for Facet Values & Insights
+
+- [Added] Facet values `AlgoliaFacetValueSnapshot`:
+  Now you can get list of all facet value to implement advance filtering options.
+- [Added] Insights implementation.
+  
+  ```dart
+  // Create an Event
+  AlgoliaEvent event = AlgoliaEvent(
+    eventType: AlgoliaEventType.view,
+    eventName: 'View contact',
+    index: 'contacts',
+    userToken: 'userId123',
+  );
+  // Push Event
+  await algolia.instance.pushEvents([event]);
+  ```
+
+- [Added] `queryId` to query snapshot when click analytics is enabled.
+- [Bug] Fixed null error in query snapshot.
+- [Improved] Improved concurrency of snapshot interface by making constructor base multiple mapped value to a getter parameters.
+
+
 ## [1.0.1] - Bug-fixes with improved debugging stability
 
 - [Bug] faulty assert resolved for checking empty values [#40](https://github.com/knoxpo/dart_algolia/issues/40)

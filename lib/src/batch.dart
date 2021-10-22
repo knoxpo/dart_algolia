@@ -67,7 +67,7 @@ class AlgoliaBatch {
 
         var response = await http.post(
           Uri.parse(url),
-          headers: algolia._header,
+          headers: algolia._headers,
           body: utf8.encode(json
               .encode({'requests': actions}, toEncodable: jsonEncodeHelper)),
           encoding: Encoding.getByName('utf-8'),

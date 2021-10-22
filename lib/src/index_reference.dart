@@ -43,6 +43,60 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   }
 
   ///
+  /// **FacetQuerys**
+  ///
+  /// Search for values of a given facet, optionally restricting the returned
+  /// values to those contained in objects matching other search criteria.
+  ///
+  /// When the query is successful, the HTTP response is a 200 OK. It
+  /// contains values that match the queried text, and that are contained in
+  /// at least one object matching the other search parameters.
+  ///
+  /// -------------------------------
+  /// **NOTE**
+  /// Pagination is not supported. The page and hitsPerPage parameters will
+  /// be ignored. By default, maximum 10 values are returned. This can be
+  /// adjusted via `maxFacetHits`.
+  /// -------------------------------
+  ///
+  ///
+  /// The response body contains the following fields:
+  ///  - `facetHits` (array): Matched values. Each hit contains the following 
+  ///     fields:
+  ///     - `value` (string): Raw value of the facet
+  ///     - `highlighted` (string): Highlighted facet value
+  ///     - `count` (integer): How many objects contain this facet value. 
+  ///        This takes into account the extra search parameters specified 
+  ///        in the query. Like for a regular search query, the counts may 
+  ///        not be exhaustive. See the related discussion.
+  ///
+  Future<List<AlgoliaFacetValueSnapshot>> facetQuery(
+    String facetName, {
+    String params = '',
+    String facetQuery = '',
+    int maxFacetHits = 10,
+  }) async {
+    var url =
+        '${algolia._host}indexes/$encodedIndex/facets/${Uri.encodeFull(facetName)}/query';
+    var response = await http.post(
+      Uri.parse(url),
+      headers: algolia._headers,
+      body: {
+        'params': params,
+        'facetQuery': facetQuery,
+        'maxFacetHits': maxFacetHits,
+      },
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+    if (!(response.statusCode >= 200 && response.statusCode < 500)) {
+      throw AlgoliaError._(body, response.statusCode);
+    }
+    return (body['facetHits'] as List<dynamic>)
+        .map((e) => AlgoliaFacetValueSnapshot._(algolia, index, e))
+        .toList();
+  }
+
+  ///
   /// **AlgoliaBatch**
   ///
   /// Creates a write batch, used for performing multiple writes as a single
@@ -118,7 +172,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     final requests = {'requests': objects};
     var response = await http.post(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       body: utf8.encode(json.encode(requests, toEncodable: jsonEncodeHelper)),
       encoding: Encoding.getByName('utf-8'),
     );
@@ -142,7 +196,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     var url = '${algolia._host}indexes/$encodedIndex/clear';
     var response = await http.post(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       encoding: Encoding.getByName('utf-8'),
     );
     Map<String, dynamic> body = json.decode(response.body);
@@ -192,7 +246,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     }
     var response = await http.post(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
       encoding: Encoding.getByName('utf-8'),
       body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
     );
@@ -243,7 +297,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     var url = '${algolia._host}indexes/$encodedIndex';
     var response = await http.delete(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
@@ -328,7 +382,7 @@ class AlgoliaMultiIndexesReference {
     var url = '${_algolia!._host}indexes/*/queries';
     var response = await http.post(
       Uri.parse(url),
-      headers: _algolia!._header,
+      headers: _algolia!._headers,
       body: utf8.encode(json.encode({
         'requests': requests,
         'strategy': 'none',

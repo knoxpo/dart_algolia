@@ -62,7 +62,5 @@ class AlgoliaIndexSnapshot {
     return _map.toString();
   }
 
-  Map<String, dynamic> toMap() {
-    return _map;
-  }
+  Map<String, dynamic> toMap() => _map;
 }

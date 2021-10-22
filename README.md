@@ -4,7 +4,7 @@
 
 **[UNOFFICIAL]** Algolia is a pure dart SDK, wrapped around Algolia REST API for easy implementation for your Flutter or Dart projects.
 
-[![pub package](https://img.shields.io/pub/v/algolia.svg)](https://pub.dartlang.org/packages/algolia)  [![.github/workflows/dart.yml](https://github.com/knoxpo/dart_algolia/actions/workflows/dart.yml/badge.svg)](https://github.com/knoxpo/dart_algolia/actions/workflows/dart.yml)
+[![pub package](https://img.shields.io/pub/v/algolia.svg)](https://pub.dartlang.org/packages/algolia)  [![.github/workflows/dart.yml](https://github.com/knoxpo/dart_algolia/actions/workflows/dart.yml/badge.svg)](https://github.com/knoxpo/dart_algolia/actions/workflows/dart.yml) [![Build Status](https://travis-ci.com/knoxpo/dart_algolia.svg?branch=master)](https://travis-ci.com/knoxpo/dart_algolia)
 
 [Pub](https://pub.dartlang.org/packages/algolia) - [API Docs](https://pub.dartlang.org/documentation/algolia/latest/) - [GitHub](https://github.com/knoxpo/dart_algolia)
 
@@ -25,6 +25,7 @@
 - Copy Index
 - Move Index
 - Index Settings
+- Push Insights Events
 
 ## Version compatibility
 
@@ -103,8 +104,24 @@ There is a pretty sweet example project in the `example` folder. Check it out. O
     // Checking if has [AlgoliaTask]
     print('\n\n');
     print(setSettings.data);
+
+    // Pushing Event
+    AlgoliaEvent event = AlgoliaEvent(
+      eventType: AlgoliaEventType.view,
+      eventName: 'View contact',
+      index: 'contacts',
+      userToken: 'user123',
+    );
+    await algolia.instance.pushEvents([event]);
   }
 ```
+
+## Insights
+
+The Insights API lets you push a collection of events related to how your product is being used. Sending those events is a required step for using several Algolia features like Click analytics, A/B Testing, Personalization and Dynamic Re-Ranking.
+
+- `.pushEvents(List<AlgoliaEvent> events)`
+
 
 ## Search Parameters
 

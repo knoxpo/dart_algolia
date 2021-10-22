@@ -6,6 +6,12 @@
             "request": "launch",
             "type": "dart",
             "program": "${workspaceRoot}/test/algolia_test.dart"
+        },
+        {
+            "name": "Dart Tests",
+            "request": "launch",
+            "type": "dart",
+            "program": "${workspaceRoot}/test/algolia_test.dart"
         }
     ]
 }

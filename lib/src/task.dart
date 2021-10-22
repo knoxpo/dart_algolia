@@ -32,7 +32,7 @@ class AlgoliaTask {
 
     var response = await http.get(
       Uri.parse(url),
-      headers: algolia._header,
+      headers: algolia._headers,
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
