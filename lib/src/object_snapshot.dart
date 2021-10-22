@@ -15,10 +15,8 @@ class AlgoliaObjectSnapshot {
   AlgoliaObjectReference get ref =>
       AlgoliaObjectReference._(algolia, index, objectID);
 
-  AlgoliaObjectSnapshot._(algolia, index, Map<String, dynamic> map)
-      : algolia = algolia,
-        index = index,
-        objectID = map['objectID'],
+  AlgoliaObjectSnapshot._(this.algolia, this.index, Map<String, dynamic> map)
+      : objectID = map['objectID'],
         highlightResult = map['_highlightResult'],
         snippetResult = map['_snippetResult'],
         _data = map;

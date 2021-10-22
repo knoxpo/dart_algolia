@@ -1,5 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:dotenv/dotenv.dart' show env;
+// ignore: invalid_annotation_target
 @Timeout(Duration(seconds: 60))
 import 'package:test/test.dart';
 

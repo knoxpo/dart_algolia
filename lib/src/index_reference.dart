@@ -308,18 +308,13 @@ class AlgoliaIndexReference extends AlgoliaQuery {
 }
 
 class AlgoliaMultiIndexesReference {
-  AlgoliaMultiIndexesReference._(Algolia? algolia,
-      {List<AlgoliaQuery>? queries}) {
-    _algolia = algolia;
-    if (queries != null) {
-      _queries = queries;
-    } else {
-      _queries = [];
-    }
-  }
+  const AlgoliaMultiIndexesReference._(Algolia algolia,
+      {List<AlgoliaQuery>? queries})
+      : _algolia = algolia,
+        _queries = queries ?? const [];
 
-  List<AlgoliaQuery>? _queries;
-  Algolia? _algolia;
+  final List<AlgoliaQuery>? _queries;
+  final Algolia _algolia;
 
   List<AlgoliaQuery>? get queries => _queries;
 
@@ -379,10 +374,10 @@ class AlgoliaMultiIndexesReference {
         'params': _encodeMap(q.parameters),
       });
     }
-    var url = '${_algolia!._host}indexes/*/queries';
+    var url = '${_algolia._host}indexes/*/queries';
     var response = await http.post(
       Uri.parse(url),
-      headers: _algolia!._headers,
+      headers: _algolia._headers,
       body: utf8.encode(json.encode({
         'requests': requests,
         'strategy': 'none',

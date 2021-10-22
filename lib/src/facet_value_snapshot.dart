@@ -12,10 +12,9 @@ class AlgoliaFacetValueSnapshot {
   AlgoliaObjectReference get ref =>
       AlgoliaObjectReference._(algolia, index, objectID);
 
-  AlgoliaFacetValueSnapshot._(algolia, index, Map<String, dynamic> map)
-      : algolia = algolia,
-        index = index,
-        objectID = map['objectID'],
+  AlgoliaFacetValueSnapshot._(
+      this.algolia, this.index, Map<String, dynamic> map)
+      : objectID = map['objectID'],
         count = map['count'],
         value = map['value'],
         highlighted = map['highlighted'],

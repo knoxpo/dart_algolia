@@ -2,18 +2,16 @@ part of algolia;
 
 class Algolia {
   const Algolia.init({
-    required String applicationId,
+    required this.applicationId,
     required String apiKey,
     this.extraHeaders = const {},
-  })  : applicationId = applicationId,
-        _apiKey = apiKey;
+  }) : _apiKey = apiKey;
 
   const Algolia._({
-    required String applicationId,
+    required this.applicationId,
     required String apiKey,
     this.extraHeaders = const {},
-  })  : applicationId = applicationId,
-        _apiKey = apiKey;
+  }) : _apiKey = apiKey;
 
   final String applicationId;
   final String _apiKey;

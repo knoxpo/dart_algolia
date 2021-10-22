@@ -21,6 +21,7 @@ class AlgoliaObjectReference {
   ///
   /// If the object does not yet exist, it will be created.
   Future<AlgoliaObjectSnapshot> getObject() async {
+    assert(_index != null, 'You can\'t get an object without an index.');
     assert(_objectId != null, 'You can\'t get an object without an objectID.');
 
     var url = '${algolia._host}indexes/$encodedIndex/$encodedObjectID';
@@ -32,7 +33,7 @@ class AlgoliaObjectReference {
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
     }
-    return AlgoliaObjectSnapshot._(algolia, _index, body);
+    return AlgoliaObjectSnapshot._(algolia, _index!, body);
   }
 
   /// Writes to the object referred to by this [AlgoliaObjectReference].

@@ -1,1 +1,7 @@
 include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    hash_and_equals: false
+    constant_identifier_names: false
+    prefer_typing_uninitialized_variables: false

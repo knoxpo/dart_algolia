@@ -1,10 +1,8 @@
 part of algolia;
 
 class AlgoliaQuerySnapshot {
-  AlgoliaQuerySnapshot._(algolia, index, Map<String, dynamic> map)
-      : algolia = algolia,
-        index = index,
-        _map = map,
+  AlgoliaQuerySnapshot._(this.algolia, this.index, Map<String, dynamic> map)
+      : _map = map,
         hits = (map['hits'] as List<dynamic>? ?? [])
             .map((dynamic o) {
               var newMap = Map<String, dynamic>.from(o);

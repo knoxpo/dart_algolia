@@ -30,9 +30,8 @@ class AlgoliaIndexesSnapshot {
 }
 
 class AlgoliaIndexSnapshot {
-  AlgoliaIndexSnapshot._(algolia, Map<String, dynamic> map)
-      : algolia = algolia,
-        _map = map,
+  AlgoliaIndexSnapshot._(this.algolia, Map<String, dynamic> map)
+      : _map = map,
         name = map['name'],
         createdAt = DateTime.parse(map['createdAt']),
         updatedAt = DateTime.parse(map['updatedAt']),
