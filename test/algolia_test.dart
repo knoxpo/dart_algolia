@@ -219,6 +219,39 @@ void main() async {
   });
 
   group('querying', () {
+    test('Perform Batch', () async {
+      var batch = algolia.instance.index('contacts').batch();
+      batch.clearIndex();
+      // batchB.clearIndex();
+      for (var i = 0; i < 10; i++) {
+        var addData = <String, dynamic>{
+          'name': 'John ${DateTime.now().microsecond}',
+          'contact': '+1 ${DateTime.now().microsecondsSinceEpoch}',
+          'email': 'johan.${DateTime.now().microsecond}@example.com',
+          'isDelete': false,
+          'status': 'published',
+          'createdAt': DateTime.now(),
+          'modifiedAt': DateTime.now(),
+          'price': i + 200,
+        };
+
+        batch.addObject(addData);
+      }
+
+      // Get Result/Objects
+      taskBatch = await batch.commit();
+      await taskBatch.waitTask();
+
+      // Checking if has [AlgoliaTask]
+      expect(taskBatch.runtimeType, AlgoliaTask);
+      print(taskBatch.data);
+      print('\n\n');
+
+      // Add ids to list for test 8
+      final List batchIds = taskBatch.data['objectIDs'];
+      ids.addAll([batchIds[3], batchIds[4]]);
+    });
+
     test('Perform Query', () async {
       var query = algolia.instance.index('contacts').query('john');
 

@@ -308,10 +308,9 @@ class AlgoliaIndexReference extends AlgoliaQuery {
 }
 
 class AlgoliaMultiIndexesReference {
-  const AlgoliaMultiIndexesReference._(Algolia algolia,
-      {List<AlgoliaQuery>? queries})
+  AlgoliaMultiIndexesReference._(Algolia algolia, {List<AlgoliaQuery>? queries})
       : _algolia = algolia,
-        _queries = queries ?? const [];
+        _queries = queries ?? [];
 
   final List<AlgoliaQuery>? _queries;
   final Algolia _algolia;
