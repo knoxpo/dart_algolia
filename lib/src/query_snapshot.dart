@@ -18,7 +18,7 @@ class AlgoliaQuerySnapshot {
         nbPages = map['nbPages'] ?? 0,
         offset = map['offset'] ?? 0,
         page = map['page'] ?? 0,
-        queryId = map['queryID'],
+        queryId = map['queryID'] ?? '',
         hitsPerPage = map['hitsPerPage'] ?? 0,
         processingTimeMS = map['processingTimeMS'],
         exhaustiveNbHits = map['exhaustiveNbHits'],
