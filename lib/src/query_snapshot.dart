@@ -17,7 +17,7 @@ class AlgoliaQuerySnapshot {
   final List<AlgoliaObjectSnapshot> hits;
 
   String get params => _map['params'];
-  String get queryId => _map['queryID'];
+  String? get queryId => _map['queryID'];
   String get query => _map['query'];
 
   bool get empty => hits.isEmpty;
