@@ -1,3 +1,7 @@
+## [1.0.3] - Bug fixes
+
+- [Bug] queryId from QuerySnapshot was made nullable.
+
 ## [1.0.2] - Added support for Facet Values & Insights
 
 - [Added] Facet values `AlgoliaFacetValueSnapshot`:
