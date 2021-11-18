@@ -23,11 +23,9 @@ class AlgoliaObjectReference {
   Future<AlgoliaObjectSnapshot> getObject() async {
     assert(_index != null, 'You can\'t get an object without an index.');
     assert(_objectId != null, 'You can\'t get an object without an objectID.');
-
-    var url = '${algolia._host}indexes/$encodedIndex/$encodedObjectID';
-    var response = await http.get(
-      Uri.parse(url),
-      headers: algolia._headers,
+    var response = await algolia._apiCall(
+      ApiRequestType.get,
+      'indexes/$encodedIndex/$encodedObjectID',
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
@@ -43,17 +41,15 @@ class AlgoliaObjectReference {
     assert(_index != null && _index != '*' && _index != '',
         'IndexName is required, but it has `*` multiple flag or `null`.');
 
-    var url = '${algolia._host}indexes/$encodedIndex';
+    var url = 'indexes/$encodedIndex';
 
     if (_objectId != null) {
       url += '/$encodedObjectID';
     }
-
-    var response = await http.post(
-      Uri.parse(url),
-      headers: algolia._headers,
-      body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
-      encoding: Encoding.getByName('utf-8'),
+    var response = await algolia._apiCall(
+      ApiRequestType.post,
+      url,
+      data: data,
     );
     Map<String, dynamic> body = json.decode(response.body);
 
@@ -75,16 +71,16 @@ class AlgoliaObjectReference {
   Future<AlgoliaTask> updateData(Map<String, dynamic> data) async {
     assert(_index != null && _index != '*' && _index != '',
         'IndexName is required, but it has `*` multiple flag or `null`.');
-    var url = '${algolia._host}indexes/$encodedIndex';
+    var url = 'indexes/$encodedIndex';
     if (_objectId != null) {
       url = '$url/$encodedObjectID';
     }
     data['objectID'] = _objectId;
-    var response = await http.put(
-      Uri.parse(url),
-      headers: algolia._headers,
-      body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
-      encoding: Encoding.getByName('utf-8'),
+
+    var response = await algolia._apiCall(
+      ApiRequestType.put,
+      url,
+      data: data,
     );
     Map<String, dynamic> body = json.decode(response.body);
 
@@ -118,17 +114,16 @@ class AlgoliaObjectReference {
     assert(_index != null && _index != '*' && _index != '',
         'IndexName is required, but it has `*` multiple flag or `null`.');
 
-    var url = '${algolia._host}indexes/$encodedIndex';
+    var url = 'indexes/$encodedIndex';
     if (_objectId != null) {
       url = '$url/$encodedObjectID/partial';
     }
     data['objectID'] = _objectId;
     data['createIfNotExists'] = createIfNotExists;
-    var response = await http.put(
-      Uri.parse(url),
-      headers: algolia._headers,
-      body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
-      encoding: Encoding.getByName('utf-8'),
+    var response = await algolia._apiCall(
+      ApiRequestType.put,
+      url,
+      data: data,
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
@@ -145,13 +140,13 @@ class AlgoliaObjectReference {
     assert(
         _objectId != null, 'You can\'t delete an object without an objectID.');
 
-    var url = '${algolia._host}indexes/$encodedIndex';
+    var url = 'indexes/$encodedIndex';
     if (_objectId != null) {
       url = '$url/$encodedObjectID';
     }
-    var response = await http.delete(
-      Uri.parse(url),
-      headers: algolia._headers,
+    var response = await algolia._apiCall(
+      ApiRequestType.delete,
+      url,
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {

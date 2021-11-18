@@ -130,6 +130,19 @@ void main() async {
       ids.addAll([batchIds[3], batchIds[4]]);
     });
 
+    test('Perform Copy index', () async {
+      var task = await algolia.instance
+          .index('contacts')
+          .copyIndex(destination: 'contacts_alt');
+
+      await task.waitTask();
+
+      // Checking if has [AlgoliaTask]
+      expect(task.runtimeType, AlgoliaTask);
+      print(task.data);
+      print('\n\n');
+    });
+
     test('Perform Multiple Queries', () async {
       var queryA = algolia.instance.index('contacts').query('john');
       var queryB = algolia.instance.index('contacts_alt').query('jo');
@@ -1471,6 +1484,76 @@ void main() async {
     });
   });
 
+  group('Algolia Synonyms', () {
+    test('Perform Adding Object to existing Index.', () async {
+      var addData = <String, dynamic>{
+        'objectID': '1',
+        'name': 'John Smith',
+        'contact': '+1 609 123456',
+        'email': 'johan@example.com',
+        'isDelete': false,
+        'status': 'published',
+        'createdAt': DateTime.now(),
+        'modifiedAt': DateTime.now(),
+        'price': 200,
+      };
+      taskAdded = await algolia.instance.index('contacts').addObject(addData);
+      await taskAdded.waitTask();
+
+      // Checking if has [AlgoliaTask]
+      expect(taskAdded.runtimeType, AlgoliaTask);
+      print(taskAdded.data);
+      print('\n\n');
+    });
+    test('Perform adding synonyms to Algolia Object. (single)', () async {
+      var synonyms = AlgoliaSynonyms(
+        objectID: '1',
+        type: SynonymsType.synonym,
+        synonyms: ['iphne', 'iphone', 'ipone'],
+        forwardToReplicas: true,
+      );
+      try {
+        // single
+        AlgoliaTask task =
+            await algolia.index('contacts').synonyms.save(synonyms);
+        expect(task.runtimeType, AlgoliaTask);
+        print(task.data);
+        print('\n\n');
+      } on AlgoliaError catch (err) {
+        print(err.error.toString());
+        expect(err.runtimeType, AlgoliaError);
+      }
+      print('\n\n');
+    });
+    test('Perform adding synonyms to Algolia Object. (batch)', () async {
+      var synonyms = AlgoliaSynonyms(
+        objectID: '1',
+        type: SynonymsType.synonym,
+        synonyms: ['iphne', 'iphone', 'ipone'],
+        forwardToReplicas: true,
+      );
+      try {
+        // single
+        AlgoliaTask task =
+            await algolia.index('contacts').synonyms.batch([synonyms]);
+        expect(task.runtimeType, AlgoliaTask);
+        print(task.data);
+        print('\n\n');
+      } on AlgoliaError catch (err) {
+        print(err.error.toString());
+        expect(err.runtimeType, AlgoliaError);
+      }
+      print('\n\n');
+    });
+    test('Perform delete Object to existing Index.', () async {
+      taskAdded =
+          await algolia.instance.index('contacts').object('1').deleteObject();
+      await taskAdded.waitTask();
+
+      // Checking if has [AlgoliaTask]
+      expect(taskAdded.runtimeType, AlgoliaTask);
+    });
+  });
   group('insights', () {
     test('Perform pushing event to Algolia Insights.', () async {
       var event = AlgoliaEvent(
@@ -1480,8 +1563,9 @@ void main() async {
         userToken: 'user123',
       );
       try {
-        await algolia.instance
-            .pushEvents([event]).then((_) => print('Event push completed'));
+        await algolia.instance.pushEvents([event]);
+        print('Event push completed');
+        print('\n\n');
       } on AlgoliaError catch (err) {
         print(err.error.toString());
         expect(err.runtimeType, AlgoliaError);

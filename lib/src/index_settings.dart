@@ -18,10 +18,9 @@ class AlgoliaIndexSettings extends AlgoliaSettings {
         super._(algolia, indexName);
 
   Future<Map<String, dynamic>> getSettings() async {
-    var url = '${algolia._host}indexes/$_index/settings';
-    var response = await http.get(
-      Uri.parse(url),
-      headers: algolia._headers,
+    var response = await algolia._apiCall(
+      ApiRequestType.get,
+      'indexes/$encodedIndex/settings',
     );
     Map<String, dynamic> body = json.decode(response.body);
 
@@ -45,6 +44,7 @@ class AlgoliaSettings {
   final Algolia algolia;
   final String _index;
   final Map<String, dynamic> _parameters;
+  String get encodedIndex => Uri.encodeFull(_index);
 
   AlgoliaSettings _copyWithParameters(Map<String, dynamic> parameters) {
     return AlgoliaSettings._(
@@ -69,14 +69,10 @@ class AlgoliaSettings {
   Future<AlgoliaTask> setSettings() async {
     assert(
         _parameters.keys.isNotEmpty, 'No setting parameter to update found.');
-
-    var url = '${algolia._host}indexes/$_index/settings';
-    var response = await http.put(
-      Uri.parse(url),
-      headers: algolia._headers,
-      body:
-          utf8.encode(json.encode(_parameters, toEncodable: jsonEncodeHelper)),
-      encoding: Encoding.getByName('utf-8'),
+    var response = await algolia._apiCall(
+      ApiRequestType.put,
+      'indexes/$encodedIndex/settings',
+      data: _parameters,
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {

@@ -63,14 +63,10 @@ class AlgoliaBatch {
 
         var actions = _actions.map((a) => a.toMap()).toList();
 
-        var url = '${algolia._host}indexes/$_index/batch';
-
-        var response = await http.post(
-          Uri.parse(url),
-          headers: algolia._headers,
-          body: utf8.encode(json
-              .encode({'requests': actions}, toEncodable: jsonEncodeHelper)),
-          encoding: Encoding.getByName('utf-8'),
+        var response = await algolia._apiCall(
+          ApiRequestType.post,
+          'indexes/$_index/batch',
+          data: {'requests': actions},
         );
 
         Map<String, dynamic> body = json.decode(response.body);

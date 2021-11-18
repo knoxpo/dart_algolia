@@ -73,13 +73,10 @@ class AlgoliaQuery {
         'attributesToRetrieve': const ['*']
       });
     }
-    var url = '${algolia._host}indexes/$_index/query';
-    var response = await http.post(
-      Uri.parse(url),
-      headers: algolia._headers,
-      body:
-          utf8.encode(json.encode(_parameters, toEncodable: jsonEncodeHelper)),
-      encoding: Encoding.getByName('utf-8'),
+    var response = await algolia._apiCall(
+      ApiRequestType.post,
+      'indexes/$_index/query',
+      data: _parameters,
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {

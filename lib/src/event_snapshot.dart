@@ -15,7 +15,7 @@ extension AlgoliaEventTypeExtention on AlgoliaEventType {
 ///
 /// Initital implemention by [@algirdasmac](https://github.com/algirdasmac) committed on 15 Jun
 /// [PR](https://github.com/knoxpo/dart_algolia/pull/56/commits/8dc068ed16f7cf0c6747ec28d0e17fcf7b433f7f)
-/// 
+///
 class AlgoliaEvent {
   AlgoliaEvent({
     required this.eventType,

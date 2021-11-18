@@ -2,7 +2,7 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-name: CI
+name: Health
 on:
   push:
     branches: [ master ]
@@ -63,17 +63,17 @@ jobs:
       run: dart test
 
 
-    - name: Setup credentials
-      run: | 
-        mkdir -p ~/.pub-cache 
-        cat <<EOF > ~/.pub-cache/credentials.json
-        {
-          "accessToken":"${{ secrets.OAUTH_ACCESS_TOKEN }}",
-          "refreshToken":"${{ secrets.OAUTH_REFRESH_TOKEN }}",
-          "tokenEndpoint":"https://accounts.google.com/o/oauth2/token",
-          "scopes": [ "openid", "https://www.googleapis.com/auth/userinfo.email" ],
-          "expiration": 1570721159347
-        }
-        EOF
-    - name: Publish package
-      run: pub publish -f
+    # - name: Setup credentials
+    #   run: | 
+    #     mkdir -p ~/.pub-cache 
+    #     cat <<EOF > ~/.pub-cache/credentials.json
+    #     {
+    #       "accessToken":"${{ secrets.OAUTH_ACCESS_TOKEN }}",
+    #       "refreshToken":"${{ secrets.OAUTH_REFRESH_TOKEN }}",
+    #       "tokenEndpoint":"https://accounts.google.com/o/oauth2/token",
+    #       "scopes": [ "openid", "https://www.googleapis.com/auth/userinfo.email" ],
+    #       "expiration": 1570721159347
+    #     }
+    #     EOF
+    # - name: Publish package
+    #   run: pub publish -f

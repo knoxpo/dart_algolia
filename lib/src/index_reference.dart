@@ -30,6 +30,16 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   ///
   AlgoliaIndexSettings get settings => AlgoliaIndexSettings._(algolia, _index);
 
+  ///
+  /// **Synonyms**
+  ///
+  /// Synonyms were originally set via the index settings, and a Get
+  /// settings call would return all synonyms as part of the
+  /// settings JSON data.
+  ///
+  AlgoliaSynonymsReference get synonyms =>
+      AlgoliaSynonymsReference._(algolia, _index);
+
   AlgoliaObjectReference object([String? path]) {
     String? objectId;
     if (path == null) {
@@ -76,12 +86,10 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     String facetQuery = '',
     int maxFacetHits = 10,
   }) async {
-    var url =
-        '${algolia._host}indexes/$encodedIndex/facets/${Uri.encodeFull(facetName)}/query';
-    var response = await http.post(
-      Uri.parse(url),
-      headers: algolia._headers,
-      body: {
+    var response = await algolia._apiCall(
+      ApiRequestType.post,
+      'indexes/$encodedIndex/facets/${Uri.encodeFull(facetName)}/query',
+      data: {
         'params': params,
         'facetQuery': facetQuery,
         'maxFacetHits': maxFacetHits,
@@ -166,15 +174,12 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   ///
   Future<List<AlgoliaObjectSnapshot>> getObjectsByIds(
       [List<String> objectIds = const []]) async {
-    var url = '${algolia._host}indexes/*/objects';
     final objects = List<Map>.generate(objectIds.length,
         (int i) => {'indexName': index, 'objectID': objectIds[i]});
-    final requests = {'requests': objects};
-    var response = await http.post(
-      Uri.parse(url),
-      headers: algolia._headers,
-      body: utf8.encode(json.encode(requests, toEncodable: jsonEncodeHelper)),
-      encoding: Encoding.getByName('utf-8'),
+    var response = await algolia._apiCall(
+      ApiRequestType.post,
+      'indexes/*/objects',
+      data: {'requests': objects},
     );
     Map<String, dynamic> body = json.decode(response.body);
 
@@ -193,11 +198,9 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   /// Clear the index referred to by this [AlgoliaIndexReference].
   ///
   Future<AlgoliaTask> clearIndex() async {
-    var url = '${algolia._host}indexes/$encodedIndex/clear';
-    var response = await http.post(
-      Uri.parse(url),
-      headers: algolia._headers,
-      encoding: Encoding.getByName('utf-8'),
+    var response = await algolia._apiCall(
+      ApiRequestType.post,
+      'indexes/$encodedIndex/clear',
     );
     Map<String, dynamic> body = json.decode(response.body);
 
@@ -236,7 +239,6 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     required bool copy,
     List<CopyScope>? scopes,
   }) async {
-    var url = '${algolia._host}indexes/$encodedIndex/operation';
     final data = <String, dynamic>{
       'operation': copy ? 'copy' : 'move',
       'destination': destination,
@@ -244,11 +246,10 @@ class AlgoliaIndexReference extends AlgoliaQuery {
     if (scopes != null) {
       data['scope'] = scopes.map<String>((s) => _scopeToString(s)).toList();
     }
-    var response = await http.post(
-      Uri.parse(url),
-      headers: algolia._headers,
-      encoding: Encoding.getByName('utf-8'),
-      body: utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper)),
+    var response = await algolia._apiCall(
+      ApiRequestType.post,
+      'indexes/$encodedIndex/operation',
+      data: data,
     );
     Map<String, dynamic> body = json.decode(response.body);
 
@@ -294,10 +295,9 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   /// Delete the index referred to by this [AlgoliaIndexReference].
   ///
   Future<AlgoliaTask> deleteIndex() async {
-    var url = '${algolia._host}indexes/$encodedIndex';
-    var response = await http.delete(
-      Uri.parse(url),
-      headers: algolia._headers,
+    var response = await algolia._apiCall(
+      ApiRequestType.delete,
+      'indexes/$encodedIndex',
     );
     Map<String, dynamic> body = json.decode(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
@@ -373,15 +373,13 @@ class AlgoliaMultiIndexesReference {
         'params': _encodeMap(q.parameters),
       });
     }
-    var url = '${_algolia._host}indexes/*/queries';
-    var response = await http.post(
-      Uri.parse(url),
-      headers: _algolia._headers,
-      body: utf8.encode(json.encode({
+    var response = await _algolia._apiCall(
+      ApiRequestType.post,
+      'indexes/*/queries',
+      data: {
         'requests': requests,
         'strategy': 'none',
-      }, toEncodable: jsonEncodeHelper)),
-      encoding: Encoding.getByName('utf-8'),
+      },
     );
     Map<String, dynamic> body = json.decode(response.body);
 

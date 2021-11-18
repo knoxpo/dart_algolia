@@ -1,5 +1,13 @@
 part of algolia;
 
+enum ApiRequestType {
+  get,
+  put,
+  post,
+  delete,
+  patch,
+}
+
 class Algolia {
   const Algolia.init({
     required this.applicationId,
@@ -24,6 +32,10 @@ class Algolia {
       );
 
   String get _host => 'https://$applicationId-dsn.algolia.net/1/';
+  String get _hostWrite => 'https://$applicationId.algolia.net/1/';
+  String get _hostFallback1 => 'https://$applicationId-1.algolianet.com/1/';
+  String get _hostFallback2 => 'https://$applicationId-2.algolianet.com/1/';
+  String get _hostFallback3 => 'https://$applicationId-3.algolianet.com/1/';
   String get _insightsHost => 'https://insights.algolia.io/1/';
 
   Map<String, String> get _headers {
@@ -34,6 +46,87 @@ class Algolia {
     };
     map.addEntries(extraHeaders.entries);
     return map;
+  }
+
+  Future<http.Response> _apiCall(ApiRequestType requestType, String url,
+      {dynamic data}) async {
+    // ignore: prefer_function_declarations_over_variables
+    final action = (int retry) {
+      String host = _hostWrite;
+      if (requestType == ApiRequestType.get && retry == 0) {
+        host = _host;
+      } else if (retry == 1) {
+        host = _hostFallback1;
+      } else if (retry == 2) {
+        host = _hostFallback2;
+      } else if (retry == 3) {
+        host = _hostFallback3;
+      }
+      switch (requestType) {
+        case ApiRequestType.get:
+          return http.get(
+            Uri.parse('$host$url'),
+            headers: _headers,
+          );
+        case ApiRequestType.post:
+          return http.post(
+            Uri.parse('$host$url'),
+            headers: _headers,
+            encoding: Encoding.getByName('utf-8'),
+            body: data != null
+                ? utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper))
+                : null,
+          );
+        case ApiRequestType.put:
+          return http.put(
+            Uri.parse('$host$url'),
+            headers: _headers,
+            encoding: Encoding.getByName('utf-8'),
+            body: data != null
+                ? utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper))
+                : null,
+          );
+        case ApiRequestType.patch:
+          return http.patch(
+            Uri.parse('$host$url'),
+            headers: _headers,
+            encoding: Encoding.getByName('utf-8'),
+            body: data != null
+                ? utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper))
+                : null,
+          );
+        case ApiRequestType.delete:
+          return http.delete(
+            Uri.parse('$host$url'),
+            headers: _headers,
+            encoding: Encoding.getByName('utf-8'),
+            body: data != null
+                ? utf8.encode(json.encode(data, toEncodable: jsonEncodeHelper))
+                : null,
+          );
+      }
+    };
+    try {
+      var response = await action(0);
+      return json.decode(response.body);
+    } catch (error) {
+      try {
+        var response = await action(1);
+        return response;
+      } catch (error) {
+        try {
+          var response = await action(2);
+          return response;
+        } catch (error) {
+          try {
+            var response = await action(3);
+            return response;
+          } catch (error) {
+            throw {'error': error};
+          }
+        }
+      }
+    }
   }
 
   Algolia setHeader(String key, String value) {
@@ -54,10 +147,9 @@ class Algolia {
       AlgoliaMultiIndexesReference._(this);
 
   Future<AlgoliaIndexesSnapshot> getIndices() async {
-    var _url = '${_host}indexes';
-    var response = await http.get(
-      Uri.parse(_url),
-      headers: _headers,
+    var response = await _apiCall(
+      ApiRequestType.get,
+      'indexes',
     );
     Map<String, dynamic> body = json.decode(response.body);
 
