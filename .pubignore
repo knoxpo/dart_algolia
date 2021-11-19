@@ -5,6 +5,7 @@
 .metadata
 .pub/
 .vscode/
+.vscode/**/*.json
 .idea/
 
 build/

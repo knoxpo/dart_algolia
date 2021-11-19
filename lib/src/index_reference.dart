@@ -21,7 +21,6 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   /// ID of the referenced index.
   ///
   String get index => _index;
-  String get encodedIndex => Uri.encodeFull(_index);
 
   ///
   /// **Settings**
@@ -146,8 +145,22 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   /// so that the resulting list will be chronologically-sorted.
   ///
   Future<AlgoliaTask> addObject(Map<String, dynamic> data) async {
-    final newDocument = object();
-    return await newDocument.setData(data);
+    if (data['objectID'] != null) {
+      final newDocument = object();
+      return await newDocument.setData(data);
+    }
+    var response = await algolia._apiCall(
+      ApiRequestType.post,
+      'indexes/$encodedIndex',
+      data: data,
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
+    }
+
+    return AlgoliaTask._(algolia, _index, body);
   }
 
   ///

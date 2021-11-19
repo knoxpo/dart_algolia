@@ -11,4 +11,8 @@ class AlgoliaError {
   Map get error => _message;
 
   int get statusCode => _statusCode;
+
+  @override
+  String toString() =>
+      'AlgoliaError(_message: $_message, _statusCode: $_statusCode)';
 }

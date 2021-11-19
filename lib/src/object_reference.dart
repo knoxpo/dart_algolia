@@ -46,8 +46,13 @@ class AlgoliaObjectReference {
     if (_objectId != null) {
       url += '/$encodedObjectID';
     }
+    if (data['objectID'] != null && _objectId == null) {
+      url += "/${Uri.encodeFull(data['objectID'])}";
+    } else if (data['objectID'] != null) {
+      data.remove('objectID');
+    }
     var response = await algolia._apiCall(
-      ApiRequestType.post,
+      ApiRequestType.put,
       url,
       data: data,
     );
@@ -121,7 +126,7 @@ class AlgoliaObjectReference {
     data['objectID'] = _objectId;
     data['createIfNotExists'] = createIfNotExists;
     var response = await algolia._apiCall(
-      ApiRequestType.put,
+      ApiRequestType.post,
       url,
       data: data,
     );

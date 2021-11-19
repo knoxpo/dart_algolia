@@ -31,6 +31,7 @@ class AlgoliaQuery {
   final Map<String, dynamic> _parameters;
 
   Map<String, dynamic> get parameters => _parameters;
+  String get encodedIndex => Uri.encodeFull(_index);
 
   AlgoliaQuery _copyWithParameters(Map<String, dynamic> parameters) {
     return AlgoliaQuery._(
@@ -49,7 +50,7 @@ class AlgoliaQuery {
   String toString() {
     return {
       'url': '${algolia._host}indexes' +
-          (_index.isNotEmpty ? '/' + Uri.encodeFull(_index) : ''),
+          (encodedIndex.isNotEmpty ? '/' + encodedIndex : ''),
       'headers': algolia._headers,
       'parameters': _parameters,
     }.toString();
@@ -75,7 +76,38 @@ class AlgoliaQuery {
     }
     var response = await algolia._apiCall(
       ApiRequestType.post,
-      'indexes/$_index/query',
+      'indexes/$encodedIndex/query',
+      data: _parameters,
+    );
+    Map<String, dynamic> body = json.decode(response.body);
+    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
+      throw AlgoliaError._(body, response.statusCode);
+    }
+
+    return AlgoliaQuerySnapshot._(algolia, _index, body);
+  }
+
+  ///
+  /// **DeleteObjects**
+  ///
+  /// This will execute the query and retrieve data from Algolia with [AlgoliaQuerySnapshot]
+  /// response.
+  ///
+  Future<AlgoliaQuerySnapshot> deleteObjects() async {
+    if (_parameters.containsKey('minimumAroundRadius')) {
+      assert(
+          (_parameters.containsKey('aroundLatLng') ||
+              _parameters.containsKey('aroundLatLngViaIP')),
+          'This setting only works within the context of a circular geo search, enabled by `aroundLatLng` or `aroundLatLngViaIP`.');
+    }
+    if (_parameters['attributesToRetrieve'] == null) {
+      _copyWithParameters(<String, dynamic>{
+        'attributesToRetrieve': const ['*']
+      });
+    }
+    var response = await algolia._apiCall(
+      ApiRequestType.post,
+      'indexes/$encodedIndex/deleteByQuery',
       data: _parameters,
     );
     Map<String, dynamic> body = json.decode(response.body);

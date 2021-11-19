@@ -1497,8 +1497,15 @@ void main() async {
         'modifiedAt': DateTime.now(),
         'price': 200,
       };
-      taskAdded = await algolia.instance.index('contacts').addObject(addData);
-      await taskAdded.waitTask();
+      try {
+        taskAdded = await algolia.instance.index('contacts').addObject(addData);
+        // taskAdded = await algolia.instance.index('contacts').object('1').setData(addData);
+        await taskAdded.waitTask();
+      } on AlgoliaError catch (err) {
+        print(err.toString());
+        print(err.statusCode);
+        print(err.error);
+      }
 
       // Checking if has [AlgoliaTask]
       expect(taskAdded.runtimeType, AlgoliaTask);

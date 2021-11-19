@@ -23,6 +23,10 @@
       ),
     ]);
   ```
+- [Added] `deleteObjects` Delete by query: now you can delete objects based on your query. 
+- [Bug] `addObject` for add object without `objectID` has been fixed.
+- [Bug] `setData` for set object data has been fixed [Issue #52](https://github.com/knoxpo/dart_algolia/issues/52)
+- [Bug] `partialUpdateObject` for partial update object data has been fixed [Issue #59](https://github.com/knoxpo/dart_algolia/issues/59)
 ## 1.0.3
 ### Bug fixes
 
