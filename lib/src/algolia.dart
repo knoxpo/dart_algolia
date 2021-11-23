@@ -108,7 +108,7 @@ class Algolia {
     };
     try {
       var response = await action(0);
-      return json.decode(response.body);
+      return response;
     } catch (error) {
       try {
         var response = await action(1);
