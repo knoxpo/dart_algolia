@@ -126,7 +126,8 @@ class AlgoliaEvent {
     if (queryID != null) body['queryID'] = queryID;
     if (objectIDs != null) body['objectIDs'] = objectIDs;
     if (filters != null) body['filters'] = filters;
-    if (positions != null) body['positions'] = positions;
+    // Only send positions when click event.
+    if (eventType == AlgoliaEventType.click && positions != null) body['positions'] = positions;
     return body;
   }
 
