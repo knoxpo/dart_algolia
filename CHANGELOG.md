@@ -1,7 +1,11 @@
 # Changelog
 
+## 1.0.5+1
+### Analyze Fixes
+
+- [Analyze] Fixed static analysis
 ## 1.0.5
-### Implemented Fallback Request
+### Bug Fixes
 
 - [Bug] Fix `Algolia._apiCall` returning `Map<String, dynamic>` instead of `Response`
 - [Bug] Fix Multiple Index query int query parameters

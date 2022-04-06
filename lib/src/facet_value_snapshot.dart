@@ -40,6 +40,18 @@ class AlgoliaFacetValueSnapshot {
         other.value == value &&
         other.highlighted == highlighted &&
         other.count == count &&
+        other.objectID == objectID &&
         other.data == data;
+  }
+
+  @override
+  int get hashCode {
+    return value.hashCode ^
+        highlighted.hashCode ^
+        count.hashCode ^
+        data.hashCode ^
+        objectID.hashCode ^
+        algolia.hashCode ^
+        _data.hashCode;
   }
 }
