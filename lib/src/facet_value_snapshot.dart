@@ -2,7 +2,7 @@ part of algolia;
 
 class AlgoliaFacetValueSnapshot {
   final Algolia algolia;
-  final String objectID;
+  final String? objectID;
   final String index;
   final int count;
   final String highlighted;

@@ -1,4 +1,11 @@
 # Changelog
+
+## 1.0.5
+### Implemented Fallback Request
+
+- [Bug] Fix `Algolia._apiCall` returning `Map<String, dynamic>` instead of `Response`
+- [Bug] Fix Multiple Index query int query parameters
+- [Bug] Fix `AlgoliaFacetValueSnapshot` made `objectID` to optional value.
 ## 1.0.4
 ### Implemented Fallback Request
 
