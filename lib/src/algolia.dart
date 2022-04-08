@@ -9,7 +9,7 @@ enum ApiRequestType {
 }
 
 class Algolia {
-  static final version = "1.0.5";
+  static final version = "1.1.0";
 
   const Algolia.init({
     required this.applicationId,
