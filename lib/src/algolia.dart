@@ -9,26 +9,32 @@ enum ApiRequestType {
 }
 
 class Algolia {
+  static final version = "1.1.0";
+
   const Algolia.init({
     required this.applicationId,
     required String apiKey,
     this.extraHeaders = const {},
+    this.extraUserAgents = const [],
   }) : _apiKey = apiKey;
 
   const Algolia._({
     required this.applicationId,
     required String apiKey,
     this.extraHeaders = const {},
+    this.extraUserAgents = const [],
   }) : _apiKey = apiKey;
 
   final String applicationId;
   final String _apiKey;
   final Map<String, String> extraHeaders;
+  final List<String> extraUserAgents;
 
   Algolia get instance => Algolia._(
         applicationId: applicationId,
         apiKey: _apiKey,
         extraHeaders: _headers,
+        extraUserAgents: _userAgents,
       );
 
   String get _host => 'https://$applicationId-dsn.algolia.net/1/';
@@ -38,11 +44,21 @@ class Algolia {
   String get _hostFallback3 => 'https://$applicationId-3.algolianet.com/1/';
   String get _insightsHost => 'https://insights.algolia.io/1/';
 
+  List<String> get _userAgents {
+    final os = "${Platform.operatingSystem} ${Platform.operatingSystemVersion}";
+    final dart = "Dart ${Platform.version}";
+    final client = "Algolia for Dart (unofficial) ($version)";
+    var userAgents = [os, dart, client];
+    userAgents.addAll(extraUserAgents);
+    return userAgents;
+  }
+
   Map<String, String> get _headers {
     var map = <String, String>{
       'X-Algolia-Application-Id': applicationId,
       'X-Algolia-API-Key': _apiKey,
       'Content-Type': 'application/json',
+      'User-Agent': _userAgents.join(";"),
     };
     map.addEntries(extraHeaders.entries);
     return map;
@@ -62,6 +78,7 @@ class Algolia {
       } else if (retry == 3) {
         host = _hostFallback3;
       }
+
       switch (requestType) {
         case ApiRequestType.get:
           return http.get(
