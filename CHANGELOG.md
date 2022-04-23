@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0+2
+### Analyze Fixes
+
+- [Analyze] Update homepage in `pubspec`
 ## 1.1.0+1
 ### Analyze Fixes
 
