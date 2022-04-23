@@ -9,8 +9,11 @@ enum ApiRequestType {
 }
 
 class Algolia {
-  static final version = "1.1.0";
+  /// Version of the package.
+  static final version = "1.1.0+1";
 
+  /// `Algolia` is a class that has a constructor `init()` that takes in a `applicationId`, `apiKey`,
+  /// `extraHeaders` and `extraUserAgents`.
   const Algolia.init({
     required this.applicationId,
     required String apiKey,
@@ -18,6 +21,7 @@ class Algolia {
     this.extraUserAgents = const [],
   }) : _apiKey = apiKey;
 
+  /// A internal constructor.
   const Algolia._({
     required this.applicationId,
     required String apiKey,
@@ -25,11 +29,19 @@ class Algolia {
     this.extraUserAgents = const [],
   }) : _apiKey = apiKey;
 
+  /// A variable that is used to store the application id.
   final String applicationId;
+
+  /// A private variable that is used to store the api key.
   final String _apiKey;
+
+  /// Used to store the extra headers that are passed in the constructor.
   final Map<String, String> extraHeaders;
+
+  /// Used to add extra user agents to the request.
   final List<String> extraUserAgents;
 
+  /// A getter that returns a new instance of Algolia.
   Algolia get instance => Algolia._(
         applicationId: applicationId,
         apiKey: _apiKey,
@@ -48,9 +60,7 @@ class Algolia {
     final os = "${Platform.operatingSystem} ${Platform.operatingSystemVersion}";
     final dart = "Dart ${Platform.version}";
     final client = "Algolia for Dart (unofficial) ($version)";
-    var userAgents = [os, dart, client];
-    userAgents.addAll(extraUserAgents);
-    return userAgents;
+    return [os, dart, client, ...extraUserAgents];
   }
 
   Map<String, String> get _headers {
@@ -64,6 +74,16 @@ class Algolia {
     return map;
   }
 
+  /// It tries to make an API call, and if it fails, it tries to make the same API call again, but with
+  /// a different host
+  ///
+  /// Args:
+  ///   requestType (ApiRequestType): The type of request you want to make.
+  ///   url (String): The url of the API endpoint.
+  ///   data (dynamic): The data to be sent to the server.
+  ///
+  /// Returns:
+  ///   A Future<http.Response>
   Future<http.Response> _apiCall(ApiRequestType requestType, String url,
       {dynamic data}) async {
     // ignore: prefer_function_declarations_over_variables
@@ -146,6 +166,15 @@ class Algolia {
     }
   }
 
+  /// The `setHeader` function takes in a `key` and `value` and returns a new instance
+  /// of `Algolia` with the `extraHeaders` updated
+  ///
+  /// Args:
+  ///   key (String): The header key
+  ///   value (String): The value of the header.
+  ///
+  /// Returns:
+  ///   A new instance of Algolia with the extraHeaders map updated.
   Algolia setHeader(String key, String value) {
     var map = extraHeaders;
     map[key] = value;
@@ -156,13 +185,26 @@ class Algolia {
     );
   }
 
+  /// Return an AlgoliaIndexReference object that is a reference to the index with the given name.
+  ///
+  /// Args:
+  ///   index (String): The name of the index you want to query.
+  ///
+  /// Returns:
+  ///   An AlgoliaIndexReference object.
   AlgoliaIndexReference index(String index) {
     return AlgoliaIndexReference._(this, index);
   }
 
+  /// A getter that returns a new instance of AlgoliaMultiIndexesReference.
   AlgoliaMultiIndexesReference get multipleQueries =>
       AlgoliaMultiIndexesReference._(this);
 
+  /// It makes a GET request to the `/1/indexes` endpoint, and returns an `AlgoliaIndexesSnapshot`
+  /// object
+  ///
+  /// Returns:
+  ///   A Future of type AlgoliaIndexesSnapshot.
   Future<AlgoliaIndexesSnapshot> getIndices() async {
     var response = await _apiCall(
       ApiRequestType.get,

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0+1
+### Analyze Fixes
+
+- [Analyze] Fixed static analysis
+## 1.1.0
+### Analytical Improvements
+
+- [Added] User Agent support while making request to Algolia api.
 ## 1.0.5+1
 ### Analyze Fixes
 
