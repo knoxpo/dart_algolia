@@ -10,7 +10,7 @@ enum ApiRequestType {
 
 class Algolia {
   /// Version of the package.
-  static final version = "1.1.0+1";
+  static final version = "1.1.1";
 
   /// `Algolia` is a class that has a constructor `init()` that takes in a `applicationId`, `apiKey`,
   /// `extraHeaders` and `extraUserAgents`.

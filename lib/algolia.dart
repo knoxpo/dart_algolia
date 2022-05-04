@@ -2,10 +2,10 @@ library algolia;
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
+import 'package:universal_io/io.dart' show Platform;
 
 part 'src/algolia.dart';
 part 'src/batch.dart';

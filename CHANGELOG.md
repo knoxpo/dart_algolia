@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+### Fixed IO Compatibility for Web
+
+- [Bug] Replaced `dart:io` with `universal_io` to fix web compatibility.
 ## 1.1.0+2
 ### Analyze Fixes
 

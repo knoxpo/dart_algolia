@@ -1,7 +1,7 @@
 name: algolia
 description: >
    Algolia is a pure dart SDK, wrapped around Algolia REST API for easy implementation for your Flutter or Dart projects.
-version: 1.1.0+2
+version: 1.1.1
 repository: https://github.com/knoxpo/dart_algolia
 homepage: https://www.algolia.com/doc/guides/building-search-ui/troubleshooting/faq/ios/#does-algolia-support-dart-and-flutter
 
@@ -12,6 +12,7 @@ dependencies:
   meta: ^1.6.0
   http: ^0.13.0
   uuid: ^3.0.5
+  universal_io: ^2.0.4
 
 dev_dependencies:
   lints: ^1.0.1
