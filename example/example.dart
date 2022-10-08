@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:algolia/algolia.dart';
 
 void main() async {
@@ -159,4 +160,40 @@ class Application {
     applicationId: 'YOUR_APPLICATION_ID',
     apiKey: 'YOUR_API_KEY',
   );
+}
+
+class IsolateDecodingAlgolia extends Algolia {
+  IsolateDecodingAlgolia.init({
+    required String applicationId,
+    required String apiKey,
+    Map<String, String> extraHeaders = const {},
+    List<String> extraUserAgents = const [],
+  }) : super.init(
+          applicationId: applicationId,
+          apiKey: apiKey,
+          extraHeaders: extraHeaders,
+          extraUserAgents: extraUserAgents,
+        );
+
+  /// Override the default JSON decoder with an Isolated one
+  @override
+  Future<dynamic> decodeJson(
+    String source, {
+    Object? Function(Object? key, Object? value)? reviver,
+  }) {
+    /// In Flutter you can simply return
+    /// ```dart
+    /// return compute(json.decode, source);
+    /// ```
+
+    /// In pure Dart <2.19 you have to import the compute package https://pub.dev/packages/compute
+    ///
+    /// Dart 2.19 will come with Isolate.run
+    ///
+    /// ```dart
+    /// return Isolate.run(json.decode, source);
+    /// ```
+
+    return json.decode(source, reviver: reviver);
+  }
 }

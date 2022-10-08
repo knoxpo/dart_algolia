@@ -254,14 +254,19 @@ class Algolia {
     }
   }
 
-  /// This method can be overridden to allow decoding JSON in an isolate
-  ///
-  /// example:
+  /// This method can be overridden to allow decoding JSON in an isolate,
+  /// for example using Flutter compute:
   ///
   /// ```dart
   /// @override
-  /// FutureOr<dynamic> decodeJson(String source) => compute(await decodeJson, source);
+  /// Future<dynamic> decodeJson(
+  ///   String source, {
+  ///   Object? Function(Object? key, Object? value)? reviver,
+  /// }) =>
+  ///     compute(json.decode);
   /// ```
+  ///
+  /// Read more about background JSON parsing here https://docs.flutter.dev/cookbook/networking/background-parsing
   FutureOr<dynamic> decodeJson(
     String source, {
     Object? Function(Object? key, Object? value)? reviver,
