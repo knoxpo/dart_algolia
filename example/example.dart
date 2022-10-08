@@ -182,17 +182,22 @@ class IsolateDecodingAlgolia extends Algolia {
     Object? Function(Object? key, Object? value)? reviver,
   }) {
     /// In Flutter you can simply return
+    ///
     /// ```dart
     /// return compute(json.decode, source);
     /// ```
-
-    /// In pure Dart <2.19 you have to import the compute package https://pub.dev/packages/compute
+    ///
+    /// In pure Dart <2.19 you have to import the compute package
+    /// https://pub.dev/packages/compute
     ///
     /// Dart 2.19 will come with Isolate.run
     ///
     /// ```dart
     /// return Isolate.run(json.decode, source);
     /// ```
+    ///
+    /// Consider also using a worker pool using the excellent Squadron package
+    /// https://pub.dev/packages/squadron
 
     return json.decode(source, reviver: reviver);
   }
