@@ -210,7 +210,7 @@ class Algolia {
       ApiRequestType.get,
       'indexes',
     );
-    Map<String, dynamic> body = json.decode(response.body);
+    Map<String, dynamic> body = await decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
@@ -247,7 +247,7 @@ class Algolia {
       body: utf8.encode(json.encode({'events': eventList})),
       encoding: Encoding.getByName('utf-8'),
     );
-    Map<String, dynamic> body = json.decode(response.body);
+    Map<String, dynamic> body = await decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);

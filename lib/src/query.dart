@@ -79,7 +79,7 @@ class AlgoliaQuery {
       'indexes/$encodedIndex/query',
       data: _parameters,
     );
-    Map<String, dynamic> body = json.decode(response.body);
+    Map<String, dynamic> body = await decodeJson(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
     }
@@ -110,7 +110,7 @@ class AlgoliaQuery {
       'indexes/$encodedIndex/deleteByQuery',
       data: _parameters,
     );
-    Map<String, dynamic> body = json.decode(response.body);
+    Map<String, dynamic> body = await decodeJson(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
     }

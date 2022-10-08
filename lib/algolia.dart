@@ -21,5 +21,6 @@ part 'src/synonyms_reference.dart';
 part 'src/query.dart';
 part 'src/query_snapshot.dart';
 part 'src/task.dart';
+part 'src/util/json_decode.dart';
 part 'src/util/json_encode.dart';
 part 'src/util/enum_util.dart';

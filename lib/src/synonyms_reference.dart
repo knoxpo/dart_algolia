@@ -26,6 +26,7 @@ extension ExtensionDietaryType on SynonymsType {
 ///
 class AlgoliaSynonymsReference {
   const AlgoliaSynonymsReference._(this.algolia, this.index);
+
   final String index;
   final Algolia algolia;
 
@@ -68,7 +69,7 @@ class AlgoliaSynonymsReference {
       'indexes/$encodedIndex/synonyms/search',
       data: data,
     );
-    Map<String, dynamic> body = json.decode(response.body);
+    Map<String, dynamic> body = await decodeJson(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 500)) {
       throw AlgoliaError._(body, response.statusCode);
     }
@@ -124,7 +125,7 @@ class AlgoliaSynonymsReference {
       'indexes/$encodedIndex/synonyms/${synonyms.objectID}?forwardToReplicas=${synonyms.forwardToReplicas}',
       data: synonyms.toMap(),
     );
-    Map<String, dynamic> body = json.decode(response.body);
+    Map<String, dynamic> body = await decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
@@ -144,7 +145,7 @@ class AlgoliaSynonymsReference {
       'indexes/$encodedIndex/synonyms/batch',
       data: synonyms.map((e) => e.toMap()).toList(),
     );
-    Map<String, dynamic> body = json.decode(response.body);
+    Map<String, dynamic> body = await decodeJson(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
     }
@@ -161,7 +162,7 @@ class AlgoliaSynonymsReference {
       ApiRequestType.get,
       'indexes/$encodedIndex/synonyms/$objectID',
     );
-    Map<String, dynamic> body = json.decode(response.body);
+    Map<String, dynamic> body = await decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
@@ -179,7 +180,7 @@ class AlgoliaSynonymsReference {
       ApiRequestType.post,
       'indexes/$encodedIndex/synonyms/clear',
     );
-    Map<String, dynamic> body = json.decode(response.body);
+    Map<String, dynamic> body = await decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
@@ -197,7 +198,7 @@ class AlgoliaSynonymsReference {
       ApiRequestType.post,
       'indexes/$encodedIndex/synonyms/$objectID',
     );
-    Map<String, dynamic> body = json.decode(response.body);
+    Map<String, dynamic> body = await decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
@@ -255,6 +256,7 @@ class AlgoliaSynonyms {
   final String? word;
   final String? placeholder;
   final bool forwardToReplicas;
+
   const AlgoliaSynonyms({
     required this.objectID,
     required this.type,
