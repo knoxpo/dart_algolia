@@ -94,7 +94,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
         'maxFacetHits': maxFacetHits,
       },
     );
-    Map<String, dynamic> body = await decodeJson(response.body);
+    Map<String, dynamic> body = await algolia.decodeJson(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 500)) {
       throw AlgoliaError._(body, response.statusCode);
     }
@@ -154,7 +154,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
       'indexes/$encodedIndex',
       data: data,
     );
-    Map<String, dynamic> body = await decodeJson(response.body);
+    Map<String, dynamic> body = await algolia.decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
@@ -194,7 +194,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
       'indexes/*/objects',
       data: {'requests': objects},
     );
-    Map<String, dynamic> body = await decodeJson(response.body);
+    Map<String, dynamic> body = await algolia.decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
@@ -215,7 +215,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
       ApiRequestType.post,
       'indexes/$encodedIndex/clear',
     );
-    Map<String, dynamic> body = await decodeJson(response.body);
+    Map<String, dynamic> body = await algolia.decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
@@ -264,7 +264,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
       'indexes/$encodedIndex/operation',
       data: data,
     );
-    Map<String, dynamic> body = await decodeJson(response.body);
+    Map<String, dynamic> body = await algolia.decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
@@ -312,7 +312,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
       ApiRequestType.delete,
       'indexes/$encodedIndex',
     );
-    Map<String, dynamic> body = await decodeJson(response.body);
+    Map<String, dynamic> body = await algolia.decodeJson(response.body);
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);
     }
@@ -399,7 +399,7 @@ class AlgoliaMultiIndexesReference {
         'strategy': 'none',
       },
     );
-    Map<String, dynamic> body = await decodeJson(response.body);
+    Map<String, dynamic> body = await _algolia.decodeJson(response.body);
 
     if (!(response.statusCode >= 200 && response.statusCode < 300)) {
       throw AlgoliaError._(body, response.statusCode);

@@ -69,7 +69,7 @@ class AlgoliaBatch {
           data: {'requests': actions},
         );
 
-        Map<String, dynamic> body = await decodeJson(response.body);
+        Map<String, dynamic> body = await algolia.decodeJson(response.body);
 
         if (!(response.statusCode >= 200 && response.statusCode < 300)) {
           throw AlgoliaError._(body, response.statusCode);
