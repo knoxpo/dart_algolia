@@ -1583,4 +1583,19 @@ void main() async {
       print('\n\n');
     });
   });
+
+  test('Perform custom parameter', () async {
+    AlgoliaQuery query = algolia.instance.index('contacts');
+
+    query = query.custom('enableReRanking', true);
+
+    // Get Result/Objects
+    var snap = await query.getObjects();
+
+    // Checking if has [AlgoliaQuerySnapshot]
+    expect(snap.runtimeType, AlgoliaQuerySnapshot);
+
+    print('Params: ${snap.params}');
+    print('\n\n');
+  });
 }
