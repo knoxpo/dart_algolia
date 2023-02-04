@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.2
+### Add custom params to requests
+
+- [Added] Functionality that allows you to add custom query [Contributed by @Aallam](https://github.com/Aallam).
+  ````dart
+    AlgoliaQuery custom(String key, dynamic value) {
+      assert(!_parameters.containsKey(key));
+      return _copyWithParameters({key: value});
+    }
+  ````
 ## 1.1.1
 ### Fixed IO Compatibility for Web
 

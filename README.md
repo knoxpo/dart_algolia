@@ -41,7 +41,7 @@ You should ensure that you add the router as a dependency in your flutter projec
 
 ```yaml
 dependencies:
- algolia: ^1.1.1
+ algolia: ^1.1.2
 ```
 
 You should then run `flutter packages upgrade` or update your packages in IntelliJ.
@@ -244,6 +244,9 @@ version of the release.
 - `.setMaxFacetHits(int value)`
 - `.setPercentileComputation({bool enabled = false})`
 - `.setEnableABTest({bool enabled = false})`
+
+##### custom-query (11/15)
+- `.custom(String key, dynamic value)`
 
 ##### GET RESULT
 

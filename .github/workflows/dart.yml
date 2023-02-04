@@ -31,13 +31,13 @@ jobs:
       env:
           ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-      run: pub global activate dotenv
+      run: dart pub global activate dotenv
 
     - name: Load dotenv 
       env:
         ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
         ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-      run: pub global run dotenv
+      run: dart pub global run dotenv
 
     # Uncomment this step to verify the use of 'dart format' on each commit.
     - name: Verify formatting
