@@ -1,5 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:dotenv/dotenv.dart' show load, env;
+
 // ignore: invalid_annotation_target
 @Timeout(Duration(seconds: 60))
 import 'package:test/test.dart';
@@ -1582,5 +1583,21 @@ void main() async {
       }
       print('\n\n');
     });
+  });
+
+  test('Perform custom parameter', () async {
+    AlgoliaQuery query = algolia.instance.index('contacts');
+
+    query = query.custom('enableReRanking', true);
+
+    // Get Result/Objects
+    var snap = await query.getObjects();
+
+    // Checking if has [AlgoliaQuerySnapshot]
+    expect(snap.runtimeType, AlgoliaQuerySnapshot);
+    expect(snap.params.contains('enableReRanking'), true);
+
+    print('Params: ${snap.params}');
+    print('\n\n');
   });
 }

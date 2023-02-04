@@ -2191,6 +2191,16 @@ class AlgoliaQuery {
     assert(!_parameters.containsKey('enableABTest'));
     return _copyWithParameters(<String, dynamic>{'enableABTest': enabled});
   }
+
+  ///
+  /// **Custom Parameter**
+  ///
+  /// Adds a custom request parameter to the search query.
+  ///
+  AlgoliaQuery custom(String key, dynamic value) {
+    assert(!_parameters.containsKey(key));
+    return _copyWithParameters({key: value});
+  }
 }
 
 class BoundingBox {
