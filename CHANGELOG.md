@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.3
+### Fixed User-Agent headers for Web
+
+- [Bug] Check if we are running as a web app before setting User-Agent headers.
+
 ## 1.1.2
 ### Add custom params to requests
 
