@@ -2,7 +2,6 @@ library algolia;
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:html' as DartHtml;
 
 import 'package:http/http.dart' as http;
 import 'package:universal_io/io.dart' show Platform;
