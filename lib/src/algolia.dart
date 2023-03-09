@@ -56,7 +56,7 @@ class Algolia {
   String get _hostFallback3 => 'https://$applicationId-3.algolianet.com/1/';
   String get _insightsHost => 'https://insights.algolia.io/1/';
 
-  bool get _isWeb => bool.fromEnvironment(
+  final _isWeb = const bool.fromEnvironment(
       'dart.library.js_util'); // this will return true if compiled to web
 
   List<String> get _userAgents {
