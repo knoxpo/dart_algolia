@@ -56,6 +56,9 @@ class Algolia {
   String get _hostFallback3 => 'https://$applicationId-3.algolianet.com/1/';
   String get _insightsHost => 'https://insights.algolia.io/1/';
 
+  // ignore: unnecessary_null_comparison
+  bool get _isWeb => DartHtml.window != null; // window is only available on web
+
   List<String> get _userAgents {
     final os = "${Platform.operatingSystem} ${Platform.operatingSystemVersion}";
     final dart = "Dart ${Platform.version}";
@@ -68,7 +71,7 @@ class Algolia {
       'X-Algolia-Application-Id': applicationId,
       'X-Algolia-API-Key': _apiKey,
       'Content-Type': 'application/json',
-      'User-Agent': _userAgents.join(";"),
+      if (!_isWeb) 'User-Agent': _userAgents.join(";"),
     };
     map.addEntries(extraHeaders.entries);
     return map;
