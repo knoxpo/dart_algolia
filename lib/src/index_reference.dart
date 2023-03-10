@@ -359,11 +359,11 @@ class AlgoliaMultiIndexesReference {
       scheme: '',
       host: '',
       path: '',
-      queryParameters: (data as Map<String, dynamic>?)?.map((key, value) {
-        if (value is List) {
+      queryParameters: data.map((key, value) {
+        if (value is String) {
           return MapEntry(key, value);
         }
-        return MapEntry(key, value.toString());
+        return MapEntry(key, jsonEncode(value));
       }),
     );
     return outgoingUri.toString().substring(3);
