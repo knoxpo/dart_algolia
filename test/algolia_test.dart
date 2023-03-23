@@ -154,6 +154,11 @@ void main() async {
       // Perform multiple facetFilters
       queryA = queryA.facetFilter('status:published');
       queryA = queryA.facetFilter('isDelete:false');
+      queryA = queryA.facetFilter([
+        'email:johan.1@example.com',
+        'email:johan.2@example.com',
+      ]);
+
       try {
         // Get Result/Objects
         var snap = await algolia.multipleQueries
