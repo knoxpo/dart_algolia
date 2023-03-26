@@ -24,7 +24,7 @@ class AlgoliaQuery {
                   List<List<String>>.unmodifiable(<List<String>>[]),
               'numericFilters':
                   List<List<String>>.unmodifiable(<List<String>>[]),
-              'tagFilters': List<List<String>>.unmodifiable(<List<String>>[]),
+              'tagFilters': List<dynamic>.unmodifiable(<dynamic>[]),
             });
   final Algolia algolia;
   final String _index;
@@ -671,12 +671,20 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/tagFilters/)
   ///
   AlgoliaQuery setTagFilter(String value) {
-    final tagFilters = List<String>.from(_parameters['tagFilters']);
-    assert(tagFilters.where((String item) => value == item).isEmpty,
+    final tagFilters = List<dynamic>.from(_parameters['tagFilters']);
+    assert(tagFilters.where((dynamic item) => value == item).isEmpty,
         'TagFilters $value already exists in this query');
-    tagFilters.add(value);
+    tagFilters.add([value]);
     return _copyWithParameters(<String, dynamic>{'tagFilters': tagFilters});
   }
+
+  AlgoliaQuery setTagFilterOneOf(List<String> oneOfValues) {
+    assert(oneOfValues.isNotEmpty);
+    final tagFilters = List<dynamic>.from(_parameters['tagFilters']);
+    tagFilters.add(List.unmodifiable([...oneOfValues]));
+    return _copyWithParameters(<String, dynamic>{'tagFilters': tagFilters});
+  }
+
 
   ///
   /// **sumOrFiltersScores**
