@@ -37,6 +37,6 @@ class AlgoliaObjectSnapshot {
     return _data;
   }
 
-  @Deprecated('Use `.raw()` instead.')
+  @Deprecated('Use `toMap()` instead.')
   Map<String, dynamic> raw() => _data;
 }
