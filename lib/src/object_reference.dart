@@ -34,21 +34,6 @@ class AlgoliaObjectReference {
     return AlgoliaObjectSnapshot._(algolia, _index!, body);
   }
 
-  /// Brows the object referred to by this [AlgoliaObjectReference].
-  ///
-  /// If the object does not yet exist, it will be created.
-  Future<AlgoliaObjectSnapshot> browse() async {
-    assert(_index != null, 'You can\'t get an object without an index.');
-    var response = await algolia._apiCall(
-      ApiRequestType.get,
-      'indexes/$encodedIndex/browse',
-    );
-    Map<String, dynamic> body = json.decode(response.body);
-    if (!(response.statusCode >= 200 && response.statusCode < 300)) {
-      throw AlgoliaError._(body, response.statusCode);
-    }
-    return AlgoliaObjectSnapshot._(algolia, _index!, body);
-  }
   /// Writes to the object referred to by this [AlgoliaObjectReference].
   ///
   /// If the object does not yet exist, it will be created.
