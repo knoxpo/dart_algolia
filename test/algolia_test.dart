@@ -1,13 +1,15 @@
 import 'package:algolia/algolia.dart';
-import 'package:dotenv/dotenv.dart' show load, env;
+import 'package:dotenv/dotenv.dart';
 
 // ignore: invalid_annotation_target
 @Timeout(Duration(seconds: 60))
 import 'package:test/test.dart';
 
+DotEnv env = DotEnv();
+
 class Application {
   static Algolia get algolia {
-    load();
+    env.load();
     return Algolia.init(
       applicationId: env['ALGOLIA_APP_ID']?.toString() ?? '',
       apiKey: env['ALGOLIA_API_KEY']?.toString() ?? '',
