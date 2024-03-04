@@ -1,4 +1,4 @@
-part of algolia;
+part of '../algolia.dart';
 
 enum SynonymsType {
   synonym,

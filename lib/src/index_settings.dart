@@ -1,4 +1,4 @@
-part of algolia;
+part of '../algolia.dart';
 
 ///
 /// **AlgoliaIndexSettings**
@@ -59,8 +59,7 @@ class AlgoliaSettings {
   @override
   String toString() {
     return {
-      'url': '${algolia._host}indexes' +
-          (_index.isNotEmpty ? '/' + Uri.encodeFull(_index) : ''),
+      'url': '${algolia._host}indexes${_index.isNotEmpty ? '/${Uri.encodeFull(_index)}' : ''}',
       'headers': algolia._headers,
       'parameters': _parameters,
     }.toString();

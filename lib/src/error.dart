@@ -1,4 +1,4 @@
-part of algolia;
+part of '../algolia.dart';
 
 class AlgoliaError {
   final Map _message;
