@@ -1,4 +1,4 @@
-part of algolia;
+part of '../../algolia.dart';
 
 dynamic jsonEncodeHelper(dynamic item) {
   if (item is DateTime) {

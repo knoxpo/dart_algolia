@@ -1,4 +1,4 @@
-part of algolia;
+part of '../algolia.dart';
 
 /// **AlgoliaBatch**
 /// A [AlgoliaBatch] is a series of write operations to be performed as one unit.
