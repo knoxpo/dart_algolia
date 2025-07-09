@@ -1,4 +1,4 @@
-part of algolia;
+part of '../../algolia.dart';
 
 class EnumUtil {
   static T fromStringEnum<T>(Iterable<T> values, String stringType) {

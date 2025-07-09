@@ -1,4 +1,4 @@
-part of algolia;
+part of '../algolia.dart';
 
 class AlgoliaTask {
   AlgoliaTask._(this.algolia, String? index, Map<String, dynamic> data)

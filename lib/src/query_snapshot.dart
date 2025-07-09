@@ -1,4 +1,4 @@
-part of algolia;
+part of '../algolia.dart';
 
 class AlgoliaQuerySnapshot {
   AlgoliaQuerySnapshot._(this.algolia, this.index, Map<String, dynamic> map)

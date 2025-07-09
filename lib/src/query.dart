@@ -1,4 +1,4 @@
-part of algolia;
+part of '../algolia.dart';
 
 enum AlgoliaSortFacetValuesBy {
   alpha,
@@ -49,8 +49,7 @@ class AlgoliaQuery {
   @override
   String toString() {
     return {
-      'url': '${algolia._host}indexes' +
-          (encodedIndex.isNotEmpty ? '/' + encodedIndex : ''),
+      'url': '${algolia._host}indexes${encodedIndex.isNotEmpty ? '/$encodedIndex' : ''}',
       'headers': algolia._headers,
       'parameters': _parameters,
     }.toString();
