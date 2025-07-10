@@ -66,12 +66,15 @@ class AlgoliaSettings {
     }.toString();
   }
 
-  Future<AlgoliaTask> setSettings() async {
+  Future<AlgoliaTask> setSettings({
+    bool forwardToReplicas = false,
+  }) async {
     assert(
         _parameters.keys.isNotEmpty, 'No setting parameter to update found.');
     var response = await algolia._apiCall(
       ApiRequestType.put,
-      'indexes/$encodedIndex/settings',
+      'indexes/$encodedIndex/settings' +
+          (forwardToReplicas ? '?forwardToReplicas=true' : ''),
       data: _parameters,
     );
     Map<String, dynamic> body = json.decode(response.body);
