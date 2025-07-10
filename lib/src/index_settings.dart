@@ -44,7 +44,7 @@ class AlgoliaSettings {
   final Algolia algolia;
   final String _index;
   final Map<String, dynamic> _parameters;
-  String get encodedIndex => Uri.encodeFull(_index);
+  String get encodedIndex => Uri.encodeComponent(_index);
 
   AlgoliaSettings _copyWithParameters(Map<String, dynamic> parameters) {
     return AlgoliaSettings._(
@@ -60,7 +60,7 @@ class AlgoliaSettings {
   String toString() {
     return {
       'url': '${algolia._host}indexes' +
-          (_index.isNotEmpty ? '/' + Uri.encodeFull(_index) : ''),
+          (_index.isNotEmpty ? '/' + Uri.encodeComponent(_index) : ''),
       'headers': algolia._headers,
       'parameters': _parameters,
     }.toString();

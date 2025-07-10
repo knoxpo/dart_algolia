@@ -31,7 +31,7 @@ class AlgoliaQuery {
   final Map<String, dynamic> _parameters;
 
   Map<String, dynamic> get parameters => _parameters;
-  String get encodedIndex => Uri.encodeFull(_index);
+  String get encodedIndex => Uri.encodeComponent(_index);
 
   AlgoliaQuery _copyWithParameters(Map<String, dynamic> parameters) {
     return AlgoliaQuery._(

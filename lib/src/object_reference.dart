@@ -14,8 +14,8 @@ class AlgoliaObjectReference {
   String? get objectID => _objectId;
 
   String? get encodedObjectID =>
-      _objectId != null ? Uri.encodeFull(_objectId!) : null;
-  String? get encodedIndex => _index != null ? Uri.encodeFull(_index!) : null;
+      _objectId != null ? Uri.encodeComponent(_objectId!) : null;
+  String? get encodedIndex => _index != null ? Uri.encodeComponent(_index!) : null;
 
   /// Get the object referred to by this [AlgoliaObjectReference].
   ///
@@ -47,7 +47,7 @@ class AlgoliaObjectReference {
       url += '/$encodedObjectID';
     }
     if (data['objectID'] != null && _objectId == null) {
-      url += "/${Uri.encodeFull(data['objectID'])}";
+      url += "/${Uri.encodeComponent(data['objectID'])}";
     } else if (data['objectID'] != null) {
       data.remove('objectID');
     }
