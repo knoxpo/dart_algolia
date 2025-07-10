@@ -38,7 +38,7 @@ class AlgoliaQuerySnapshot {
 
   Map<String, dynamic> toMap() => _map;
 
-  @Deprecated('Use `.raw()` instead.')
+  @Deprecated('Use `toMap()` instead.')
   Map<String, dynamic> raw() => _map;
 
   @override
