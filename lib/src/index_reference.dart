@@ -360,7 +360,7 @@ class AlgoliaMultiIndexesReference {
       host: '',
       path: '',
       queryParameters: (data as Map<String, dynamic>?)?.map((key, value) {
-        if (value is List) {
+        if (value is List && value.isNotEmpty) {
           return MapEntry(key, value);
         }
         return MapEntry(key, value.toString());

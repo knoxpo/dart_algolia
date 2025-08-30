@@ -9,12 +9,12 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  meta: ^1.6.0
-  http: ^0.13.0
-  uuid: ^3.0.5
-  universal_io: ^2.0.4
+  meta: ^1.8.0
+  http: ^0.13.5
+  uuid: ^3.0.7
+  universal_io: ^2.2.0
 
 dev_dependencies:
-  lints: ^1.0.1
-  test: ^1.17.12
+  lints: ^2.0.1
+  test: ^1.23.1
   dotenv: ^3.0.0

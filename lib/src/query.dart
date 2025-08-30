@@ -301,7 +301,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/attributesToRetrieve/)
   ///
   AlgoliaQuery setAttributesToRetrieve(List<String> value) {
-    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('attributesToRetrieve'));
     return _copyWithParameters(
         <String, dynamic>{'attributesToRetrieve': value});
@@ -836,7 +835,6 @@ class AlgoliaQuery {
   /// Source: [Learn more](https://www.algolia.com/doc/api-reference/api-parameters/attributesToHighlight/)
   ///
   AlgoliaQuery setAttributesToHighlight(List<String> value) {
-    assert(value.isNotEmpty, 'value can not be empty');
     assert(!_parameters.containsKey('attributesToHighlight'));
     return _copyWithParameters(
         <String, dynamic>{'attributesToHighlight': value});
