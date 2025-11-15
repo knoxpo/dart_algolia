@@ -44,7 +44,7 @@ class AlgoliaSettings {
   final Algolia algolia;
   final String _index;
   final Map<String, dynamic> _parameters;
-  String get encodedIndex => Uri.encodeFull(_index);
+  String get encodedIndex => Uri.encodeComponent(_index);
 
   AlgoliaSettings _copyWithParameters(Map<String, dynamic> parameters) {
     return AlgoliaSettings._(
@@ -60,18 +60,21 @@ class AlgoliaSettings {
   String toString() {
     return {
       'url': '${algolia._host}indexes' +
-          (_index.isNotEmpty ? '/' + Uri.encodeFull(_index) : ''),
+          (_index.isNotEmpty ? '/' + Uri.encodeComponent(_index) : ''),
       'headers': algolia._headers,
       'parameters': _parameters,
     }.toString();
   }
 
-  Future<AlgoliaTask> setSettings() async {
+  Future<AlgoliaTask> setSettings({
+    required bool forwardToReplicas,
+  }) async {
     assert(
         _parameters.keys.isNotEmpty, 'No setting parameter to update found.');
     var response = await algolia._apiCall(
       ApiRequestType.put,
-      'indexes/$encodedIndex/settings',
+      'indexes/$encodedIndex/settings' +
+          (forwardToReplicas ? '?forwardToReplicas=true' : ''),
       data: _parameters,
     );
     Map<String, dynamic> body = json.decode(response.body);

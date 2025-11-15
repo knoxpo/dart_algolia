@@ -32,7 +32,7 @@ class AlgoliaSynonymsReference {
   ///
   /// ID of the referenced index.
   ///
-  String get encodedIndex => Uri.encodeFull(index);
+  String get encodedIndex => Uri.encodeComponent(index);
 
   ///
   /// **Search synonyms**

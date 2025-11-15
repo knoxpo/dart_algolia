@@ -1,9 +1,15 @@
 import 'package:algolia/algolia.dart';
-import 'package:dotenv/dotenv.dart' show load, env;
+import 'package:dotenv/dotenv.dart';
 
 // ignore: invalid_annotation_target
 @Timeout(Duration(seconds: 60))
 import 'package:test/test.dart';
+
+late DotEnv env;
+void load() {
+  env = DotEnv(includePlatformEnvironment: true);
+  env.load();
+}
 
 class Application {
   static Algolia get algolia {
@@ -220,7 +226,7 @@ void main() async {
     test('Perform Delete Indexes.', () async {
       AlgoliaSettings settings = algolia.instance.index('contacts').settings;
       settings = settings.setReplicas(['contacts_copy_1', 'contacts_copy_2']);
-      final removeReplicas = await settings.setSettings();
+      final removeReplicas = await settings.setSettings(forwardToReplicas: true);
       await removeReplicas.waitTask();
       taskDeleteIndex = await algolia.instance.index('contacts').deleteIndex();
       // taskDeleteIndex =
@@ -326,7 +332,7 @@ void main() async {
           .settings
           .setSearchableAttributes(['name']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -340,7 +346,7 @@ void main() async {
           .settings
           .setAttributesForFaceting(['name', 'searchable(email)']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -354,7 +360,7 @@ void main() async {
           .settings
           .setUnRetrievableAttributes(['isDelete']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -368,7 +374,7 @@ void main() async {
           .settings
           .setAttributesToRetrieve(['email']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -388,7 +394,7 @@ void main() async {
       // Get Result/Objects
       var snap;
       try {
-        var task = await settings.setSettings();
+        var task = await settings.setSettings(forwardToReplicas: true);
         await task.waitTask();
         snap = await query.getObjects();
       } on AlgoliaError catch (err) {
@@ -407,7 +413,7 @@ void main() async {
       var settings =
           algolia.instance.index('contacts').settings.setRanking(['words']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -421,7 +427,7 @@ void main() async {
           .settings
           .setCustomRanking(['asc(createdAt)']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -485,7 +491,7 @@ void main() async {
       // Get Result/Objects
       var snap;
       try {
-        var task = await settings.setSettings();
+        var task = await settings.setSettings(forwardToReplicas: true);
         await task.waitTask();
         snap = await query.getObjects();
       } on AlgoliaError catch (err) {
@@ -592,7 +598,7 @@ void main() async {
           .settings
           .setAttributesToHighlight(['email']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -606,7 +612,7 @@ void main() async {
           .settings
           .setAttributesToSnippet(['contact']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -621,7 +627,7 @@ void main() async {
           .setHighlightPreTag('<em>')
           .setHighlightPostTag('</em>');
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -635,7 +641,7 @@ void main() async {
           .settings
           .setRestrictHighlightAndSnippetArrays(enable: true);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -755,7 +761,7 @@ void main() async {
       var settings =
           algolia.instance.index('contacts').settings.setTypoTolerance(true);
 
-      await settings.setSettings();
+      await settings.setSettings(forwardToReplicas: true);
 
       AlgoliaQuery query = algolia.instance.index('contacts');
 
@@ -777,7 +783,7 @@ void main() async {
           .settings
           .setAllowTyposOnNumericTokens(false);
 
-      await settings.setSettings();
+      await settings.setSettings(forwardToReplicas: true);
 
       AlgoliaQuery query = algolia.instance.index('contacts');
 
@@ -800,7 +806,7 @@ void main() async {
           .setDisableTypoToleranceOnAttributes(
               ['status']).setSearchableAttributes(['status']);
 
-      var task = await settings.setSettings();
+      var task = await settings.setSettings(forwardToReplicas: true);
       await task.waitTask();
 
       AlgoliaQuery query = algolia.instance.index('contacts');
@@ -829,7 +835,7 @@ void main() async {
       // Get Result/Objects
       var snap;
       try {
-        snap = await settings.setSettings();
+        snap = await settings.setSettings(forwardToReplicas: true);
       } on AlgoliaError catch (err) {
         print(err.error);
       }
@@ -928,7 +934,7 @@ void main() async {
           .settings
           .setQueryLanguages(['es']).setIgnorePlurals(true);
 
-      await settings.setSettings();
+      await settings.setSettings(forwardToReplicas: true);
 
       AlgoliaQuery query = algolia.instance.index('contacts');
 
@@ -949,7 +955,7 @@ void main() async {
           .settings
           .setQueryLanguages(['es']).setRemoveStopWords(true);
 
-      await settings.setSettings();
+      await settings.setSettings(forwardToReplicas: true);
 
       AlgoliaQuery query = algolia.instance.index('contacts');
 
@@ -970,7 +976,7 @@ void main() async {
           .settings
           .setCamelCaseAttributes(['name']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -991,7 +997,7 @@ void main() async {
 
       var response;
       try {
-        response = await settings.setSettings();
+        response = await settings.setSettings(forwardToReplicas: true);
       } on AlgoliaError catch (err) {
         print(err.error);
       }
@@ -1010,7 +1016,7 @@ void main() async {
 
       var response;
       try {
-        response = await settings.setSettings();
+        response = await settings.setSettings(forwardToReplicas: true);
       } on AlgoliaError catch (err) {
         print(err.error);
       }
@@ -1027,7 +1033,7 @@ void main() async {
           .settings
           .setQueryLanguages(['es', 'ja']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -1041,7 +1047,7 @@ void main() async {
           .settings
           .setIndexLanguages(['es', 'ja']);
 
-      var response = await settings.setSettings();
+      var response = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaTask]
       expect(response.runtimeType, AlgoliaTask);
@@ -1074,7 +1080,7 @@ void main() async {
           .settings
           .setEnableRules(enabled: true);
 
-      await settings.setSettings();
+      await settings.setSettings(forwardToReplicas: true);
 
       AlgoliaQuery query = algolia.instance.index('contacts');
 
@@ -1118,7 +1124,7 @@ void main() async {
           .setEnablePersonalization(enabled: true);
 
       try {
-        await settings.setSettings();
+        await settings.setSettings(forwardToReplicas: true);
       } on AlgoliaError catch (err) {
         print(err.error);
       }
@@ -1180,7 +1186,7 @@ void main() async {
           .setQueryType(QueryType.prefixLast);
 
       try {
-        await settings.setSettings();
+        await settings.setSettings(forwardToReplicas: true);
       } on AlgoliaError catch (err) {
         print(err.error);
       }
@@ -1212,7 +1218,7 @@ void main() async {
           .setRemoveWordsIfNoResults(RemoveWordsIfNoResults.none);
 
       try {
-        await settings.setSettings();
+        await settings.setSettings(forwardToReplicas: true);
       } on AlgoliaError catch (err) {
         print(err.error);
       }
@@ -1242,7 +1248,7 @@ void main() async {
           .settings
           .setDisablePrefixOnAttributes(['sku']);
 
-      var result = await settings.setSettings();
+      var result = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaQuerySnapshot]
       expect(result.runtimeType, AlgoliaTask);
@@ -1256,7 +1262,7 @@ void main() async {
           .settings
           .setDisableExactOnAttributes(['email']);
 
-      var result = await settings.setSettings();
+      var result = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaQuerySnapshot]
       expect(result.runtimeType, AlgoliaTask);
@@ -1271,7 +1277,7 @@ void main() async {
           .settings
           .setExactOnSingleWordQuery(ExactOnSingleWordQuery.attribute);
 
-      await settings.setSettings();
+      await settings.setSettings(forwardToReplicas: true);
 
       //Override default exact ranking criterion computation on single word query for the current search
       AlgoliaQuery query = algolia.instance.index('contacts');
@@ -1295,7 +1301,7 @@ void main() async {
           .settings
           .setNumericAttributesForFiltering(['quantity']);
 
-      var result = await settings.setSettings();
+      var result = await settings.setSettings(forwardToReplicas: true);
 
       expect(result.runtimeType, AlgoliaTask);
       print(result);
@@ -1308,7 +1314,7 @@ void main() async {
           .settings
           .setAllowCompressionOfIntegerArray(enabled: true);
 
-      var result = await settings.setSettings();
+      var result = await settings.setSettings(forwardToReplicas: true);
 
       expect(result.runtimeType, AlgoliaTask);
       print(result);
@@ -1322,7 +1328,7 @@ void main() async {
           .settings
           .setAttributeForDistinct('url');
 
-      var result = await settings.setSettings();
+      var result = await settings.setSettings(forwardToReplicas: true);
 
       expect(result.runtimeType, AlgoliaTask);
       print(result);
@@ -1333,7 +1339,7 @@ void main() async {
       var settings =
           algolia.instance.index('contacts').settings.setDistinct(value: 0);
 
-      var result = await settings.setSettings();
+      var result = await settings.setSettings(forwardToReplicas: true);
 
       expect(result.runtimeType, AlgoliaTask);
       print(result);
@@ -1429,7 +1435,7 @@ void main() async {
       var settings =
           algolia.instance.index('contacts').settings.setMaxFacetHits(10);
 
-      await settings.setSettings();
+      await settings.setSettings(forwardToReplicas: true);
 
       //Override default number of facet values to return during a search for facet values for the current search
       AlgoliaQuery query = algolia.instance.index('contacts');
@@ -1451,7 +1457,7 @@ void main() async {
           .settings
           .setAttributeCriteriaComputedByMinProximity(enabled: true);
 
-      var result = await settings.setSettings();
+      var result = await settings.setSettings(forwardToReplicas: true);
 
       // Checking if has [AlgoliaQuerySnapshot]
       expect(result.runtimeType, AlgoliaTask);

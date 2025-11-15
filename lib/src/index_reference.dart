@@ -87,7 +87,7 @@ class AlgoliaIndexReference extends AlgoliaQuery {
   }) async {
     var response = await algolia._apiCall(
       ApiRequestType.post,
-      'indexes/$encodedIndex/facets/${Uri.encodeFull(facetName)}/query',
+      'indexes/$encodedIndex/facets/${Uri.encodeComponent(facetName)}/query',
       data: {
         'params': params,
         'facetQuery': facetQuery,

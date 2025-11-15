@@ -147,7 +147,7 @@ void main() async {
   AlgoliaSettings settingsData = settingsRef;
   settingsData =
       settingsData.setReplicas(const ['index_copy_1', 'index_copy_2']);
-  var setSettings = await settingsData.setSettings();
+  var setSettings = await settingsData.setSettings(forwardToReplicas: true);
 
   // Checking if has [AlgoliaTask]
   print('\n\n');
